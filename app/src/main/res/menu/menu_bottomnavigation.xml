@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/item_searchMusic"
+        android:title="음악 찾기" />
+    <item
+        android:id="@+id/item_playMusic"
+        android:title="음악 즐기기" />
+    <item
+        android:id="@+id/item_playlist"
+        android:title="내 재생목록" />
+
+</menu>
