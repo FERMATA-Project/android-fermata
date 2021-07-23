@@ -11,21 +11,23 @@ import android.view.MenuItem;
 
 import com.example.fermata.R;
 import com.example.fermata.fragment.PlaylistFragment;
+import com.example.fermata.fragment.SearchFragment;
 import com.example.fermata.fragment.SearchMusicFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
 public class MainActivity extends AppCompatActivity {
+    FragmentManager fragmentManager; // 프래그먼트 매니저
+    SearchMusicFragment searchMusicFragment = new SearchMusicFragment(); // 음악 찾기 프래그먼트
+    PlaylistFragment playlistFragment = new PlaylistFragment(); // 내 재생목록 프래그먼트
+    SearchFragment searchFragment = new SearchFragment(); // 검색하기 프래그먼트
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SearchMusicFragment searchMusicFragment = new SearchMusicFragment(); // 음악 찾기 프래그먼트
-        PlaylistFragment playlistFragment = new PlaylistFragment(); // 내 재생목록 프래그먼트
-
-        FragmentManager fragmentManager = getSupportFragmentManager(); // 프래그먼트 매니저
+        fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction(); // 프래그먼트 트랜잭션
         transaction.replace(R.id.frameLayout, searchMusicFragment).commitAllowingStateLoss(); // 첫 화면 설정
 
@@ -62,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.item_search:
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.frameLayout, searchFragment).commitAllowingStateLoss(); // 검색하기 프래그먼트로 변환
                 break;
         }
 
