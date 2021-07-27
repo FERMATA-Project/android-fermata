@@ -19,6 +19,8 @@ import com.example.fermata.domain.Music;
 
 import java.util.ArrayList;
 
+// 설명: 메인 화면 중 하단바 음악 찾기 클릭 -> 음악 목록 화면
+// author: soohyun, last modified: 21.07.27
 public class SearchMusicFragment extends Fragment {
 
     @Override
