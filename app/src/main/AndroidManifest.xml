@@ -10,6 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FERMATA">
         <activity android:name=".activity.LikePlaylistActivity"></activity>
+        <activity android:name=".activity.PlayActivity" />
         <activity android:name=".activity.NowPlaylistActivity" />
         <activity android:name=".activity.MainActivity">
             <intent-filter>
