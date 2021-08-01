@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="10"
+    tools:context=".PlayActivity">
+
+    <!-- 시각 정보 ~ seekbar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <!-- 시각 정보 -->
+        <ImageView
+            android:id="@+id/iv_music"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="40dp"
+            android:src="@drawable/img"></ImageView>
+
+
+        <!-- repeat, 곡 제목, 가수명, favorite 토글 -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp">
+
+            <!-- 곡 제목 -->
+            <TextView
+                android:id="@+id/tv_songName"
+                android:text="곡 제목"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:layout_alignParentBottom="true"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="60dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="60dp"
+                android:layout_marginBottom="30dp"
+                android:padding="2dp"
+                android:singleLine="true"
+                android:textAlignment="center"
+                android:textSize="22sp"></TextView>
+
+            <!-- 가수명 -->
+            <TextView
+                android:id="@+id/tv_singerName"
+                android:text="가수명"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:layout_alignParentBottom="true"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="60dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="60dp"
+                android:layout_marginBottom="0dp"
+                android:padding="2dp"
+                android:singleLine="true"
+                android:textAlignment="center"
+                android:textSize="16sp"></TextView>
+
+            <!-- repeat -->
+            <Button
+                android:id="@+id/btn_repeat"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentLeft="false"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_toLeftOf="@id/tv_songName"
+                android:background="@drawable/ic_repeat"></Button>
+
+            <!-- favorite 토글 -->
+            <Button
+                android:id="@+id/btn_like"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="20dp"
+                android:layout_alignParentRight="false"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="20dp"
+                android:layout_toRightOf="@id/tv_songName"
+                android:background="@drawable/ic_favorite_no"></Button>
+        </RelativeLayout>
+
+        <!-- 곡 시작 시간, seekbar, 곡 종료 시간 -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp">
+
+            <!-- seekbar -->
+            <SeekBar
+                android:id="@+id/sb_music"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"></SeekBar>
+
+            <!-- 곡 시작 시간 -->
+            <TextView
+                android:id="@+id/tv_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="false"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="20dp"
+                android:layout_toLeftOf="@id/sb_music"
+                android:text="0:00"
+                android:textSize="14sp"></TextView>
+
+            <!-- 곡 종료 시간 -->
+            <TextView
+                android:id="@+id/tv_end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="false"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="20dp"
+                android:layout_toRightOf="@id/sb_music"
+                android:text="0:00"
+                android:textSize="14sp"></TextView>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <!-- 소리, 이전 곡, play(pause), 다음 곡, 진동 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!-- 소리 조정 -->
+            <Button
+                android:id="@+id/btn_volume"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="false"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="20dp"
+                android:layout_toLeftOf="@id/btn_prev"
+                android:background="@drawable/ic_volume"></Button>
+
+            <!-- 이전 곡 -->
+            <Button
+                android:id="@+id/btn_prev"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentRight="false"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@id/btn_play"
+                android:background="@drawable/ic_play_prev">
+            </Button>
+
+            <!-- play(pause) 토글 -->
+            <Button
+                android:id="@+id/btn_play"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentRight="false"
+                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/ic_pause"></Button>
+
+            <!-- 다음 곡 -->
+            <Button
+                android:id="@+id/btn_next"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentRight="false"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/btn_play"
+                android:background="@drawable/ic_play_next"></Button>
+
+            <!-- 소리 조정 -->
+            <Button
+                android:id="@+id/btn_sensor"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="false"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@id/btn_next"
+                android:background="@drawable/ic_sensor">
+            </Button>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <!-- 현재 재생 목록 (1/N)-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
