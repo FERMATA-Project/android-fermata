@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
                 switch(item.getItemId()){
                     case R.id.item_searchMusic:
                         transaction.replace(R.id.frameLayout, searchMusicFragment).commitAllowingStateLoss(); // 음악 찾기 프래그먼트로 변환
+                        break;
+                    case R.id.item_playMusic:
+                        startActivity(new Intent(getApplicationContext(), PlayActivity.class));
                         break;
                     case R.id.item_playlist:
                         transaction.replace(R.id.frameLayout, playlistFragment).commitAllowingStateLoss(); // 내 재생목록 프래그먼트로 변환

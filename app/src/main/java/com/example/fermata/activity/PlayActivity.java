@@ -1,4 +1,4 @@
-package com.example.musicplayerapp;
+package com.example.fermata.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,12 +13,14 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.example.fermata.R;
+
 import java.util.ArrayList;
 
 public class PlayActivity extends AppCompatActivity {
 
     ImageView imageView;
-    TextView songName, singerName, songStart, songEnd;
+    TextView songName, singerName, songStart, songEnd, now;
     Button btnRepeat, btnLike, btnPlay, btnPrev, btnNext, btnVolume, btnSensor;
     SeekBar sbMusic;
 
@@ -42,6 +44,7 @@ public class PlayActivity extends AppCompatActivity {
         singerName = findViewById(R.id.tv_singerName);
         songStart = findViewById(R.id.tv_start);
         songEnd = findViewById(R.id.tv_end);
+        now = findViewById(R.id.tv_now);
 
         btnRepeat = findViewById(R.id.btn_repeat);
         btnLike = findViewById(R.id.btn_like);
@@ -131,6 +134,13 @@ public class PlayActivity extends AppCompatActivity {
                     btnPlay.setBackgroundResource(R.drawable.ic_pause);
                     mediaPlayer.start();
                 }
+            }
+        });
+
+        now.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), NowPlaylistActivity.class));
             }
         });
     }
