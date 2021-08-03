@@ -4,35 +4,34 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fermata.R;
 import com.example.fermata.domain.Music;
+import com.example.fermata.domain.Playlist;
 
 import java.util.ArrayList;
 
-public class MusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class MyPlayListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     Context context;
-    private ArrayList<Music> musicList = null;
-    private OnItemClickListener listener = null;
+    private ArrayList<Playlist> myplayList = null;
+    private MyPlayListAdapter.OnItemClickListener listener = null;
 
     public interface OnItemClickListener {
         void onItemClick(View v, int position) ;
     }
 
     // OnItemClickListener 리스너 객체 참조를 어댑터에 전달하는 메서드
-    public void setOnItemClickListener(OnItemClickListener listener) {
+    public void setOnItemClickListener(MyPlayListAdapter.OnItemClickListener listener) {
         this.listener = listener;
     }
 
-    public MusicAdapter(Context context, ArrayList<Music> musicList){
+    public MyPlayListAdapter(Context context, ArrayList<Playlist> musicList){
         this.context = context;
-        this.musicList = musicList;
+        this.myplayList = musicList;
     }
 
     @NonNull
@@ -42,32 +41,32 @@ public class MusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         Context context = parent.getContext();
         LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        view = inflater.inflate(R.layout.search_music_item_musiclist, parent,false);
-        return new MusicAdapter.MusicViewHolder(view);
+        view = inflater.inflate(R.layout.playlist_list_item, parent,false);
+        return new MyPlayListAdapter.MyPlayListViewHolder(view);
     }
 
     // 뷰 홀더에 데이터를 연결해주는 함수
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
-        ((MusicViewHolder)viewHolder).tv_musicName.setText(musicList.get(position).getMusicName());
-        ((MusicViewHolder)viewHolder).tv_singerName.setText(musicList.get(position).getSingerName());
+        ((MyPlayListViewHolder)viewHolder).tv_listName.setText(myplayList.get(position).getListName());
+        ((MyPlayListViewHolder)viewHolder).tv_singCount.setText(myplayList.get(position).getSingCount());
     }
 
     // 전체 데이터 개수 리턴
     @Override
     public int getItemCount() {
-        return musicList.size();
+        return myplayList.size();
     }
 
     // 뷰 홀더
-    public class MusicViewHolder extends RecyclerView.ViewHolder{
-        TextView tv_musicName;
-        TextView tv_singerName;
+    public class MyPlayListViewHolder extends RecyclerView.ViewHolder{
+        TextView tv_listName;
+        TextView tv_singCount;
 
-        public MusicViewHolder(@NonNull View itemView) {
+        public MyPlayListViewHolder(@NonNull View itemView) {
             super(itemView);
-            tv_musicName = itemView.findViewById(R.id.tv_musicName);
-            tv_singerName = itemView.findViewById(R.id.tv_singerName);
+            tv_listName = itemView.findViewById(R.id.tv_listName);
+            tv_singCount = itemView.findViewById(R.id.tv_singCount);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -83,4 +82,5 @@ public class MusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             });
         }
     }
+
 }

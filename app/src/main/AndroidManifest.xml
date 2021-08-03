@@ -12,6 +12,8 @@
         <activity android:name=".activity.LikePlaylistActivity"></activity>
         <activity android:name=".activity.PlayActivity" />
         <activity android:name=".activity.NowPlaylistActivity" />
+        <activity android:name=".activity.AddPlaylistActivity" />
+        <activity android:name=".activity.MakePlaylistActivity"/>
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
