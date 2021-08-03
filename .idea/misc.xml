@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.24462890625" />
+        <entry key="app/src/main/res/layout/activity_play.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_playlist.xml" value="0.2144210815429688" />
         <entry key="app/src/main/res/layout/fragment_search.xml" value="0.2921875" />
         <entry key="app/src/main/res/layout/fragment_search_music.xml" value="0.2921875" />
@@ -11,7 +12,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
