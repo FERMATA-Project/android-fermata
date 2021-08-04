@@ -3,24 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".activity.AddPlaylistActivity">
 
+    <!-- 재생목록에 노래 추가하기 텍스트 -->
     <TextView
-        android:id="@+id/tv_addlist"
+        android:id="@+id/tv_add_playlist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
         android:text="재생목록에 노래 추가하기"
-        android:textSize="20dp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.156"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.142" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
+    <!-- 전체 곡 리사이클러뷰 -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_musicList"
+        android:id="@+id/rv_add_playlist"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="20dp"
@@ -28,5 +32,6 @@
         android:clipToPadding="false"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_addlist"/>
+        app:layout_constraintTop_toBottomOf="@+id/tv_add_playlist"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
