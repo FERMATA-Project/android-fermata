@@ -8,7 +8,7 @@
     android:weightSum="10"
     tools:context=".activity.PlayActivity">
 
-    <!-- 시각 정보 ~ seekbar -->
+    <!-- visualizer ~ seekbar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -16,16 +16,16 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <!-- 시각 정보 -->
-        <ImageView
-            android:id="@+id/iv_music"
+        <!-- visualizer -->
+        <com.gauravk.audiovisualizer.visualizer.BarVisualizer xmlns:custom="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/vi_bar"
             android:layout_width="300dp"
             android:layout_height="300dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="40dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="40dp"
-            android:src="@drawable/img"></ImageView>
+            custom:avColor="#8C8C8C"
+            custom:avDensity="0.5"
+            custom:avSpeed="medium"
+            custom:avType="fill"
+            custom:avWidth="4dp" />
 
 
         <!-- repeat, 곡 제목, 가수명, favorite 토글 -->
@@ -90,9 +90,9 @@
                 android:id="@+id/btn_like"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginTop="20dp"
                 android:layout_alignParentRight="false"
                 android:layout_centerInParent="true"
+                android:layout_marginTop="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_toRightOf="@id/tv_songName"
                 android:background="@drawable/ic_favorite_no"></Button>
@@ -155,8 +155,8 @@
             <!-- 소리 조정 -->
             <Button
                 android:id="@+id/btn_volume"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_alignParentRight="false"
                 android:layout_centerInParent="true"
                 android:layout_marginRight="20dp"
@@ -199,8 +199,8 @@
             <!-- 소리 조정 -->
             <Button
                 android:id="@+id/btn_sensor"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_alignParentRight="false"
                 android:layout_centerInParent="true"
                 android:layout_marginLeft="20dp"
