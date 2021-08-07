@@ -27,11 +27,13 @@ public class LikePlaylistActivity extends AppCompatActivity {
 
         // 임시 데이터
         ArrayList<Music> likePlaylist = new ArrayList<>();
+        /*
         likePlaylist.add(new Music("노래 제목1", "가수 이름1"));
         likePlaylist.add(new Music("노래 제목2", "가수 이름2"));
         likePlaylist.add(new Music("노래 제목3", "가수 이름3"));
         likePlaylist.add(new Music("노래 제목4", "가수 이름4"));
         likePlaylist.add(new Music("노래 제목5", "가수 이름5"));
+         */
 
         RecyclerView rv_like_playlist = findViewById(R.id.rv_like_playlist); // 현재 재생 목록 리사이클러뷰
         LinearLayoutManager manager = new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL,false); // 레이아웃 매니저
