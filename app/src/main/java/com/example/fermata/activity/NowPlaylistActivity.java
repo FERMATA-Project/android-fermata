@@ -30,13 +30,15 @@ public class NowPlaylistActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
-        // 임시 데이터
         ArrayList<Music> nowPlaylist = new ArrayList<>();
+        /*
+        // 임시 데이터
         nowPlaylist.add(new Music("노래 제목1", "가수 이름1"));
         nowPlaylist.add(new Music("노래 제목2", "가수 이름2"));
         nowPlaylist.add(new Music("노래 제목3", "가수 이름3"));
         nowPlaylist.add(new Music("노래 제목4", "가수 이름4"));
         nowPlaylist.add(new Music("노래 제목5", "가수 이름5"));
+        */
 
         RecyclerView rv_now_playlist = findViewById(R.id.rv_now_playlist); // 현재 재생 목록 리사이클러뷰
         LinearLayoutManager manager = new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL,false); // 레이아웃 매니저
@@ -45,6 +47,7 @@ public class NowPlaylistActivity extends AppCompatActivity {
         rv_now_playlist.setAdapter(adapter); // 리사이클러뷰와 어댑터 연결
 
         ImageButton btn_option = findViewById(R.id.btn_option); // 재생 목록 옵션 버튼
+
         btn_option.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -69,5 +72,7 @@ public class NowPlaylistActivity extends AppCompatActivity {
                 popupMenu.show();
             }
         });
+
+
     }
 }

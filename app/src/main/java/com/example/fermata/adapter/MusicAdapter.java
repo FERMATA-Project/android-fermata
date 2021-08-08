@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,8 +50,13 @@ public class MusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     // 뷰 홀더에 데이터를 연결해주는 함수
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
-        ((MusicViewHolder)viewHolder).tv_musicName.setText(musicList.get(position).getMusicName());
-        ((MusicViewHolder)viewHolder).tv_singerName.setText(musicList.get(position).getSingerName());
+        ((MusicViewHolder)viewHolder).tv_musicName.setText(musicList.get(position).getMusic_title());
+        ((MusicViewHolder)viewHolder).tv_singerName.setText(musicList.get(position).getSinger());
+        if(musicList.get(position).getLikes() == 1) {
+            ((MusicViewHolder)viewHolder).btn_like.setChecked(true);
+        } else {
+            ((MusicViewHolder)viewHolder).btn_like.setChecked(false);
+        }
     }
 
     // 전체 데이터 개수 리턴
@@ -63,11 +69,13 @@ public class MusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public class MusicViewHolder extends RecyclerView.ViewHolder{
         TextView tv_musicName;
         TextView tv_singerName;
+        CheckBox btn_like;
 
         public MusicViewHolder(@NonNull View itemView) {
             super(itemView);
             tv_musicName = itemView.findViewById(R.id.tv_musicName);
             tv_singerName = itemView.findViewById(R.id.tv_singerName);
+            btn_like = itemView.findViewById(R.id.btn_like);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

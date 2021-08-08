@@ -47,8 +47,8 @@ public class LatelyMusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     // 뷰 홀더에 데이터를 연결해주는 함수
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
-        ((LatelyMusicViewHolder)viewHolder).tv_lately_musicName.setText(latelymusicList.get(position).getMusicName());
-        ((LatelyMusicViewHolder)viewHolder).tv_lately_singerName.setText(latelymusicList.get(position).getSingerName());
+        ((LatelyMusicViewHolder)viewHolder).tv_lately_musicName.setText(latelymusicList.get(position).getMusic_title());
+        ((LatelyMusicViewHolder)viewHolder).tv_lately_singerName.setText(latelymusicList.get(position).getSinger());
     }
 
     // 전체 데이터 개수 리턴
