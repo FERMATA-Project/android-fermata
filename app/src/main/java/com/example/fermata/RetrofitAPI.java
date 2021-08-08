@@ -18,4 +18,8 @@ public interface RetrofitAPI {
     // 음악 가나다 순 API
     @POST("/music/alphabet")
     Call<musicResponse> requestMusicAlphabet();
+  
+    // 현재 playList
+    //@POST("/...")
+    //Call<MusicList> ...
 }
