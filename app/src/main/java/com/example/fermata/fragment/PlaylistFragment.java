@@ -31,11 +31,13 @@ public class PlaylistFragment extends Fragment {
 
         // 최근 들은 노래 임시 데이터
         ArrayList<Music> lately_musicList = new ArrayList<>();
+        /*
         lately_musicList.add(new Music("노래 이름1", "가수1"));
         lately_musicList.add(new Music("노래 이름2", "가수2"));
         lately_musicList.add(new Music("노래 이름3", "가수3"));
         lately_musicList.add(new Music("노래 이름4", "가수4"));
         lately_musicList.add(new Music("노래 이름5", "가수5"));
+         */
 
         RecyclerView rv_lately_musicList = view.findViewById(R.id.rv_lately_list); // 최근들은노래 리사이클러뷰
         LinearLayoutManager manager_lately = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL,false); // 레이아웃 매니저
