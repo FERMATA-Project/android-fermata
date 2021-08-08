@@ -26,11 +26,13 @@ public class AddPlaylistActivity extends AppCompatActivity {
 
         // 임시 데이터
         ArrayList<Music> AddPlaylist = new ArrayList<>();
+        /*
         AddPlaylist.add(new Music("노래 제목1", "가수 이름1"));
         AddPlaylist.add(new Music("노래 제목2", "가수 이름2"));
         AddPlaylist.add(new Music("노래 제목3", "가수 이름3"));
         AddPlaylist.add(new Music("노래 제목4", "가수 이름4"));
         AddPlaylist.add(new Music("노래 제목5", "가수 이름5"));
+         */
 
         RecyclerView rv_add_playlist = findViewById(R.id.rv_add_playlist); // 현재 재생 목록 리사이클러뷰
         LinearLayoutManager manager = new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL,false); // 레이아웃 매니저
