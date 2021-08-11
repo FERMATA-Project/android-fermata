@@ -20,4 +20,5 @@ public class Playlist {
     public String getSingCount() {
         return "노래 " + String.valueOf(singCount) + "곡";
     }
+
 }

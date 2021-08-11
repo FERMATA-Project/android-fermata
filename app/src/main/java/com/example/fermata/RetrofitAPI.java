@@ -27,8 +27,8 @@ public interface RetrofitAPI {
     Call<musicResponse> requestSearch(@Field("search_word") String search_word);
   
     // 현재 playList
-    //@POST("/...")
-    //Call<MusicList> ...
+    @POST("/playlist/now")
+    Call<musicResponse> requestPlaylistNow();
 
     // 최근 재생목록 5개 API
     @POST("/music/playlist_lately")

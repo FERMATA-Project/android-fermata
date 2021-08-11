@@ -5,15 +5,27 @@
       <map>
         <entry key="app/src/main/res/drawable-v24/ic_repeat.xml" value="0.239" />
         <entry key="app/src/main/res/drawable-v24/ic_repeat_one.xml" value="0.239" />
+        <entry key="app/src/main/res/drawable/bg_appcolorwhite_radius.xml" value="0.2785" />
+        <entry key="app/src/main/res/drawable/ic_baseline_favorite_24.xml" value="0.2785" />
+        <entry key="app/src/main/res/drawable/ic_baseline_favorite_border_24.xml" value="0.2785" />
         <entry key="app/src/main/res/drawable/ic_favorite_no.xml" value="0.272" />
         <entry key="app/src/main/res/drawable/ic_favorite_yes.xml" value="0.272" />
+        <entry key="app/src/main/res/drawable/ic_pause.xml" value="0.2785" />
         <entry key="app/src/main/res/drawable/ic_play.xml" value="0.272" />
+        <entry key="app/src/main/res/drawable/ic_play_menu.xml" value="0.2785" />
         <entry key="app/src/main/res/drawable/ic_play_next.xml" value="0.272" />
+        <entry key="app/src/main/res/drawable/ic_play_prev.xml" value="0.2785" />
         <entry key="app/src/main/res/drawable/ic_repeat.xml" value="0.239" />
+        <entry key="app/src/main/res/drawable/ic_sensor.xml" value="0.2785" />
+        <entry key="app/src/main/res/drawable/ic_volume.xml" value="0.2785" />
+        <entry key="app/src/main/res/drawable/seek_tumb.xml" value="0.2785" />
+        <entry key="app/src/main/res/drawable/seekbar.xml" value="0.2785" />
+        <entry key="app/src/main/res/drawable/selector_bottomnavigation.xml" value="0.2785" />
         <entry key="app/src/main/res/drawable/selector_btn_like.xml" value="0.272" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.24462890625" />
         <entry key="app/src/main/res/layout/activity_now_playlist.xml" value="0.25625" />
         <entry key="app/src/main/res/layout/activity_play.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_play.xml" value="0.375" />
         <entry key="app/src/main/res/layout/fragment_playlist.xml" value="0.2144210815429688" />
         <entry key="app/src/main/res/layout/fragment_search.xml" value="0.2921875" />
         <entry key="app/src/main/res/layout/fragment_search_music.xml" value="0.2921875" />
