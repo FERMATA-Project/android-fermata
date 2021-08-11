@@ -37,6 +37,7 @@
             <TextView
                 android:id="@+id/tv_songName"
                 android:text="곡 제목"
+                android:textColor="@color/black"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:ellipsize="marquee"
@@ -57,10 +58,9 @@
             <TextView
                 android:id="@+id/tv_singerName"
                 android:text="가수명"
+                android:textColor="@color/black"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:marqueeRepeatLimit="marquee_forever"
                 android:layout_alignParentBottom="true"
                 android:layout_centerInParent="true"
                 android:layout_marginStart="20dp"
@@ -68,6 +68,8 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginRight="60dp"
                 android:layout_marginBottom="0dp"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
                 android:padding="2dp"
                 android:singleLine="true"
                 android:textAlignment="center"
@@ -113,6 +115,8 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
+                android:thumbTint="@color/black"
+                android:progressBackgroundTint="@color/black"
                 android:layout_marginBottom="20dp"></SeekBar>
 
             <!-- 곡 시작 시간 -->
@@ -125,6 +129,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_toLeftOf="@id/sb_music"
                 android:text="0:00"
+                android:textColor="@color/black"
                 android:textSize="14sp"></TextView>
 
             <!-- 곡 종료 시간 -->
@@ -137,6 +142,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_toRightOf="@id/sb_music"
                 android:text="0:00"
+                android:textColor="@color/black"
                 android:textSize="14sp"></TextView>
         </RelativeLayout>
 
@@ -196,7 +202,7 @@
                 android:layout_toRightOf="@id/btn_play"
                 android:background="@drawable/ic_play_next"></Button>
 
-            <!-- 소리 조정 -->
+            <!-- 진동 조정 -->
             <Button
                 android:id="@+id/btn_sensor"
                 android:layout_width="30dp"
@@ -218,12 +224,34 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <TextView
-            android:id="@+id/tv_now"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="현재 재생 목록"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
+            <!-- 현재 재생 목록으로 -->
+            <TextView
+                android:id="@+id/tv_now"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="20dp"
+                android:text="현재 재생 목록"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <!-- 현재 재생 음악 정보 텍스트 -->
+            <TextView
+                android:id="@+id/tv_music_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(?/N)"
+                android:textColor="@color/black"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="20dp"
+                android:textSize="14sp"/>
+        </RelativeLayout>
 
     </LinearLayout>
 

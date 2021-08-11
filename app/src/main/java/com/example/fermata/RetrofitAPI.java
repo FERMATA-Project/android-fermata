@@ -1,6 +1,5 @@
 package com.example.fermata;
 
-import com.example.fermata.domain.Music;
 import com.example.fermata.response.musicResponse;
 
 import retrofit2.Call;
@@ -20,6 +19,6 @@ public interface RetrofitAPI {
     Call<musicResponse> requestMusicAlphabet();
   
     // 현재 playList
-    //@POST("/...")
-    //Call<MusicList> ...
+    @POST("/playlist/now")
+    Call<musicResponse> requestPlaylistNow();
 }
