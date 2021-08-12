@@ -38,6 +38,7 @@ public class PlayActivity extends AppCompatActivity {
     Thread updateSB; //현재 재생 시간 확인을 위한
     static MediaPlayer mediaPlayer;
     ArrayList<Music> playlist = new ArrayList<>(); // 재생 목록
+    int now_play = 0; // 현재 음악 재생 위치
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +72,8 @@ public class PlayActivity extends AppCompatActivity {
 
         // SearchMusicFragment 로부터 받은 데이터
         Intent intent = getIntent();
-        String playlist_title = intent.getStringExtra("playlist_title");
-        int position = intent.getIntExtra("position", -1);
+        String playlist_title = intent.getStringExtra("playlist_title"); // 재생 목록 이름
+        int position = intent.getIntExtra("position", -1); // 음악 재생 위치
 
         nowList.setText(playlist_title); // 재생목록 표시
         if(position == -1 || position == 0) { // 음악 즐기기 클릭한 경우, 음악 목록에서 음악 선택한 경우
@@ -233,6 +234,7 @@ public class PlayActivity extends AppCompatActivity {
                             musicInfo.setText("(1" +"/" + size + ")");
                         } else if(position == 0) {
                             musicInfo.setText("("+ size +"/" + size + ")");
+                            now_play = size - 1; // 음악 재생 위치를 마지막 위치로 설정
                         }
 
                     }
