@@ -37,4 +37,12 @@ public interface RetrofitAPI {
     // 재생목록 리스트 API
     @POST("/playlist/playlist_list")
     Call<playlistResponse> requestPlaylistList();
+
+    // 재생목록에 음악 추가 API
+    @FormUrlEncoded
+    @POST("/music/add")
+    Call<musicResponse> requestAddMusic(
+            @Field("playlist_title") String playlist_title,
+            @Field("music_id") int music_id
+    );
 }

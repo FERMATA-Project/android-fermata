@@ -11,20 +11,33 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.fermata.R;
+import com.example.fermata.RetrofitClient;
+import com.example.fermata.domain.Music;
+import com.example.fermata.response.musicResponse;
 import com.gauravk.audiovisualizer.visualizer.BarVisualizer;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 // 설명: 음악 재생 화면
 // author: dayoung, last modified: 21.08.10
+// author: soohyun, last modified: 21.08.12
 
 public class PlayActivity extends AppCompatActivity {
-
     BarVisualizer visualizer;
-    TextView songName, singerName, songStart, songEnd, nowList; //제목, 가수, 현재 재생 시간, 재생 종료 시간, 현재 재생 목록 (화면 전환)
+    TextView songName, singerName, songStart, songEnd, nowList, musicInfo; //제목, 가수, 현재 재생 시간, 재생 종료 시간, 현재 재생 목록 (화면 전환), 음악 정보
     Button btnRepeat, btnLike, btnPlay, btnPrev, btnNext, btnVolume, btnSensor; //반복 재생, 좋아요, play(pause), 이전 곡, 다음 곡, 소리 조절, 진동 조절
     SeekBar sbMusic; //음악 재생바
     Thread updateSB; //현재 재생 시간 확인을 위한
-    static MediaPlayer mediaPlayer; 
+    static MediaPlayer mediaPlayer;
+    ArrayList<Music> playlist = new ArrayList<>(); // 재생 목록
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +58,7 @@ public class PlayActivity extends AppCompatActivity {
         songStart = findViewById(R.id.tv_start);
         songEnd = findViewById(R.id.tv_end);
         nowList = findViewById(R.id.tv_now);
+        musicInfo = findViewById(R.id.tv_music_info);
         btnRepeat = findViewById(R.id.btn_repeat);
         btnLike = findViewById(R.id.btn_like);
         btnPlay = findViewById(R.id.btn_play);
@@ -53,6 +67,17 @@ public class PlayActivity extends AppCompatActivity {
         btnVolume = findViewById(R.id.btn_volume);
         btnSensor = findViewById(R.id.btn_sensor);
         sbMusic = findViewById(R.id.sb_music);
+
+
+        // SearchMusicFragment 로부터 받은 데이터
+        Intent intent = getIntent();
+        String playlist_title = intent.getStringExtra("playlist_title");
+        int position = intent.getIntExtra("position", -1);
+
+        nowList.setText(playlist_title); // 재생목록 표시
+        if(position == -1 || position == 0) { // 음악 즐기기 클릭한 경우, 음악 목록에서 음악 선택한 경우
+            requestPlaylistNow(position); // 현재 재생 목록 가져오기
+        }
 
         // 현재 재생 시간 update를 위한 스레드
         updateSB = new Thread(){
@@ -184,4 +209,39 @@ public class PlayActivity extends AppCompatActivity {
         return time;
     }
 
+    // 현재 플레이리스트
+    private void requestPlaylistNow(int position) {
+        RetrofitClient.getApiService().requestPlaylistNow().enqueue(new Callback<musicResponse>() {
+            @Override
+            public void onResponse(Call<musicResponse> call, Response<musicResponse> response) {
+                if(response.isSuccessful()){
+                    musicResponse result = response.body(); // 응답 결과
+
+                    if(result.code.equals("400")) {
+                        Toast.makeText(getApplicationContext(), "에러가 발생했습니다", Toast.LENGTH_SHORT).show();
+                    } else if (result.code.equals("200")) {
+                        List<Music> musics = result.music; // 음악 리스트
+
+                        playlist.clear(); // 음악 목록 리스트 초기화
+                        for(Music music: musics){
+                            playlist.add(music);
+                        }
+
+                        // 음악 정보 표시
+                        int size = playlist.size();
+                        if(position == -1) {
+                            musicInfo.setText("(1" +"/" + size + ")");
+                        } else if(position == 0) {
+                            musicInfo.setText("("+ size +"/" + size + ")");
+                        }
+
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<musicResponse> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "네트워크 에러", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }
