@@ -57,7 +57,9 @@ public class MainActivity extends AppCompatActivity {
                         transaction.replace(R.id.frameLayout, searchMusicFragment).commitAllowingStateLoss(); // 음악 찾기 프래그먼트로 변환
                         break;
                     case R.id.item_playMusic:
-                        startActivity(new Intent(getApplicationContext(), PlayActivity.class));
+                        Intent intent = new Intent(getApplicationContext(), PlayActivity.class);
+                        intent.putExtra("playlist_title", "현재 재생 목록");
+                        startActivity(intent);
                         break;
                     case R.id.item_playlist:
                         transaction.replace(R.id.frameLayout, playlistFragment).commitAllowingStateLoss(); // 내 재생목록 프래그먼트로 변환
