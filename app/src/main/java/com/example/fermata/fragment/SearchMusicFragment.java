@@ -185,7 +185,7 @@ public class SearchMusicFragment extends Fragment {
                     } else if (result.code.equals("200")) {
                         Intent intent = new Intent(getContext(), PlayActivity.class);
                         intent.putExtra("playlist_title", "현재 재생 목록"); // 재생목록 이름
-                        intent.putExtra("position", 0); // 음악 재생 위치
+                        intent.putExtra("position", -1); // 음악 재생 위치
                         startActivity(intent);
                     }
                 }
