@@ -184,8 +184,8 @@ public class SearchMusicFragment extends Fragment {
                         Toast.makeText(getContext(), "에러가 발생했습니다", Toast.LENGTH_SHORT).show();
                     } else if (result.code.equals("200")) {
                         Intent intent = new Intent(getContext(), PlayActivity.class);
-                        intent.putExtra("playlist_title", "현재 재생 목록");
-                        intent.putExtra("position", 0);
+                        intent.putExtra("playlist_title", "현재 재생 목록"); // 재생목록 이름
+                        intent.putExtra("position", 0); // 음악 재생 위치
                         startActivity(intent);
                     }
                 }
