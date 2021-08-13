@@ -37,4 +37,8 @@ public interface RetrofitAPI {
     // 재생목록 리스트 API
     @POST("/playlist/playlist_list")
     Call<playlistResponse> requestPlaylistList();
+
+    //좋아요 리스트 API
+    @POST("/music/playlist_likes")
+    Call<musicResponse> requestPlaylistLikes();
 }

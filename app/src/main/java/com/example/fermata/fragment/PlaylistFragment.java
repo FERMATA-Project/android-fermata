@@ -41,15 +41,6 @@ public class PlaylistFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_playlist, container, false);
 
-        // 최근 들은 노래 임시 데이터
-        /*
-        lately_musicList.add(new Music("노래 이름1", "가수1"));
-        lately_musicList.add(new Music("노래 이름2", "가수2"));
-        lately_musicList.add(new Music("노래 이름3", "가수3"));
-        lately_musicList.add(new Music("노래 이름4", "가수4"));
-        lately_musicList.add(new Music("노래 이름5", "가수5"));
-         */
-
         requestPlaylistLately();   //최근 들은 노래 리스트
 
         RecyclerView rv_lately_musicList = view.findViewById(R.id.rv_lately_list); // 최근들은노래 리사이클러뷰
@@ -59,16 +50,9 @@ public class PlaylistFragment extends Fragment {
         rv_lately_musicList.setAdapter(adapter_lately); // 리사이클러뷰와 어댑터 연결
 
 
-        // 재생 목록 임시 데이터
-        /*
-        playList.add(new Playlist("좋아요한 음악목록", 1));
-        playList.add(new Playlist("재생목록 이름1", 2));
-        playList.add(new Playlist("재생목록 이름2", 3));
-        playList.add(new Playlist("재생목록 이름3", 4));
-        playList.add(new Playlist("재생목록 이름4", 5));
-        playList.add(new Playlist("재생목록 이름5", 6));*/
-
-        requestPlaylistList();  //재생 목록 리스트
+        //재생 목록 리스트
+        requestPlaylistLikes();
+        requestPlaylistList();
 
         RecyclerView rv_my_playlist = view.findViewById(R.id.rv_my_playlist); // 재생목록 리사이클러뷰
         LinearLayoutManager manager_playlist = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL,false); // 레이아웃 매니저
@@ -117,6 +101,39 @@ public class PlaylistFragment extends Fragment {
         });
     }
 
+    //좋아요 개수 데이터 요청 메서드
+    private void requestPlaylistLikes() {
+        RetrofitClient.getApiService().requestPlaylistLikes().enqueue(new Callback<musicResponse>() {
+            @Override
+            public void onResponse(Call<musicResponse> call, Response<musicResponse> response) {
+                if(response.isSuccessful()){
+                    musicResponse result = response.body(); // 응답 결과
+
+                    if(result.code.equals("400")) {
+                        Toast.makeText(getContext(), "에러가 발생했습니다", Toast.LENGTH_SHORT).show();
+                    } else if (result.code.equals("200")) {
+                        List<Music> likescount = result.music; // 좋아요 개수세는 리스트
+                        int count = 0;
+
+                        playList.clear(); // 재생 목록 리스트 초기화
+                        for(Music music: likescount){
+                            count += 1;
+                        }
+                        if(count == 0)
+                            playList.add(new Playlist(0,"좋아요한 음악목록"));
+                        else
+                            playList.add(new Playlist(count,"좋아요한 음악목록"));
+                        adapter_playlist.notifyDataSetChanged();
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<musicResponse> call, Throwable t) {
+                Toast.makeText(getContext(), "네트워크 에러", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     //재생목록 리스트 데이터 요청 메서드
     private void requestPlaylistList() {
         RetrofitClient.getApiService().requestPlaylistList().enqueue(new Callback<playlistResponse>() {
@@ -130,11 +147,9 @@ public class PlaylistFragment extends Fragment {
                     } else if (result.code.equals("200")) {
                         List<Playlist> playlists = result.playlist; // 재생목록 리스트
 
-                        playList.clear(); // 재생 목록 리스트 초기화
                         for(Playlist playlist: playlists){
                             playList.add(playlist);
                         }
-                        adapter_playlist.notifyDataSetChanged();
                     }
                 }
             }
