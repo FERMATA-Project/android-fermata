@@ -26,7 +26,11 @@ public interface RetrofitAPI {
     @FormUrlEncoded
     @POST("/music/search")
     Call<musicResponse> requestSearch(@Field("search_word") String search_word);
-  
+
+    // 음악 play
+    //@POST("/music/play")
+    //Call<musicResponse> requestMusicPlay();
+
     // 현재 playList
     @POST("/playlist/now")
     Call<musicResponse> requestPlaylistNow();
