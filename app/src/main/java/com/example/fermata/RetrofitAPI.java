@@ -50,7 +50,7 @@ public interface RetrofitAPI {
     //리스트에 음악 저장 API
     @FormUrlEncoded
     @POST("/playlist/playlist_add")
-    Call<AddPlaylist> sendName(@Field("playlist_title") String playlist_title, @Field("music_id") int music_id);
+    Call<AddPlaylist> requestAddPlaylist(@Field("playlist_title") String playlist_title, @Field("music_id") int music_id);
 
     // 재생목록에 음악 추가 API
     @FormUrlEncoded

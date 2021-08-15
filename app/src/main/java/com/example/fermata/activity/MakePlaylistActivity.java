@@ -49,12 +49,12 @@ public class MakePlaylistActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 make_list_name = et_list_name.getText().toString();
-                if(make_list_name != null) {
+                if(make_list_name.equals("")) {
+                    Toast.makeText(getApplicationContext(), "재생목록이름을 입력해주세요", Toast.LENGTH_SHORT).show();
+                }else{
                     Intent MaketoAdd = new Intent(getApplicationContext(), AddPlaylistActivity.class);
                     MaketoAdd.putExtra("재생목록이름", make_list_name);
                     startActivity(MaketoAdd);
-                }else{
-                    Toast.makeText(getApplicationContext(), "재생목록이름을 입력해주세요", Toast.LENGTH_SHORT).show();
                 }
             }
         });

@@ -51,7 +51,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new MusicAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
-                final Call<com.example.fermata.domain.AddPlaylist> addplaylist = RetrofitClient.getApiService().sendName(make_list_title, AddPlaylist.get(position).getMusic_id());
+                final Call<com.example.fermata.domain.AddPlaylist> addplaylist = RetrofitClient.getApiService().requestAddPlaylist(make_list_title, AddPlaylist.get(position).getMusic_id());
 
                 addplaylist.enqueue(new Callback<com.example.fermata.domain.AddPlaylist>() {
                     @Override
