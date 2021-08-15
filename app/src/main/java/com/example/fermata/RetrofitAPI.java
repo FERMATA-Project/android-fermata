@@ -47,6 +47,7 @@ public interface RetrofitAPI {
     @POST("/music/playlist_likes")
     Call<musicResponse> requestPlaylistLikes();
 
+    @FormUrlEncoded
     @POST("/playlist/playlist_add")
     Call<AddPlaylist> sendName(@Field("playlist_title") String playlist_title, @Field("music_id") int music_id);
 
