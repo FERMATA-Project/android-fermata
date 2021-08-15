@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
@@ -19,6 +21,8 @@ import com.example.fermata.domain.Music;
 import com.example.fermata.response.musicResponse;
 import com.gauravk.audiovisualizer.visualizer.BarVisualizer;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +31,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 // 설명: 음악 재생 화면
-// author: dayoung, last modified: 21.08.10
+// author: dayoung, last modified: 21.08.15
 // author: soohyun, last modified: 21.08.12
 
 public class PlayActivity extends AppCompatActivity {
@@ -36,9 +40,9 @@ public class PlayActivity extends AppCompatActivity {
     Button btnRepeat, btnLike, btnPlay, btnPrev, btnNext, btnVolume, btnSensor; //반복 재생, 좋아요, play(pause), 이전 곡, 다음 곡, 소리 조절, 진동 조절
     SeekBar sbMusic; //음악 재생바
     Thread updateSB; //현재 재생 시간 확인을 위한
-    static MediaPlayer mediaPlayer;
     ArrayList<Music> playlist = new ArrayList<>(); // 재생 목록
     int now_play = 0; // 현재 음악 재생 위치
+    static MediaPlayer mediaPlayer; // 음악 플레이어
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +52,6 @@ public class PlayActivity extends AppCompatActivity {
         // 상단바 안보이게 숨기기
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
-
-        //getSupportActionBar().setTitle("Now Playing");
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         visualizer = findViewById(R.id.vi_bar);
         songName = findViewById(R.id.tv_songName);
@@ -80,6 +80,7 @@ public class PlayActivity extends AppCompatActivity {
             requestPlaylistNow(position); // 현재 재생 목록 가져오기
         }
 
+
         // 현재 재생 시간 update를 위한 스레드
         updateSB = new Thread(){
             @Override
@@ -100,18 +101,19 @@ public class PlayActivity extends AppCompatActivity {
             }
         };
 
-        //재생, visualizer 실행
-        if (mediaPlayer != null)
-        {
-            mediaPlayer.stop();
-            mediaPlayer.release();
-        }
-        mediaPlayer = MediaPlayer.create(PlayActivity.this, R.raw.cantinaband60); // (음악 서버 구축 후 선택된 곡으로 재생 & setText 되도록 수정해야함)
+
+        // 플레이리스트의 마지막(최근에 추가된) 곡 재생
+        int play_music_id = 0;
+        if(!playlist.isEmpty())
+            play_music_id = playlist.get(playlist.size() - 1).getMusic_id();
+        playAudio(play_music_id);
+
+
+        //visualizer 실행
         int audioSessionId = mediaPlayer.getAudioSessionId();
         if (audioSessionId != -1) {
             visualizer.setAudioSessionId(audioSessionId);
         }
-        mediaPlayer.start();
 
         // seekbar, 재생 시작 시간, 재생 종료 시간 설정
         String endTime = createTime(mediaPlayer.getDuration());
@@ -193,6 +195,20 @@ public class PlayActivity extends AppCompatActivity {
         super.onDestroy();
         if (visualizer != null)
             visualizer.release();
+    }
+
+    // 음악을 재생하는 메소드
+    public void playAudio(int music_id) {
+        Uri url = Uri.parse("http://localhost:3000/music/play?music_id=" + Integer.toString(music_id));
+        try {
+            mediaPlayer = new MediaPlayer();
+            mediaPlayer.setDataSource(this, url);
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // 곡 현재 재생 시간 update를 위한
