@@ -202,10 +202,11 @@ public class PlayActivity extends AppCompatActivity {
 
     // 음악을 재생하는 메소드
     public void playAudio(int music_id) {
-        Uri url = Uri.parse("http://localhost:3000/music/play?music_id=" + Integer.toString(music_id));
+        //Uri url = Uri.parse("http://10.0.2.2:3000/music/play?music_id=1"); //+ Integer.toString(music_id));
+        String url = "http://10.0.2.2:3000/music/play?music_id=1";
         try {
             mediaPlayer = new MediaPlayer();
-            mediaPlayer.setDataSource(this, url);
+            mediaPlayer.setDataSource(url);
             mediaPlayer.prepare();
             mediaPlayer.start();
 
