@@ -5,26 +5,44 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.fermata.R;
+import com.example.fermata.RetrofitClient;
+import com.example.fermata.domain.Music;
+import com.example.fermata.response.musicResponse;
 import com.gauravk.audiovisualizer.visualizer.BarVisualizer;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 // 설명: 음악 재생 화면
-// author: dayoung, last modified: 21.08.10
+// author: dayoung, last modified: 21.08.15
+// author: soohyun, last modified: 21.08.12
 
 public class PlayActivity extends AppCompatActivity {
-
     BarVisualizer visualizer;
-    TextView songName, singerName, songStart, songEnd, nowList; //제목, 가수, 현재 재생 시간, 재생 종료 시간, 현재 재생 목록 (화면 전환)
+    TextView songName, singerName, songStart, songEnd, nowList, musicInfo; //제목, 가수, 현재 재생 시간, 재생 종료 시간, 현재 재생 목록 (화면 전환), 음악 정보
     Button btnRepeat, btnLike, btnPlay, btnPrev, btnNext, btnVolume, btnSensor; //반복 재생, 좋아요, play(pause), 이전 곡, 다음 곡, 소리 조절, 진동 조절
     SeekBar sbMusic; //음악 재생바
     Thread updateSB; //현재 재생 시간 확인을 위한
-    static MediaPlayer mediaPlayer; 
+    ArrayList<Music> playlist = new ArrayList<>(); // 재생 목록
+    int now_play = 0; // 현재 음악 재생 위치
+    static MediaPlayer mediaPlayer; // 음악 플레이어
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,16 +53,13 @@ public class PlayActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
-        //getSupportActionBar().setTitle("Now Playing");
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //getSupportActionBar().setDisplayShowHomeEnabled(true);
-
         visualizer = findViewById(R.id.vi_bar);
         songName = findViewById(R.id.tv_songName);
         singerName = findViewById(R.id.tv_singerName);
         songStart = findViewById(R.id.tv_start);
         songEnd = findViewById(R.id.tv_end);
         nowList = findViewById(R.id.tv_now);
+        musicInfo = findViewById(R.id.tv_music_info);
         btnRepeat = findViewById(R.id.btn_repeat);
         btnLike = findViewById(R.id.btn_like);
         btnPlay = findViewById(R.id.btn_play);
@@ -53,6 +68,17 @@ public class PlayActivity extends AppCompatActivity {
         btnVolume = findViewById(R.id.btn_volume);
         btnSensor = findViewById(R.id.btn_sensor);
         sbMusic = findViewById(R.id.sb_music);
+
+        // SearchMusicFragment 로부터 받은 데이터
+        Intent intent = getIntent();
+        String playlist_title = intent.getStringExtra("playlist_title"); // 재생 목록 이름
+        int position = intent.getIntExtra("position", -2); // 음악 재생 위치
+
+        nowList.setText(playlist_title); // 재생목록 표시
+        if(position == -2 || position == -1) { // 음악 즐기기 클릭한 경우, 음악 목록에서 음악 선택한 경우
+            requestPlaylistNow(position); // 현재 재생 목록 가져오기
+        }
+
 
         // 현재 재생 시간 update를 위한 스레드
         updateSB = new Thread(){
@@ -74,18 +100,19 @@ public class PlayActivity extends AppCompatActivity {
             }
         };
 
-        //재생, visualizer 실행
-        if (mediaPlayer != null)
-        {
-            mediaPlayer.stop();
-            mediaPlayer.release();
-        }
-        mediaPlayer = MediaPlayer.create(PlayActivity.this, R.raw.cantinaband60); // (음악 서버 구축 후 선택된 곡으로 재생 & setText 되도록 수정해야함)
+
+        // 플레이리스트의 마지막(최근에 추가된) 곡 재생
+        int play_music_id = 0;
+        if(!playlist.isEmpty())
+            play_music_id = playlist.get(playlist.size() - 1).getMusic_id();
+        playAudio(play_music_id);
+
+
+        //visualizer 실행
         int audioSessionId = mediaPlayer.getAudioSessionId();
         if (audioSessionId != -1) {
             visualizer.setAudioSessionId(audioSessionId);
         }
-        mediaPlayer.start();
 
         // seekbar, 재생 시작 시간, 재생 종료 시간 설정
         String endTime = createTime(mediaPlayer.getDuration());
@@ -155,7 +182,11 @@ public class PlayActivity extends AppCompatActivity {
         nowList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), NowPlaylistActivity.class));
+                Intent intent_playlist = new Intent(getApplicationContext(), NowPlaylistActivity.class);
+                intent_playlist.putExtra("playlist", playlist);
+                intent_playlist.putExtra("playlist_title", playlist_title);
+                intent_playlist.putExtra("now_play", now_play);
+                startActivity(intent_playlist);
             }
         });
 
@@ -167,6 +198,20 @@ public class PlayActivity extends AppCompatActivity {
         super.onDestroy();
         if (visualizer != null)
             visualizer.release();
+    }
+
+    // 음악을 재생하는 메소드
+    public void playAudio(int music_id) {
+        Uri url = Uri.parse("http://localhost:3000/music/play?music_id=" + Integer.toString(music_id));
+        try {
+            mediaPlayer = new MediaPlayer();
+            mediaPlayer.setDataSource(this, url);
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // 곡 현재 재생 시간 update를 위한
@@ -184,4 +229,40 @@ public class PlayActivity extends AppCompatActivity {
         return time;
     }
 
+    // 현재 플레이리스트
+    private void requestPlaylistNow(int position) {
+        RetrofitClient.getApiService().requestPlaylistNow().enqueue(new Callback<musicResponse>() {
+            @Override
+            public void onResponse(Call<musicResponse> call, Response<musicResponse> response) {
+                if(response.isSuccessful()){
+                    musicResponse result = response.body(); // 응답 결과
+
+                    if(result.code.equals("400")) {
+                        Toast.makeText(getApplicationContext(), "에러가 발생했습니다", Toast.LENGTH_SHORT).show();
+                    } else if (result.code.equals("200")) {
+                        List<Music> musics = result.music; // 음악 리스트
+
+                        playlist.clear(); // 음악 목록 리스트 초기화
+                        for(Music music: musics){
+                            playlist.add(music);
+                        }
+
+                        // 음악 정보 표시
+                        int size = playlist.size();
+                        if(position == -2) {
+                            musicInfo.setText("(1" +"/" + size + ")");
+                        } else if(position == -1) {
+                            musicInfo.setText("("+ size +"/" + size + ")");
+                            now_play = size - 1; // 음악 재생 위치를 마지막 위치로 설정
+                        }
+
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<musicResponse> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "네트워크 에러", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }

@@ -13,9 +13,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fermata.R;
+import com.example.fermata.RetrofitClient;
 import com.example.fermata.domain.Music;
+import com.example.fermata.response.musicResponse;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     Context context;
@@ -57,6 +64,17 @@ public class MusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         } else {
             ((MusicViewHolder)viewHolder).btn_like.setChecked(false);
         }
+
+        ((MusicViewHolder)viewHolder).btn_like.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(((MusicViewHolder)viewHolder).btn_like.isChecked()) {
+                    requestUpdateLike(musicList.get(position).getMusic_id(), 1);
+                } else {
+                    requestUpdateLike(musicList.get(position).getMusic_id(), 0);
+                }
+            }
+        });
     }
 
     // 전체 데이터 개수 리턴
@@ -83,12 +101,32 @@ public class MusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     int position = getAdapterPosition();
 
                     if(position != RecyclerView.NO_POSITION){
-                        if(listener !=null){
+                        if(listener != null){
                             listener.onItemClick(v,position);
                         }
                     }
                 }
             });
         }
+    }
+
+    // 좋아요 상태 변경 메서드
+    private void requestUpdateLike (int music_id, int like) {
+        RetrofitClient.getApiService().requestUpdateLike(music_id, like).enqueue(new Callback<musicResponse>() {
+            @Override
+            public void onResponse(Call<musicResponse> call, Response<musicResponse> response) {
+                if(response.isSuccessful()){
+                    musicResponse result = response.body(); // 응답 결과
+
+                    if(result.code.equals("400")) {
+                        Toast.makeText(context, "에러가 발생했습니다", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<musicResponse> call, Throwable t) {
+                Toast.makeText(context, "네트워크 에러", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
