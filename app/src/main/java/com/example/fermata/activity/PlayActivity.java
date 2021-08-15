@@ -69,14 +69,13 @@ public class PlayActivity extends AppCompatActivity {
         btnSensor = findViewById(R.id.btn_sensor);
         sbMusic = findViewById(R.id.sb_music);
 
-
         // SearchMusicFragment 로부터 받은 데이터
         Intent intent = getIntent();
         String playlist_title = intent.getStringExtra("playlist_title"); // 재생 목록 이름
-        int position = intent.getIntExtra("position", -1); // 음악 재생 위치
+        int position = intent.getIntExtra("position", -2); // 음악 재생 위치
 
         nowList.setText(playlist_title); // 재생목록 표시
-        if(position == -1 || position == 0) { // 음악 즐기기 클릭한 경우, 음악 목록에서 음악 선택한 경우
+        if(position == -2 || position == -1) { // 음악 즐기기 클릭한 경우, 음악 목록에서 음악 선택한 경우
             requestPlaylistNow(position); // 현재 재생 목록 가져오기
         }
 
@@ -181,7 +180,11 @@ public class PlayActivity extends AppCompatActivity {
         nowList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), NowPlaylistActivity.class));
+                Intent intent_playlist = new Intent(getApplicationContext(), NowPlaylistActivity.class);
+                intent_playlist.putExtra("playlist", playlist);
+                intent_playlist.putExtra("playlist_title", playlist_title);
+                intent_playlist.putExtra("now_play", now_play);
+                startActivity(intent_playlist);
             }
         });
 
@@ -230,9 +233,9 @@ public class PlayActivity extends AppCompatActivity {
 
                         // 음악 정보 표시
                         int size = playlist.size();
-                        if(position == -1) {
+                        if(position == -2) {
                             musicInfo.setText("(1" +"/" + size + ")");
-                        } else if(position == 0) {
+                        } else if(position == -1) {
                             musicInfo.setText("("+ size +"/" + size + ")");
                             now_play = size - 1; // 음악 재생 위치를 마지막 위치로 설정
                         }

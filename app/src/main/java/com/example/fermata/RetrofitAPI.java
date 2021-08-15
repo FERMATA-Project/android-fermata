@@ -45,4 +45,12 @@ public interface RetrofitAPI {
             @Field("playlist_title") String playlist_title,
             @Field("music_id") int music_id
     );
+
+    // 좋아요 상태 변경 API
+    @FormUrlEncoded
+    @POST("/music/like")
+    Call<musicResponse> requestUpdateLike(
+            @Field("music_id") int music_id,
+            @Field("like") int like
+    );
 }
