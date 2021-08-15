@@ -36,9 +36,9 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_musicName" />
 
-    <!-- 음악 플레이 버튼 -->
+    <!-- 음악 재생 버튼 -->
     <ImageButton
-        android:id="@+id/iv_play"
+        android:id="@+id/btn_play"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginTop="25dp"
@@ -46,12 +46,12 @@
         android:background="@drawable/ic_baseline_play_arrow_24"
         app:layout_constraintHorizontal_bias="1"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/iv_next"
+        app:layout_constraintRight_toLeftOf="@+id/btn_next"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- 다음곡 플레이 버튼 -->
+    <!-- 다음곡 재생 버튼 -->
     <ImageButton
-        android:id="@+id/iv_next"
+        android:id="@+id/btn_next"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginTop="30dp"
@@ -62,9 +62,9 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- 현재 재생 목록 텍스트 -->
+    <!-- 재생 목록 텍스트 -->
     <TextView
-        android:id="@+id/tv_now_playlist"
+        android:id="@+id/tv_playlistName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
@@ -78,7 +78,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_singerName"/>
 
-    <!-- 현재 재생 음악 정보 텍스트 -->
+    <!-- 음악 정보 텍스트 -->
     <TextView
         android:id="@+id/tv_music_info"
         android:layout_width="wrap_content"
@@ -88,8 +88,8 @@
         android:textColor="@color/black"
         android:textSize="14sp"
         app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tv_now_playlist"
-        app:layout_constraintLeft_toRightOf="@+id/tv_now_playlist"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tv_playlistName"
+        app:layout_constraintLeft_toRightOf="@+id/tv_playlistName"
         app:layout_constraintRight_toRightOf="parent" />
 
     <!-- 재생목록 옵션 버튼 -->
@@ -115,6 +115,6 @@
         android:clipToPadding="false"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_now_playlist"/>
+        app:layout_constraintTop_toBottomOf="@+id/tv_playlistName"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

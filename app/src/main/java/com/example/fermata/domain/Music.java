@@ -2,7 +2,9 @@ package com.example.fermata.domain;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Music {
+import java.io.Serializable;
+
+public class Music implements Serializable {
     @SerializedName("music_id")
     private int music_id; // 음악 id
     @SerializedName("music_title")
