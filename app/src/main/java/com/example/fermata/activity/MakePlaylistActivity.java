@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,6 +17,8 @@ import com.example.fermata.R;
 // 설명: 재생목록에 노래 추가하기 화면
 // author: seungyeon, last modified: 21.08.03
 public class MakePlaylistActivity extends AppCompatActivity {
+    String make_list_name;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +48,14 @@ public class MakePlaylistActivity extends AppCompatActivity {
         btn_list_name.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), AddPlaylistActivity.class));
+                make_list_name = et_list_name.getText().toString();
+                if(make_list_name != null) {
+                    Intent MaketoAdd = new Intent(getApplicationContext(), AddPlaylistActivity.class);
+                    MaketoAdd.putExtra("재생목록이름", make_list_name);
+                    startActivity(MaketoAdd);
+                }else{
+                    Toast.makeText(getApplicationContext(), "재생목록이름을 입력해주세요", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

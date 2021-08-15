@@ -150,6 +150,7 @@ public class PlaylistFragment extends Fragment {
                         for(Playlist playlist: playlists){
                             playList.add(playlist);
                         }
+                        adapter_playlist.notifyDataSetChanged();
                     }
                 }
             }

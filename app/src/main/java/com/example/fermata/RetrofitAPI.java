@@ -1,5 +1,6 @@
 package com.example.fermata;
 
+import com.example.fermata.domain.AddPlaylist;
 import com.example.fermata.response.musicResponse;
 import com.example.fermata.response.playlistResponse;
 
@@ -41,4 +42,7 @@ public interface RetrofitAPI {
     //좋아요 리스트 API
     @POST("/music/playlist_likes")
     Call<musicResponse> requestPlaylistLikes();
+
+    @POST("/playlist/playlist_add")
+    Call<AddPlaylist> sendName(@Field("playlist_title") String playlist_title, @Field("music_id") int music_id);
 }
