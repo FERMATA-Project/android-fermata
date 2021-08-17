@@ -5,30 +5,52 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- 음악 목록 텍스트 -->
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="match_parent"
+        android:layout_height="124dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/black"/>
+
     <TextView
-        android:id="@+id/tv_musiclist"
+        android:id="@+id/text1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp"
-        android:text="음악 목록"
-        android:textStyle="bold"
-        android:textColor="@color/black"
-        android:textSize="20sp"
+        android:layout_marginTop="24dp"
+        android:layout_marginLeft="16dp"
+        android:text="시대를 초월해 사랑받는 명곡"
+        android:textColor="@color/white"
+        android:textSize="14sp"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/text2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="16dp"
+        android:text="음악 목록"
+        android:textColor="@color/white"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintTop_toBottomOf="@id/text1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <!-- 정렬 필터 버튼 -->
     <ImageButton
         android:id="@+id/btn_filter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/ic_baseline_filter_list_24"
+        android:layout_marginTop="57dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/searchmusic_btn_filter"
         app:layout_constraintHorizontal_bias="1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -39,11 +61,10 @@
         android:id="@+id/rv_musicList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:paddingBottom="70dp"
+        android:paddingBottom="130dp"
         android:clipToPadding="false"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_musiclist"/>
+        app:layout_constraintTop_toBottomOf="@+id/image"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,11 +9,14 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fermata.DividerItemDecorator;
 import com.example.fermata.R;
 import com.example.fermata.RetrofitClient;
+import com.example.fermata.WidthItemDecorator;
 import com.example.fermata.activity.MakePlaylistActivity;
 import com.example.fermata.adapter.LatelyMusicAdapter;
 import com.example.fermata.adapter.MyPlayListAdapter;
@@ -48,6 +51,7 @@ public class PlaylistFragment extends Fragment {
         adapter_lately = new LatelyMusicAdapter(getContext(), lately_musicList);
         rv_lately_musicList.setLayoutManager(manager_lately); // 리사이클러뷰와 레이아웃 매니저 연결
         rv_lately_musicList.setAdapter(adapter_lately); // 리사이클러뷰와 어댑터 연결
+        rv_lately_musicList.addItemDecoration(new WidthItemDecorator(24));
 
 
         //재생 목록 리스트
@@ -59,6 +63,7 @@ public class PlaylistFragment extends Fragment {
         adapter_playlist = new MyPlayListAdapter(getContext(), playList);
         rv_my_playlist.setLayoutManager(manager_playlist); // 리사이클러뷰와 레이아웃 매니저 연결
         rv_my_playlist.setAdapter(adapter_playlist); // 리사이클러뷰와 어댑터 연결
+        rv_my_playlist.addItemDecoration(new DividerItemDecoration(view.getContext(), 1));
 
 
 
