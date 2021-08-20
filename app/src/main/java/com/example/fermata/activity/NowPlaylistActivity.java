@@ -2,6 +2,7 @@ package com.example.fermata.activity;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -63,18 +64,48 @@ public class NowPlaylistActivity extends AppCompatActivity {
         now_play = intent.getIntExtra("now_play", 0);
 
         // 보여지는 정보 세팅
-        tv_musicName.setText(nowPlaylist.get(now_play).getMusic_title());
-        tv_singerName.setText(nowPlaylist.get(now_play).getSinger());
-        tv_playlistName.setText(playlist_title);
-        tv_music_info.setText("("+ (now_play+1) +"/" + nowPlaylist.size() + ")");
+        tv_musicName.setText(nowPlaylist.get(now_play).getMusic_title()); // 노래 제목
+        tv_singerName.setText(nowPlaylist.get(now_play).getSinger()); // 가수 이름
+        tv_playlistName.setText(playlist_title); // 재생목록 이름
+        tv_music_info.setText("("+ (now_play+1) +"/" + nowPlaylist.size() + ")"); // 음악 정보
+        if(PlayActivity.mediaPlayer.isPlaying()) { // 음악 재생 중인 경우
+            btn_play.setBackgroundResource(R.drawable.ic_pause);
+        } else { // 음악 재생 중이 아닌 경우
+            btn_play.setBackgroundResource(R.drawable.ic_play);
+        }
 
         RecyclerView rv_now_playlist = findViewById(R.id.rv_now_playlist); // 현재 재생 목록 리사이클러뷰
         LinearLayoutManager manager = new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL,false); // 레이아웃 매니저
         nowAdapter = new MusicAdapter(getApplicationContext(), nowPlaylist);
         rv_now_playlist.setLayoutManager(manager); // 리사이클러뷰와 레이아웃 매니저 연결
         rv_now_playlist.setAdapter(nowAdapter); // 리사이클러뷰와 어댑터 연결
+        rv_now_playlist.addItemDecoration(new DividerItemDecoration(getApplicationContext(), 1));
         nowAdapter.notifyDataSetChanged();
 
+        // 재생 버튼 클릭한 경우
+        btn_play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(PlayActivity.mediaPlayer.isPlaying()){
+                    btn_play.setBackgroundResource(R.drawable.ic_play);
+                    PlayActivity.mediaPlayer.pause();
+                }
+                else{
+                    btn_play.setBackgroundResource(R.drawable.ic_pause);
+                    PlayActivity.mediaPlayer.start();
+                }
+            }
+        });
+
+        // 다음곡 재생 버튼 클릭한 경우
+        btn_next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        // 재생 목록 옵션 버튼 클릭한 경우
         btn_option.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
