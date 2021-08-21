@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.fermata.R;
+import com.example.fermata.fragment.PlaylistDetailFragment;
 import com.example.fermata.fragment.PlaylistFragment;
 import com.example.fermata.fragment.SearchMusicFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     SearchMusicFragment searchMusicFragment = new SearchMusicFragment(); // 음악 찾기 프래그먼트
     PlaylistFragment playlistFragment = new PlaylistFragment(); // 내 재생목록 프래그먼트
     //PlayerFragment playerFragment = new PlayerFragment(); // 음악 재생 프래그먼트
+    PlaylistDetailFragment playlistDetailFragment = new PlaylistDetailFragment();
 
     //(menifest uses-permission) 런타임 퍼미션 목록
     String[] permission_list = {
@@ -124,5 +126,4 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
 }
