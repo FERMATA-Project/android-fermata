@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,12 +11,9 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.fermata.DividerItemDecorator;
 import com.example.fermata.R;
 import com.example.fermata.RetrofitClient;
 import com.example.fermata.adapter.AddMusicAdapter;
-import com.example.fermata.adapter.MusicAdapter;
-import com.example.fermata.domain.AddPlaylist;
 import com.example.fermata.domain.Music;
 import com.example.fermata.response.musicResponse;
 
@@ -75,7 +71,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                     }
                 });
 
-                Toast.makeText(getApplicationContext(), "추가가 완료되었습니다." + make_list_title + AddPlaylist.get(position).getMusic_id(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "추가가 완료되었습니다.", Toast.LENGTH_SHORT).show();
             }
         });*/
     }

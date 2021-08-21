@@ -15,7 +15,6 @@ import com.example.fermata.R;
 import com.example.fermata.RetrofitClient;
 import com.example.fermata.domain.AddPlaylist;
 import com.example.fermata.domain.Music;
-import com.example.fermata.response.musicResponse;
 
 import java.util.ArrayList;
 
@@ -68,6 +67,9 @@ public class AddMusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 if(((AddMusicViewHolder)viewHolder).btn_add.isChecked()) {
                     requestAddPlaylist(AddPlayList.get(position).getMusic_id());
                 }
+                else if(((AddMusicViewHolder)viewHolder).btn_add.isChecked() == false) {
+                    requestDelPlaylist(AddPlayList.get(position).getMusic_id());
+                }
             }
         });
     }
@@ -105,11 +107,9 @@ public class AddMusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    // 좋아요 상태 변경 메서드
+    // 재생목록에 음악 추가 메서드
     private void requestAddPlaylist (int music_id) {
-        final Call<com.example.fermata.domain.AddPlaylist> addplaylist = RetrofitClient.getApiService().requestAddPlaylist(make_list_title, music_id);
-
-        addplaylist.enqueue(new Callback<com.example.fermata.domain.AddPlaylist>() {
+        RetrofitClient.getApiService().requestAddPlaylist(make_list_title, music_id).enqueue(new Callback<com.example.fermata.domain.AddPlaylist>() {
             @Override
             public void onResponse(Call<com.example.fermata.domain.AddPlaylist> call, Response<com.example.fermata.domain.AddPlaylist> response) {
                 final AddPlaylist addplaylist = response.body();
@@ -123,6 +123,25 @@ public class AddMusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
         });
 
-        Toast.makeText(context, "추가가 완료되었습니다." + make_list_title + music_id, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "추가가 완료되었습니다.", Toast.LENGTH_SHORT).show();
+    }
+
+    // 재생목록에 음악 삭제 메서드
+    private void requestDelPlaylist (int music_id) {
+        RetrofitClient.getApiService().requestDelPlaylist(make_list_title, music_id).enqueue(new Callback<com.example.fermata.domain.AddPlaylist>() {
+            @Override
+            public void onResponse(Call<com.example.fermata.domain.AddPlaylist> call, Response<com.example.fermata.domain.AddPlaylist> response) {
+                final AddPlaylist delplaylist = response.body();
+                Toast.makeText(context, "서버에 값을 전달했습니다", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<com.example.fermata.domain.AddPlaylist> call, Throwable t) {
+                t.printStackTrace();
+                Toast.makeText(context, "서버와 통신중 에러가 발생했습니다", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        Toast.makeText(context, "추가가 취소되었습니다.", Toast.LENGTH_SHORT).show();
     }
 }

@@ -1,35 +1,24 @@
 package com.example.fermata.activity;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
+import android.widget.TextView;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.PopupMenu;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.example.fermata.R;
-import com.example.fermata.RetrofitClient;
 import com.example.fermata.adapter.MusicAdapter;
 import com.example.fermata.domain.Music;
-import com.example.fermata.response.musicResponse;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 // 설명: 음악 재생 화면 재생목록 탭 클릭 -> 재생 목록 화면
 // author: soohyun, last modified: 21.07.27
