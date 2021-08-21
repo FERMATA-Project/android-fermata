@@ -2,17 +2,18 @@ package com.example.fermata.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fermata.R;
 import com.example.fermata.RetrofitClient;
-import com.example.fermata.adapter.MusicAdapter;
-import com.example.fermata.domain.AddPlaylist;
+import com.example.fermata.adapter.AddMusicAdapter;
 import com.example.fermata.domain.Music;
 import com.example.fermata.response.musicResponse;
 
@@ -28,7 +29,7 @@ import retrofit2.Response;
 
 public class AddPlaylistActivity extends AppCompatActivity {
     ArrayList<Music> AddPlaylist = new ArrayList<>();
-    MusicAdapter adapter;
+    AddMusicAdapter adapter;
     String make_list_title;
 
     @Override
@@ -45,10 +46,13 @@ public class AddPlaylistActivity extends AppCompatActivity {
 
         RecyclerView rv_add_playlist = findViewById(R.id.rv_add_playlist); // 현재 재생 목록 리사이클러뷰
         LinearLayoutManager manager = new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, false); // 레이아웃 매니저
-        adapter = new MusicAdapter(getApplicationContext(), AddPlaylist);
+        adapter = new AddMusicAdapter(getApplicationContext(), AddPlaylist, make_list_title);
         rv_add_playlist.setLayoutManager(manager); // 리사이클러뷰와 레이아웃 매니저 연결
+        rv_add_playlist.setAdapter(adapter); // 리사이클러뷰와 어댑터 연결
+        rv_add_playlist.addItemDecoration(new DividerItemDecoration(getApplicationContext(), 1));
 
-        adapter.setOnItemClickListener(new MusicAdapter.OnItemClickListener() {
+        /*
+        adapter.setOnItemClickListener(new AddMusicAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
                 final Call<com.example.fermata.domain.AddPlaylist> addplaylist = RetrofitClient.getApiService().requestAddPlaylist(make_list_title, AddPlaylist.get(position).getMusic_id());
@@ -67,11 +71,9 @@ public class AddPlaylistActivity extends AppCompatActivity {
                     }
                 });
 
-                Toast.makeText(getApplicationContext(), "추가가 완료되었습니다." + make_list_title + AddPlaylist.get(position).getMusic_id(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "추가가 완료되었습니다.", Toast.LENGTH_SHORT).show();
             }
-        });
-
-        rv_add_playlist.setAdapter(adapter); // 리사이클러뷰와 어댑터 연결
+        });*/
     }
 
 
@@ -103,4 +105,21 @@ public class AddPlaylistActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_actionbar_close, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.item_close:
+                finish(); // 액티비티 종료
+                break;
+        }
+
+        return  true;
+    }
 }

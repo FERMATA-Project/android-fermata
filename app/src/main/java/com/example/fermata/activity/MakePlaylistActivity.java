@@ -4,6 +4,8 @@ package com.example.fermata.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -11,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 
 import com.example.fermata.R;
 
@@ -24,7 +27,7 @@ public class MakePlaylistActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_make_playlist);
 
-        Button btn_list_name = findViewById(R.id.btn_list_name); // 재생목록 추가 버튼
+        AppCompatButton btn_list_name = findViewById(R.id.btn_list_name); // 재생목록 추가 버튼
         EditText et_list_name = findViewById(R.id.et_list_name); // 재생목록 이름 입력 창
 
 
@@ -58,5 +61,23 @@ public class MakePlaylistActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_actionbar_close, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.item_close:
+                finish(); // 액티비티 종료
+                break;
+        }
+
+        return  true;
     }
 }

@@ -22,13 +22,12 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="72dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="parent"
-        app:backgroundTint="#c4c4c4"
         app:itemIconTint="@drawable/selector_bottomnavigation"
-        app:itemTextColor="@color/black"
+        app:itemTextColor="@drawable/selector_bottomnavigation"
         app:itemTextAppearanceActive="@style/BottomNavigation"
         app:menu="@menu/menu_bottomnavigation" />
 

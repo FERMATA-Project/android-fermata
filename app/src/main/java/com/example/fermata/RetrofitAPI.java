@@ -52,7 +52,16 @@ public interface RetrofitAPI {
     @POST("/playlist/playlist_add")
     Call<AddPlaylist> requestAddPlaylist(
             @Field("playlist_title") String playlist_title,
-            @Field("music_id") int music_id);
+            @Field("music_id") int music_id
+    );
+
+    // 리스트에 음악 저장 취소 API
+    @FormUrlEncoded
+    @POST("/playlist/playlist_del")
+    Call<AddPlaylist> requestDelPlaylist(
+            @Field("playlist_title") String playlist_title,
+            @Field("music_id") int music_id
+    );
 
     // 재생목록에 음악 추가 API
     @FormUrlEncoded
@@ -70,7 +79,7 @@ public interface RetrofitAPI {
             @Field("like") int like
     );
 
-    //재생목록이름 API
+    //재생목록 음악 가져오기 API
     @FormUrlEncoded
     @POST("/music/playlist_getmusic")
     Call<musicResponse> requestPlaylistGetmusic(

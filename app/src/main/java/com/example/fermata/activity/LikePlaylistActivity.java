@@ -1,10 +1,17 @@
 package com.example.fermata.activity;
 
 import android.content.Intent;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +25,7 @@ import com.example.fermata.RetrofitClient;
 import com.example.fermata.adapter.MusicAdapter;
 import com.example.fermata.domain.Music;
 import com.example.fermata.response.musicResponse;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +51,7 @@ public class LikePlaylistActivity extends AppCompatActivity {
         Intent AddforMake = getIntent();
         make_list_name = AddforMake.getStringExtra("재생목록이름");
 
-        TextView playlist_name = findViewById(R.id.tv_like_playlist);
+        TextView playlist_name = findViewById(R.id.tv_playlistName);
         playlist_name.setText(make_list_name);
 
         //좋아요한 음악목록 or 재생목록 음악목록
@@ -85,30 +93,55 @@ public class LikePlaylistActivity extends AppCompatActivity {
         rv_like_playlist.setAdapter(adapter); // 리사이클러뷰와 어댑터 연결
 
         ImageButton btn_option = findViewById(R.id.btn_option); // 재생 목록 옵션 버튼
+        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View option_view = inflater.inflate(R.layout.bottomsheet_option, null, false); // 옵션 버튼의 팝업 뷰
+        ImageView iv_close = option_view.findViewById(R.id.iv_close); // 팝업 뷰의 닫기 버튼
+        TextView tv_delete = option_view.findViewById(R.id.tv_delete); // 팝업 뷰의 재생 목록 삭제
+        TextView tv_share = option_view.findViewById(R.id.tv_share); // 팝업 뷰의 재생 목록 공유
+        TextView tv_update = option_view.findViewById(R.id.tv_update); // 팝업 뷰의 재생 목록 수정
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getApplicationContext());
+        bottomSheetDialog.setContentView(option_view);
+
+        // 옵션 버튼 클릭한 경우
         btn_option.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                final PopupMenu popupMenu = new PopupMenu(getApplicationContext(),view);
-                popupMenu.getMenuInflater().inflate(R.menu.menu_btn_option, popupMenu.getMenu());
-
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-                        switch (menuItem.getItemId()) {
-                            case R.id.item_playlist_update:
-                                break;
-                            case R.id.item_playlist_delete:
-                                break;
-                            case R.id.item_playlist_share:
-                                break;
-                        }
-
-                        return true;
-                    }
-                });
-                popupMenu.show();
+                bottomSheetDialog.show();
             }
         });
+
+        // 팝업 뷰의 닫기 클릭한 경우
+        iv_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetDialog.dismiss();
+            }
+        });
+
+        // 팝업 뷰의 재생목록 삭제 클릭한 경우
+        tv_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetDialog.dismiss();
+            }
+        });
+
+        // 팝업 뷰의 재생목록 공유 클릭한 경우
+        tv_share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetDialog.dismiss();
+            }
+        });
+
+        // 팝업 뷰의 재생목록 수정 클릭한 경우
+        tv_update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetDialog.dismiss();
+            }
+        });
+
     }
 
     // 좋아요한 음악 데이터 요청 메서드

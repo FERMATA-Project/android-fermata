@@ -2,19 +2,18 @@ package com.example.fermata.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.PopupMenu;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fermata.R;
 import com.example.fermata.RetrofitClient;
@@ -22,6 +21,7 @@ import com.example.fermata.activity.PlayActivity;
 import com.example.fermata.adapter.MusicAdapter;
 import com.example.fermata.domain.Music;
 import com.example.fermata.response.musicResponse;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +45,7 @@ public class SearchMusicFragment extends Fragment {
         adapter = new MusicAdapter(getContext(), musicList);
         rv_musicList.setLayoutManager(manager); // 리사이클러뷰와 레이아웃 매니저 연결
         rv_musicList.setAdapter(adapter); // 리사이클러뷰와 어댑터 연결
+        rv_musicList.addItemDecoration(new DividerItemDecoration(view.getContext(), 1));
 
         requestMusicRecent(); // 처음 화면 데이터 세팅
 
@@ -57,31 +58,55 @@ public class SearchMusicFragment extends Fragment {
         });
 
         ImageButton btn_filter = view.findViewById(R.id.btn_filter); // 정렬 필터 버튼
+        //LayoutInflater inflater = (LayoutInflater)view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View filter_view = inflater.inflate(R.layout.bottomsheet_filter, null, false); // 필터 버튼의 팝업 뷰
+        ImageView iv_close = filter_view.findViewById(R.id.iv_close); // 팝업 뷰의 닫기 버튼
+        TextView tv_recent = filter_view.findViewById(R.id.tv_recent); // 팝업 뷰의 '최근 재생한 순'
+        TextView tv_most = filter_view.findViewById(R.id.tv_most); // 팝업 뷰의 '많이 재생한 순'
+        TextView tv_alphabet = filter_view.findViewById(R.id.tv_alphabet); // 팝업 뷰의 '가나다 순'
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
+        bottomSheetDialog.setContentView(filter_view);
+
+        // 정렬 필터 버튼 클릭한 경우
         btn_filter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                final PopupMenu popupMenu = new PopupMenu(getContext(),view);
-                popupMenu.getMenuInflater().inflate(R.menu.menu_btn_filter, popupMenu.getMenu());
+                bottomSheetDialog.show();
+            }
+        });
 
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-                        switch (menuItem.getItemId()) {
-                            case R.id.item_recent: // 최신 재생한 순 클릭한 경우
-                                requestMusicRecent();
-                                break;
-                            case R.id.item_most: // 많이 재생한 순 클릭한 경우
-                                requestMusicTimes();
-                                break;
-                            case R.id.item_alphabet: // 가나다 순 클릭한 경우
-                                requestMusicAlphabet();
-                                break;
-                        }
+        // 팝업 뷰의 닫기 클릭한 경우
+        iv_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetDialog.dismiss();
+            }
+        });
 
-                        return true;
-                    }
-                });
-                popupMenu.show();
+        // 팝업 뷰의 최신 재생한 순 클릭한 경우
+        tv_recent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestMusicRecent();
+                bottomSheetDialog.dismiss();
+            }
+        });
+
+        // 팝업 뷰의 많이 재생한 순 클릭한 경우
+        tv_most.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestMusicTimes();
+                bottomSheetDialog.dismiss();
+            }
+        });
+
+        // 팝업 뷰의 가나다 순 클릭한 경우
+        tv_alphabet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestMusicAlphabet();
+                bottomSheetDialog.dismiss();
             }
         });
 
