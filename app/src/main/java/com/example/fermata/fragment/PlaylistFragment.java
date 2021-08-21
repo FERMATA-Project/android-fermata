@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fermata.R;
 import com.example.fermata.RetrofitClient;
+import com.example.fermata.activity.LikePlaylistActivity;
 import com.example.fermata.activity.MakePlaylistActivity;
 import com.example.fermata.adapter.LatelyMusicAdapter;
 import com.example.fermata.adapter.MyPlayListAdapter;
@@ -60,6 +61,14 @@ public class PlaylistFragment extends Fragment {
         rv_my_playlist.setLayoutManager(manager_playlist); // 리사이클러뷰와 레이아웃 매니저 연결
         rv_my_playlist.setAdapter(adapter_playlist); // 리사이클러뷰와 어댑터 연결
 
+        adapter_playlist.setOnItemClickListener(new MyPlayListAdapter.OnItemClickListener(){
+            @Override
+            public void onItemClick(View v, int position) {
+                Intent PlaylisttoLike = new Intent(getContext(), LikePlaylistActivity.class);
+                PlaylisttoLike.putExtra("재생목록이름", playList.get(position).getListName());
+                startActivity(PlaylisttoLike);
+            }
+        });
 
 
         ImageButton btn_add_list = view.findViewById(R.id.btn_add_list); // 재생목록추가 버튼
