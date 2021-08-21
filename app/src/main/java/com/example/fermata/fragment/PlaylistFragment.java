@@ -9,6 +9,8 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +20,7 @@ import com.example.fermata.R;
 import com.example.fermata.RetrofitClient;
 import com.example.fermata.activity.LikePlaylistActivity;
 import com.example.fermata.WidthItemDecorator;
+import com.example.fermata.activity.MainActivity;
 import com.example.fermata.activity.MakePlaylistActivity;
 import com.example.fermata.adapter.LatelyMusicAdapter;
 import com.example.fermata.adapter.MyPlayListAdapter;
@@ -53,7 +56,6 @@ public class PlaylistFragment extends Fragment {
         rv_lately_musicList.setLayoutManager(manager_lately); // 리사이클러뷰와 레이아웃 매니저 연결
         rv_lately_musicList.setAdapter(adapter_lately); // 리사이클러뷰와 어댑터 연결
         rv_lately_musicList.addItemDecoration(new WidthItemDecorator(24));
-
 
         //재생 목록 리스트
         requestPlaylistLikes();
@@ -173,5 +175,13 @@ public class PlaylistFragment extends Fragment {
                 Toast.makeText(getContext(), "네트워크 에러", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        requestPlaylistLikes();
+        requestPlaylistList();
     }
 }

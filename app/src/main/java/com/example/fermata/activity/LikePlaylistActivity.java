@@ -2,6 +2,7 @@ package com.example.fermata.activity;
 
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -91,6 +92,7 @@ public class LikePlaylistActivity extends AppCompatActivity {
         adapter = new MusicAdapter(getApplicationContext(), likePlaylist);
         rv_like_playlist.setLayoutManager(manager); // 리사이클러뷰와 레이아웃 매니저 연결
         rv_like_playlist.setAdapter(adapter); // 리사이클러뷰와 어댑터 연결
+        rv_like_playlist.addItemDecoration(new DividerItemDecoration(getApplicationContext(), 1));
 
         ImageButton btn_option = findViewById(R.id.btn_option); // 재생 목록 옵션 버튼
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
