@@ -101,7 +101,7 @@ public class LikePlaylistActivity extends AppCompatActivity {
         TextView tv_delete = option_view.findViewById(R.id.tv_delete); // 팝업 뷰의 재생 목록 삭제
         TextView tv_share = option_view.findViewById(R.id.tv_share); // 팝업 뷰의 재생 목록 공유
         TextView tv_update = option_view.findViewById(R.id.tv_update); // 팝업 뷰의 재생 목록 수정
-        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getApplicationContext());
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(LikePlaylistActivity.this);
         bottomSheetDialog.setContentView(option_view);
 
         // 옵션 버튼 클릭한 경우
