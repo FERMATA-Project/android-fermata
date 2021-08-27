@@ -40,7 +40,7 @@ public class PlayActivity extends AppCompatActivity {
     Thread updateSB; //현재 재생 시간 확인을 위한
     int now_play = 0; // 현재 음악 재생 위치
     public ArrayList<Music> playlist = new ArrayList<>(); // 재생 목록
-    MediaPlayer mediaPlayer = new MediaPlayer(); // 음악 플레이어
+    static MediaPlayer mediaPlayer = new MediaPlayer(); // 음악 플레이어
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
