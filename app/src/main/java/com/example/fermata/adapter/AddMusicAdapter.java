@@ -1,6 +1,7 @@
 package com.example.fermata.adapter;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +55,7 @@ public class AddMusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return new AddMusicAdapter.AddMusicViewHolder(view);
     }
 
+
     // 뷰 홀더에 데이터를 연결해주는 함수
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
@@ -66,9 +68,19 @@ public class AddMusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             public void onClick(View v) {
                 if(((AddMusicViewHolder)viewHolder).btn_add.isChecked()) {
                     requestAddPlaylist(AddPlayList.get(position).getMusic_id());
+
+                    Toast addtoast = new Toast(context);
+                    addtoast.setView(v.inflate(context, R.layout.playlist_music_add_toast, null));
+                    addtoast.setGravity(Gravity.CENTER, 0, 0);
+                    addtoast.show();
                 }
                 else if(((AddMusicViewHolder)viewHolder).btn_add.isChecked() == false) {
                     requestDelPlaylist(AddPlayList.get(position).getMusic_id());
+
+                    Toast cancletoast = new Toast(context);
+                    cancletoast.setView(v.inflate(context, R.layout.playlist_music_cancle_toast, null));
+                    cancletoast.setGravity(Gravity.CENTER, 0, 0);
+                    cancletoast.show();
                 }
             }
         });
