@@ -1,5 +1,7 @@
 package com.example.fermata.activity;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -25,8 +27,11 @@ import com.example.fermata.R;
 import com.example.fermata.RetrofitClient;
 import com.example.fermata.adapter.MusicAdapter;
 import com.example.fermata.domain.Music;
+import com.example.fermata.domain.Playlist;
 import com.example.fermata.response.musicResponse;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,11 +42,12 @@ import retrofit2.Response;
 
 // 설명: 좋아요한 음악 목록 화면
 // author: soohyun, last modified: 21.07.27
-// author: seungyeon, last modified: 21.08.21
+// author: seungyeon, last modified: 21.08.28
 public class LikePlaylistActivity extends AppCompatActivity {
     ArrayList<Music> likePlaylist = new ArrayList<>();
     MusicAdapter adapter;
     String make_list_name;
+    String list_music_clip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,7 +138,72 @@ public class LikePlaylistActivity extends AppCompatActivity {
         tv_share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bottomSheetDialog.dismiss();
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+
+                //좋아요한 음악목록 or 재생목록 음악목록
+                if(make_list_name.equals("좋아요한 음악목록")){
+                    RetrofitClient.getApiService().requestPlaylistLikes().enqueue(new Callback<musicResponse>() {
+                        @Override
+                        public void onResponse(Call<musicResponse> call, Response<musicResponse> response) {
+                            if(response.isSuccessful()){
+                                musicResponse result = response.body(); // 응답 결과
+
+                                if(result.code.equals("400")) {
+                                    Toast.makeText(getApplicationContext(), "에러가 발생했습니다", Toast.LENGTH_SHORT).show();
+                                } else if (result.code.equals("200")) {
+                                    List<Music> musics = result.music;
+                                    list_music_clip = "";
+
+                                    for(Music music: musics){
+                                        list_music_clip = list_music_clip + "\n" + music.getMusic_title().toString() + " - " + music.getSinger().toString();
+                                    }
+
+                                    ClipData clip = ClipData.newPlainText(make_list_name, "재생목록 이름: " + make_list_name + "\n" + list_music_clip);
+                                    clipboard.setPrimaryClip(clip);
+
+                                    bottomSheetDialog.dismiss();
+                                    Toast.makeText(getApplicationContext(), "재생목록이 클립보드에 복사되었습니다.", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+                        @Override
+                        public void onFailure(Call<musicResponse> call, Throwable t) {
+                            Toast.makeText(getApplicationContext(), "네트워크 에러", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }else{
+                    RetrofitClient.getApiService().requestPlaylistGetmusic(make_list_name).enqueue(new Callback<musicResponse>() {
+                        @Override
+                        public void onResponse(Call<musicResponse> call, Response<musicResponse> response) {
+                            if(response.isSuccessful()){
+                                musicResponse result = response.body(); // 응답 결과
+
+                                if(result.code.equals("400")) {
+                                    Toast.makeText(getApplicationContext(), "에러가 발생했습니다", Toast.LENGTH_SHORT).show();
+                                } else if (result.code.equals("200")) {
+                                    List<Music> musics = result.music; // 음악 리스트
+                                    list_music_clip = "";
+
+                                    for(Music music: musics){
+                                        list_music_clip = list_music_clip + "\n" + music.getMusic_title().toString() + " - " + music.getSinger().toString();
+                                    }
+
+                                    ClipData clip = ClipData.newPlainText(make_list_name, "재생목록 이름: " + make_list_name + "\n" + list_music_clip);
+                                    clipboard.setPrimaryClip(clip);
+
+                                    bottomSheetDialog.dismiss();
+                                    Toast.makeText(getApplicationContext(), "재생목록이 클립보드에 복사되었습니다.", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<musicResponse> call, Throwable t) {
+                            t.printStackTrace();
+                            Toast.makeText(getApplicationContext(), "네트워크 에러", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             }
         });
 
