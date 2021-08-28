@@ -1,18 +1,18 @@
 package com.example.fermata.activity;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fermata.R;
 import com.example.fermata.RetrofitClient;
@@ -40,7 +40,7 @@ public class PlayActivity extends AppCompatActivity {
     Thread updateSB; //현재 재생 시간 확인을 위한
     int now_play = 0; // 현재 음악 재생 위치
     public ArrayList<Music> playlist = new ArrayList<>(); // 재생 목록
-    MediaPlayer mediaPlayer = new MediaPlayer(); // 음악 플레이어
+    static MediaPlayer mediaPlayer = new MediaPlayer(); // 음악 플레이어
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
