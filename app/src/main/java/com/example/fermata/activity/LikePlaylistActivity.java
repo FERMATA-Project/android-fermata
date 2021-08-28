@@ -36,7 +36,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 // 설명: 좋아요한 음악 목록 화면
-// author: soohyun, last modified: 21.07.27
+// author: soohyun, last modified: 21.08.27
 // author: seungyeon, last modified: 21.08.21
 
 public class LikePlaylistActivity extends AppCompatActivity {
@@ -94,6 +94,18 @@ public class LikePlaylistActivity extends AppCompatActivity {
         rv_like_playlist.setLayoutManager(manager); // 리사이클러뷰와 레이아웃 매니저 연결
         rv_like_playlist.setAdapter(adapter); // 리사이클러뷰와 어댑터 연결
         rv_like_playlist.addItemDecoration(new DividerItemDecoration(getApplicationContext(), 1));
+
+        // 재생목록 리스트 클릭한 경우 -> 음악 즐기기 화면으로 이동
+        adapter.setOnItemClickListener(new MusicAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                Intent intent = new Intent(getApplicationContext(), PlayActivity.class);
+                intent.putExtra("playlist_title", make_list_name); // 재생목록 이름
+                intent.putExtra("position", position); // 음악 재생 위치
+                intent.putExtra("playlist", likePlaylist); // 재생목록 리스트
+                startActivity(intent);
+            }
+        });
 
         ImageButton btn_option = findViewById(R.id.btn_option); // 재생 목록 옵션 버튼
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);

@@ -33,7 +33,7 @@ import retrofit2.Response;
 
 // 설명: 음악 재생 화면
 // author: dayoung, last modified: 21.08.28
-// author: soohyun, last modified: 21.08.12
+// author: soohyun, last modified: 21.08.27
 
 public class PlayActivity extends AppCompatActivity {
     Context context;
@@ -49,11 +49,14 @@ public class PlayActivity extends AppCompatActivity {
     SimpleDateFormat dateFormat = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
     Date date = new Date();
     int like = 0;
+    public static Context context; // PlayActivity context
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
+
+        context = this;
 
         // 상단바 안보이게 숨기기
         ActionBar actionBar = getSupportActionBar();
@@ -75,7 +78,7 @@ public class PlayActivity extends AppCompatActivity {
         btnSensor = findViewById(R.id.btn_sensor);
         sbMusic = findViewById(R.id.sb_music);
 
-        // SearchMusicFragment 로부터 받은 데이터
+        // SearchMusicFragment, LikePlaylistActivity, MainAcitivity 로부터 받은 데이터
         Intent intent = getIntent();
         String playlist_title = intent.getStringExtra("playlist_title"); // 재생 목록 이름
         int position = intent.getIntExtra("position", -2); // 음악 재생 위치
@@ -86,6 +89,15 @@ public class PlayActivity extends AppCompatActivity {
         // 음악 재생 + visualizer
         if(position == -2 || position == -1) { // 음악 즐기기 클릭한 경우, 음악 목록에서 음악 선택한 경우
             requestPlaylistNow(position, 0); // 현재 재생 목록 가져오기
+        } else { // 좋아요한 음악 목록, 그 외의 음악 목록에서 음악 선택한 경우
+            playlist = (ArrayList<Music>)intent.getSerializableExtra("playlist"); // LikePlaylistActivity 로부터 받은 재생목록 리스트
+            now_play = position;
+
+            songName.setText(playlist.get(now_play).getMusic_title());
+            singerName.setText(playlist.get(now_play).getSinger());
+            musicInfo.setText("("+ (now_play+1) +"/" + playlist.size() + ")");
+
+            playAudio(playlist.get(now_play).getMusic_id());
         }
 
         // play, pause 버튼
@@ -360,5 +372,4 @@ public class PlayActivity extends AppCompatActivity {
             }
         });
     }
-
 }
