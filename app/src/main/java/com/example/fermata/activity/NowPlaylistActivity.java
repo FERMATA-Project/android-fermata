@@ -90,7 +90,15 @@ public class NowPlaylistActivity extends AppCompatActivity {
         btn_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+                /*
+                int next = (now_play + 1) % nowPlaylist.size(); // 다음곡 인덱스
+                // 곡 정보 세팅
+                tv_musicName.setText(nowPlaylist.get(next).getMusic_title());
+                tv_singerName.setText(nowPlaylist.get(next).getSinger());
+                tv_music_info.setText("("+ (next + 1) +"/" + nowPlaylist.size() + ")");
+
+                ((PlayActivity)PlayActivity.context).playAudio(nowPlaylist.get(next).getMusic_id()); // 음악 플레이
+                 */
             }
         });
 
