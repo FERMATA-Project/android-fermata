@@ -2,6 +2,8 @@ package com.example.fermata.activity;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
@@ -30,7 +32,7 @@ import retrofit2.Response;
 
 // 설명: 음악 재생 화면
 // author: dayoung, last modified: 21.08.21
-// author: soohyun, last modified: 21.08.12
+// author: soohyun, last modified: 21.08.27
 
 public class PlayActivity extends AppCompatActivity {
     BarVisualizer visualizer;
@@ -40,12 +42,15 @@ public class PlayActivity extends AppCompatActivity {
     Thread updateSB; //현재 재생 시간 확인을 위한
     int now_play = 0; // 현재 음악 재생 위치
     public ArrayList<Music> playlist = new ArrayList<>(); // 재생 목록
-    static MediaPlayer mediaPlayer = new MediaPlayer(); // 음악 플레이어
+    public static MediaPlayer mediaPlayer = new MediaPlayer(); // 음악 플레이어
+    public static Context context; // PlayActivity context
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
+
+        context = this;
 
         // 상단바 안보이게 숨기기
         ActionBar actionBar = getSupportActionBar();
@@ -67,7 +72,7 @@ public class PlayActivity extends AppCompatActivity {
         btnSensor = findViewById(R.id.btn_sensor);
         sbMusic = findViewById(R.id.sb_music);
 
-        // SearchMusicFragment 로부터 받은 데이터
+        // SearchMusicFragment, LikePlaylistActivity, MainAcitivity 로부터 받은 데이터
         Intent intent = getIntent();
         String playlist_title = intent.getStringExtra("playlist_title"); // 재생 목록 이름
         int position = intent.getIntExtra("position", -2); // 음악 재생 위치
@@ -78,6 +83,15 @@ public class PlayActivity extends AppCompatActivity {
         // 음악 재생 + visualizer
         if(position == -2 || position == -1) { // 음악 즐기기 클릭한 경우, 음악 목록에서 음악 선택한 경우
             requestPlaylistNow(position, 0); // 현재 재생 목록 가져오기
+        } else { // 좋아요한 음악 목록, 그 외의 음악 목록에서 음악 선택한 경우
+            playlist = (ArrayList<Music>)intent.getSerializableExtra("playlist"); // LikePlaylistActivity 로부터 받은 재생목록 리스트
+            now_play = position;
+
+            songName.setText(playlist.get(now_play).getMusic_title());
+            singerName.setText(playlist.get(now_play).getSinger());
+            musicInfo.setText("("+ (now_play+1) +"/" + playlist.size() + ")");
+
+            playAudio(playlist.get(now_play).getMusic_id());
         }
 
         // 버튼 설정
@@ -272,7 +286,7 @@ public class PlayActivity extends AppCompatActivity {
                                 now_play = size - 1;
                         }
                         songName.setText(playlist.get(now_play).getMusic_title());
-                        singerName.setText(playlist.get(now_play).getPlay_date());
+                        singerName.setText(playlist.get(now_play).getSinger());
                         musicInfo.setText("("+ (now_play+1) +"/" + size + ")");
 
                         playAudio(playlist.get(now_play).getMusic_id());
@@ -285,5 +299,4 @@ public class PlayActivity extends AppCompatActivity {
             }
         });
     }
-
 }
