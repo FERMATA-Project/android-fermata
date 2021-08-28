@@ -27,10 +27,6 @@ public interface RetrofitAPI {
     @POST("/music/search")
     Call<musicResponse> requestSearch(@Field("search_word") String search_word);
 
-    // 음악 play
-    //@POST("/music/play")
-    //Call<musicResponse> requestMusicPlay();
-
     // 현재 playList
     @POST("/playlist/now")
     Call<musicResponse> requestPlaylistNow();
@@ -75,8 +71,16 @@ public interface RetrofitAPI {
     @FormUrlEncoded
     @POST("/music/like")
     Call<musicResponse> requestUpdateLike(
-            @Field("music_id") int music_id,
-            @Field("like") int like
+            @Field("like") int like,
+            @Field("music_id") int music_id
+    );
+
+    // 재생 날짜 변경 API
+    @FormUrlEncoded
+    @POST("/music/playdate")
+    Call<musicResponse> requestUpdatePlayDate(
+            @Field("play_date") String play_date,
+            @Field("music_id") int music_id
     );
 
     //재생목록 음악 가져오기 API

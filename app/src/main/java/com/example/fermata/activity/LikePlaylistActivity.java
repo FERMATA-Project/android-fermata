@@ -38,6 +38,7 @@ import retrofit2.Response;
 // 설명: 좋아요한 음악 목록 화면
 // author: soohyun, last modified: 21.08.27
 // author: seungyeon, last modified: 21.08.21
+
 public class LikePlaylistActivity extends AppCompatActivity {
     ArrayList<Music> likePlaylist = new ArrayList<>();
     MusicAdapter adapter;
