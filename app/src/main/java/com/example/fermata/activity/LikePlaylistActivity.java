@@ -38,6 +38,7 @@ import retrofit2.Response;
 // 설명: 좋아요한 음악 목록 화면
 // author: soohyun, last modified: 21.07.27
 // author: seungyeon, last modified: 21.08.21
+
 public class LikePlaylistActivity extends AppCompatActivity {
     ArrayList<Music> likePlaylist = new ArrayList<>();
     MusicAdapter adapter;
@@ -101,7 +102,7 @@ public class LikePlaylistActivity extends AppCompatActivity {
         TextView tv_delete = option_view.findViewById(R.id.tv_delete); // 팝업 뷰의 재생 목록 삭제
         TextView tv_share = option_view.findViewById(R.id.tv_share); // 팝업 뷰의 재생 목록 공유
         TextView tv_update = option_view.findViewById(R.id.tv_update); // 팝업 뷰의 재생 목록 수정
-        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getApplicationContext());
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(LikePlaylistActivity.this);
         bottomSheetDialog.setContentView(option_view);
 
         // 옵션 버튼 클릭한 경우

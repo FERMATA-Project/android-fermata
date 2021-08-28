@@ -45,7 +45,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
-    <!-- 옵 버튼 -->
+    <!-- 옵션 버튼 -->
     <ImageButton
         android:id="@+id/btn_option"
         android:layout_width="wrap_content"
