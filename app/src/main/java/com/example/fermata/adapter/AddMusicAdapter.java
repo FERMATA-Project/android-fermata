@@ -122,8 +122,6 @@ public class AddMusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 Toast.makeText(context, "서버와 통신중 에러가 발생했습니다", Toast.LENGTH_SHORT).show();
             }
         });
-
-        Toast.makeText(context, "추가가 완료되었습니다.", Toast.LENGTH_SHORT).show();
     }
 
     // 재생목록에 음악 삭제 메서드
@@ -141,7 +139,5 @@ public class AddMusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 Toast.makeText(context, "서버와 통신중 에러가 발생했습니다", Toast.LENGTH_SHORT).show();
             }
         });
-
-        Toast.makeText(context, "추가가 취소되었습니다.", Toast.LENGTH_SHORT).show();
     }
 }
