@@ -31,10 +31,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 // 설명: 메인 화면 중 하단바 음악 찾기 클릭 -> 음악 목록 화면
-// author: soohyun, last modified: 21.08.07
+// author: soohyun, last modified: 21.08.29
 public class SearchMusicFragment extends Fragment {
     ArrayList<Music> musicList = new ArrayList<>(); // 음악 목록 리스트
     MusicAdapter adapter; // 음악 목록 어댑터
+    int select_option = 0; // 어떤 옵션을 선택했는지 저장하는 변수, 0 - 최신순 재생한 순 / 1 - 많이 재생한 순 / 2- 가나다
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -88,6 +89,7 @@ public class SearchMusicFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 requestMusicRecent();
+                select_option = 0;
                 bottomSheetDialog.dismiss();
             }
         });
@@ -97,6 +99,7 @@ public class SearchMusicFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 requestMusicTimes();
+                select_option = 1;
                 bottomSheetDialog.dismiss();
             }
         });
@@ -106,6 +109,7 @@ public class SearchMusicFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 requestMusicAlphabet();
+                select_option = 2;
                 bottomSheetDialog.dismiss();
             }
         });
@@ -220,5 +224,22 @@ public class SearchMusicFragment extends Fragment {
                 Toast.makeText(getContext(), "네트워크 에러", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        switch (select_option) {
+            case 0:
+                requestMusicRecent();
+                break;
+            case 1:
+                requestMusicTimes();
+                break;
+            case 2:
+                requestMusicAlphabet();
+                break;
+        }
     }
 }
