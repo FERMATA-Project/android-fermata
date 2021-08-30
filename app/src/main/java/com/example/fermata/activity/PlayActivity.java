@@ -1,6 +1,5 @@
 package com.example.fermata.activity;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,7 +10,7 @@ import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.os.Build;
-import android.os.Bundle;
+import android.os.Bundle;;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
@@ -30,7 +29,6 @@ import com.example.fermata.response.vibrateResponse;
 import com.gauravk.audiovisualizer.visualizer.BarVisualizer;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,7 +40,7 @@ import retrofit2.Response;
 
 // 설명: 음악 재생 화면
 // author: dayoung, last modified: 21.08.28
-// author: soohyun, last modified: 21.08.29
+// author: soohyun, last modified: 21.08.30
 public class PlayActivity extends AppCompatActivity {
     public static Context context; // PlayActivity context
     BarVisualizer visualizer;
@@ -55,7 +53,10 @@ public class PlayActivity extends AppCompatActivity {
     ArrayList<Music> playlist = new ArrayList<>(); // 재생 목록
     List<Integer> vibrateList = new ArrayList<>(); // 음악 진동 세기 리스트
     static MediaPlayer mediaPlayer = new MediaPlayer(); // 음악 플레이어
-    Vibrator vibrator; // 진동
+    Thread vibrateThread; // 진동 시간 확인을 위한 스레드
+    Vibrator vibrator; // 진동 구현 도구
+    String isVibrate = null; // 진동 여부
+    int vibrateTime = 0; // 현재 진동 위치
     SimpleDateFormat dateFormat = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
     Date date = new Date();
     int like = 0;
@@ -67,10 +68,14 @@ public class PlayActivity extends AppCompatActivity {
 
         context = this;
 
-
         // 상단바 안보이게 숨기기
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
+
+        // 진동 구현을 위한 세팅
+        vibrator = (Vibrator)getSystemService(Activity.VIBRATOR_SERVICE);
+        SharedPreferences sharedPreferences = getSharedPreferences("vibrate", Activity.MODE_PRIVATE); // 진동 여부 데이터가 저장되어 있는 곳
+        isVibrate = sharedPreferences.getString("vibrate","true"); // 저장된 진동 여부 값
 
         visualizer = findViewById(R.id.vi_bar);
         songName = findViewById(R.id.tv_songName);
@@ -108,6 +113,7 @@ public class PlayActivity extends AppCompatActivity {
             musicInfo.setText("("+ (now_play+1) +"/" + playlist.size() + ")");
 
             playAudio(playlist.get(now_play).getMusic_id());
+            requestVibrate(playlist.get(position).getMusic_id());
         }
 
         // play, pause 버튼
@@ -117,10 +123,12 @@ public class PlayActivity extends AppCompatActivity {
                 if(mediaPlayer.isPlaying()){
                     btnPlay.setBackgroundResource(R.drawable.ic_play);
                     mediaPlayer.pause();
+                    vibrateThread.interrupt();
                 }
                 else{
                     btnPlay.setBackgroundResource(R.drawable.ic_pause);
                     mediaPlayer.start();
+                    playVibrate();
                 }
             }
         });
@@ -407,7 +415,6 @@ public class PlayActivity extends AppCompatActivity {
     // 음악 진동 세기 정보 가져오는 메소드
     public void requestVibrate(int music_id) {
         FlaskRetrofitClient.getApiService().requestVibrate(music_id).enqueue(new Callback<vibrateResponse>() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onResponse(Call<vibrateResponse> call, Response<vibrateResponse> response) {
                 if(response.isSuccessful()){
@@ -415,7 +422,8 @@ public class PlayActivity extends AppCompatActivity {
                     vibrateList.clear();
                     vibrateList = result.amplitude;
 
-                    //playVibrate();
+                    vibrateTime = 0;
+                    playVibrate();
                 }
             }
             @Override
@@ -426,29 +434,31 @@ public class PlayActivity extends AppCompatActivity {
     }
 
     // 음악 진동 구현 메소드
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public void playVibrate() {
-        SharedPreferences sharedPreferences = getSharedPreferences("vibrate", Activity.MODE_PRIVATE); // 진동 여부 데이터가 저장되어 있는 곳
-        String isVibrate = sharedPreferences.getString("vibrate","true"); // 저장된 진동 여부 값
+        vibrateThread = new Thread() {
+            @Override
+            public void run() {
 
-        vibrator = (Vibrator)getSystemService(Activity.VIBRATOR_SERVICE);
-        final long[] vibratePattern = new long[]{3000, 1000};
-
-        if(Build.VERSION.SDK_INT >=  26) {
-            for(int i=0; i<vibrateList.size(); i+=3) {
-                if(isVibrate.equals("true")) {
-                    //vibrator.vibrate(VibrationEffect.createOneShot(1000, (int)(vibrateList.get(i) * 2.5)));
-                    int[] amplitudes = new int[]{0, (int)(vibrateList.get(i) * 2.5)};
-                    vibrator.vibrate(VibrationEffect.createWaveform(vibratePattern, amplitudes, -1));
-                    Toast.makeText(getApplicationContext(), "진동" + i, Toast.LENGTH_SHORT).show();
+                while (mediaPlayer.isPlaying() && vibrateTime <= vibrateList.size()){
+                    try{
+                        if(isVibrate.equals("true")) { // 진동을 허용했다면 3초마다 진동 구현
+                            if(Build.VERSION.SDK_INT >=  26) {
+                                vibrator.vibrate(VibrationEffect.createOneShot(1000, (int)(vibrateList.get(vibrateTime) * 2.5))); // 1초 동안 진동
+                                System.out.println("진동 " + vibrateTime);
+                                vibrateTime += 3;
+                            } else {
+                                vibrator.vibrate(1000);
+                            }
+                        }
+                        sleep(2000);
+                    }
+                    catch (InterruptedException | IllegalStateException e){
+                        e.printStackTrace();
+                    }
                 }
             }
-        } else {
-            for(int i=0; i<vibrateList.size(); i++) {
-                if(isVibrate.equals("true")) {
-                    vibrator.vibrate(1000);
-                }
-            }
-        }
+        };
+
+        vibrateThread.start();
     }
 }
