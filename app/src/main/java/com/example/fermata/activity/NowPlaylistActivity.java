@@ -70,7 +70,7 @@ public class NowPlaylistActivity extends AppCompatActivity {
         if(PlayActivity.mediaPlayer.isPlaying()) { // 음악 재생 중인 경우
             btn_play.setBackgroundResource(R.drawable.ic_pause);
         } else { // 음악 재생 중이 아닌 경우
-            btn_play.setBackgroundResource(R.drawable.ic_play);
+            btn_play.setBackgroundResource(R.drawable.now_playlist_btn_play);
         }
 
         RecyclerView rv_now_playlist = findViewById(R.id.rv_now_playlist); // 현재 재생 목록 리사이클러뷰
