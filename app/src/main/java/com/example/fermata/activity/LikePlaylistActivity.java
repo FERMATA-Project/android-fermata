@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -175,7 +176,10 @@ public class LikePlaylistActivity extends AppCompatActivity {
                                     clipboard.setPrimaryClip(clip);
 
                                     bottomSheetDialog.dismiss();
-                                    Toast.makeText(getApplicationContext(), "재생목록이 클립보드에 복사되었습니다.", Toast.LENGTH_SHORT).show();
+                                    Toast cliptoast = new Toast(getApplicationContext());
+                                    cliptoast.setView(v.inflate(getApplicationContext(), R.layout.clip_copy_toast, null));
+                                    cliptoast.setGravity(Gravity.CENTER, 0, 0);
+                                    cliptoast.show();
                                 }
                             }
                         }
@@ -205,7 +209,10 @@ public class LikePlaylistActivity extends AppCompatActivity {
                                     clipboard.setPrimaryClip(clip);
 
                                     bottomSheetDialog.dismiss();
-                                    Toast.makeText(getApplicationContext(), "재생목록이 클립보드에 복사되었습니다.", Toast.LENGTH_SHORT).show();
+                                    Toast cliptoast = new Toast(getApplicationContext());
+                                    cliptoast.setView(v.inflate(getApplicationContext(), R.layout.clip_copy_toast, null));
+                                    cliptoast.setGravity(Gravity.CENTER, 0, 0);
+                                    cliptoast.show();
                                 }
                             }
                         }

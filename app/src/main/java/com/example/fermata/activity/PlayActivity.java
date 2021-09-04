@@ -39,7 +39,7 @@ import retrofit2.Response;
 // author: soohyun, last modified: 21.08.27
 
 public class PlayActivity extends AppCompatActivity {
-    Context context;
+    public static Context context;
     BarVisualizer visualizer;
     TextView songName, singerName, songStart, songEnd, nowList, musicInfo; //제목, 가수, 현재 재생 시간, 재생 종료 시간, 현재 재생 목록 (화면 전환), 음악 정보
     Button btnRepeat, btnLike, btnPlay, btnPrev, btnNext, btnVolume, btnSensor; //반복 재생, 좋아요, play(pause), 이전 곡, 다음 곡, 소리 조절, 진동 조절
@@ -52,7 +52,6 @@ public class PlayActivity extends AppCompatActivity {
     SimpleDateFormat dateFormat = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
     Date date = new Date();
     int like = 0;
-    public static Context context; // PlayActivity context
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

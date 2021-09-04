@@ -17,7 +17,7 @@
         android:id="@+id/tv_toast"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="추가가\n취소되었습니다!"
+        android:text="삭제가\n완료되었습니다!"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="20dp"
