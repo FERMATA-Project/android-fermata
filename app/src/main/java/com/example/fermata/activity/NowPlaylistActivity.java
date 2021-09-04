@@ -39,7 +39,7 @@ public class NowPlaylistActivity extends AppCompatActivity {
     MusicAdapter nowAdapter; // 음악 목록 어댑터
     int now_play = 0; // 음악 현재 재생 위치
     String list_music_clip = "";
-    TextView tv_musicName, tv_singerName, tv_music_info;
+    static TextView tv_musicName, tv_singerName, tv_music_info;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +65,6 @@ public class NowPlaylistActivity extends AppCompatActivity {
         now_play = intent.getIntExtra("now_play", 0);
 
         // 보여지는 정보 세팅
-        setMusicInfo(now_play, playlist_title);
         tv_playlistName.setText(playlist_title + " 재생 목록"); // 재생목록 이름
         if(PlayActivity.mediaPlayer.isPlaying()) { // 음악 재생 중인 경우
             btn_play.setBackgroundResource(R.drawable.ic_pause);
@@ -100,10 +99,8 @@ public class NowPlaylistActivity extends AppCompatActivity {
         btn_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 곡 재생
+                // 곡 재생 + 정보 변경
                 ((PlayActivity)PlayActivity.context).requestPlaylistNow(now_play+1, playlist_title);
-                // 곡 정보 세팅
-                setMusicInfo(now_play+1, playlist_title);
             }
         });
 
@@ -196,34 +193,6 @@ public class NowPlaylistActivity extends AppCompatActivity {
             }
         });
 
-    }
-
-    // 음악 정보 설정 (재생 관리 X)
-    public void setMusicInfo(int position, String playlist_title) {
-        RetrofitClient.getApiService().requestPlaylistNow(playlist_title).enqueue(new Callback<musicResponse>() {
-            @Override
-            public void onResponse(Call<musicResponse> call, Response<musicResponse> response) {
-                if(response.isSuccessful()){
-                    musicResponse result = response.body(); // 응답 결과
-
-                    if(result.code.equals("400")) {
-                        Toast.makeText(getApplicationContext(), "에러가 발생했습니다", Toast.LENGTH_SHORT).show();
-                    } else if (result.code.equals("200")) {
-                        List<Music> musics = result.music; // 음악 리스트
-
-                        now_play = position % musics.size();
-                        // 재생
-                        tv_musicName.setText(nowPlaylist.get(now_play).getMusic_title());
-                        tv_singerName.setText(nowPlaylist.get(now_play).getSinger());
-                        tv_music_info.setText("("+ (now_play + 1) +"/" + nowPlaylist.size() + ")");
-                    }
-                }
-            }
-            @Override
-            public void onFailure(Call<musicResponse> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "네트워크 에러", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
 }
