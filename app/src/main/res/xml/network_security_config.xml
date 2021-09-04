@@ -5,10 +5,4 @@
             <certificates src="system" />
         </trust-anchors>
     </base-config>
-
-    <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="true">server.com</domain>
-    </domain-config>
-
 </network-security-config>
-

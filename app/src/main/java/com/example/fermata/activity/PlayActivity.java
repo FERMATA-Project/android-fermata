@@ -3,12 +3,17 @@ package com.example.fermata.activity;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
-import android.os.Bundle;
+import android.os.Build;
+import android.os.Bundle;;
 import android.os.Handler;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -18,13 +23,12 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
+import com.example.fermata.FlaskRetrofitClient;
 import com.example.fermata.R;
 import com.example.fermata.RetrofitClient;
 import com.example.fermata.domain.Music;
 import com.example.fermata.response.musicResponse;
+import com.example.fermata.response.vibrateResponse;
 import com.gauravk.audiovisualizer.visualizer.BarVisualizer;
 
 import java.io.IOException;
@@ -39,8 +43,7 @@ import retrofit2.Response;
 
 // 설명: 음악 재생 화면
 // author: dayoung, last modified: 21.08.28
-// author: soohyun, last modified: 21.08.27
-
+// author: soohyun, last modified: 21.08.30
 public class PlayActivity extends AppCompatActivity {
     public static Context context; // PlayActivity context
     ImageButton btn_option; // 재생 목록 옵션 버튼
@@ -52,7 +55,12 @@ public class PlayActivity extends AppCompatActivity {
     int now_play = 0; // 현재 음악 재생 위치
     int now_music_id = 0; // 현재 재생 음악 id
     ArrayList<Music> playlist = new ArrayList<>(); // 재생 목록
+    List<Integer> vibrateList = new ArrayList<>(); // 음악 진동 세기 리스트
     static MediaPlayer mediaPlayer = new MediaPlayer(); // 음악 플레이어
+    Thread vibrateThread; // 진동 시간 확인을 위한 스레드
+    Vibrator vibrator; // 진동 구현 도구
+    String isVibrate = null; // 진동 여부
+    int vibrateTime = 0; // 현재 진동 위치
     SimpleDateFormat dateFormat = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
     Date date = new Date();
     int like = 0;
@@ -67,6 +75,11 @@ public class PlayActivity extends AppCompatActivity {
         // 상단바 안보이게 숨기기
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
+
+        // 진동 구현을 위한 세팅
+        vibrator = (Vibrator)getSystemService(Activity.VIBRATOR_SERVICE);
+        SharedPreferences sharedPreferences = getSharedPreferences("vibrate", Activity.MODE_PRIVATE); // 진동 여부 데이터가 저장되어 있는 곳
+        isVibrate = sharedPreferences.getString("vibrate","true"); // 저장된 진동 여부 값
 
         btn_option = findViewById(R.id.btn_option);
         visualizer = findViewById(R.id.vi_bar);
@@ -95,6 +108,9 @@ public class PlayActivity extends AppCompatActivity {
 
         // 음악 재생 + visualizer
         requestPlaylistNow(position, playlist_title);
+      
+        //playAudio(playlist.get(now_play).getMusic_id());
+        //requestVibrate(playlist.get(position).getMusic_id());
 
         // 재생 목록 옵션 버튼 클릭한 경우
         btn_option.setOnClickListener(new View.OnClickListener() {
@@ -124,10 +140,12 @@ public class PlayActivity extends AppCompatActivity {
                 if(mediaPlayer.isPlaying()){
                     btnPlay.setBackgroundResource(R.drawable.ic_play);
                     mediaPlayer.pause();
+                    vibrateThread.interrupt();
                 }
                 else{
                     btnPlay.setBackgroundResource(R.drawable.ic_pause);
                     mediaPlayer.start();
+                    playVibrate();
                 }
             }
         });
@@ -182,6 +200,26 @@ public class PlayActivity extends AppCompatActivity {
                 {
                     requestUpdateLike(1, now_music_id);
                     btnLike.setBackgroundResource(R.drawable.ic_favorite_yes);
+                }
+            }
+        });
+
+        // 진동 버튼
+        btnSensor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences sharedPreferences = getSharedPreferences("vibrate", Activity.MODE_PRIVATE); // 진동 여부 데이터가 저장되어 있는 곳
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                String isVibrate = sharedPreferences.getString("vibrate","true"); // 저장된 진동 여부 값
+
+                if(isVibrate.equals("true")) { // 진동 켜기 상태인 경우
+                    editor.putString("vibrate", "false"); // 진동 끄기로 변경
+                    editor.commit();
+                    Toast.makeText(context, "진동 끄기", Toast.LENGTH_SHORT).show();
+                } else if(isVibrate.equals("false")) { // 진동 끄기 상태인 경우
+                    editor.putString("vibrate", "true"); // 진동 켜로 변경
+                    editor.commit();
+                    Toast.makeText(context, "진동 켜기", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -378,7 +416,7 @@ public class PlayActivity extends AppCompatActivity {
                         singerName.setText(playlist.get(now_play).getSinger());
                         musicInfo.setText("("+ (now_play+1) +"/" + size + ")");
                         playAudio(playlist.get(now_play).getMusic_id());
-
+                        requestVibrate(playlist.get(now_play).getMusic_id());
                     }
                 }
             }
@@ -387,5 +425,55 @@ public class PlayActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "네트워크 에러", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    // 음악 진동 세기 정보 가져오는 메소드
+    public void requestVibrate(int music_id) {
+        FlaskRetrofitClient.getApiService().requestVibrate(music_id).enqueue(new Callback<vibrateResponse>() {
+            @Override
+            public void onResponse(Call<vibrateResponse> call, Response<vibrateResponse> response) {
+                if(response.isSuccessful()){
+                    vibrateResponse result = response.body();
+                    vibrateList.clear();
+                    vibrateList = result.amplitude;
+
+                    vibrateTime = 0;
+                    playVibrate();
+                }
+            }
+            @Override
+            public void onFailure(Call<vibrateResponse> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "네트워크 에러", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // 음악 진동 구현 메소드
+    public void playVibrate() {
+        vibrateThread = new Thread() {
+            @Override
+            public void run() {
+
+                while (mediaPlayer.isPlaying() && vibrateTime <= vibrateList.size()){
+                    try{
+                        if(isVibrate.equals("true")) { // 진동을 허용했다면 3초마다 진동 구현
+                            if(Build.VERSION.SDK_INT >=  26) {
+                                vibrator.vibrate(VibrationEffect.createOneShot(1000, (int)(vibrateList.get(vibrateTime) * 2.5))); // 1초 동안 진동
+                                System.out.println("진동 " + vibrateTime);
+                                vibrateTime += 3;
+                            } else {
+                                vibrator.vibrate(1000);
+                            }
+                        }
+                        sleep(2000);
+                    }
+                    catch (InterruptedException | IllegalStateException e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+
+        vibrateThread.start();
     }
 }

@@ -2,11 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/item_playlist_update"
-        android:title="재생목록 수정" />
-    <item
         android:id="@+id/item_playlist_delete"
-        android:title="재생목록 삭제" />
+        android:title="노래 삭제" />
     <item
         android:id="@+id/item_playlist_share"
         android:title="재생목록 공유" />

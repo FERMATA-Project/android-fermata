@@ -3,11 +3,15 @@ package com.example.fermata;
 import com.example.fermata.domain.AddPlaylist;
 import com.example.fermata.response.musicResponse;
 import com.example.fermata.response.playlistResponse;
+import com.example.fermata.response.vibrateResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface RetrofitAPI {
     // 음악 최신 재생한 순 API
@@ -92,4 +96,8 @@ public interface RetrofitAPI {
     Call<musicResponse> requestPlaylistGetmusic(
             @Field("playlist_title") String playlist_title
     );
+
+    // 음악 진동 세기 가져오기 API
+    @GET("/vibrate")
+    Call<vibrateResponse> requestVibrate(@Query("music_id") int music_id);
 }
