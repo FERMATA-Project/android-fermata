@@ -1,12 +1,16 @@
 package com.example.fermata.fragment;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,58 +63,32 @@ public class SearchMusicFragment extends Fragment {
         });
 
         ImageButton btn_filter = view.findViewById(R.id.btn_filter); // 정렬 필터 버튼
-        //LayoutInflater inflater = (LayoutInflater)view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View filter_view = inflater.inflate(R.layout.bottomsheet_filter, null, false); // 필터 버튼의 팝업 뷰
-        ImageView iv_close = filter_view.findViewById(R.id.iv_close); // 팝업 뷰의 닫기 버튼
-        TextView tv_recent = filter_view.findViewById(R.id.tv_recent); // 팝업 뷰의 '최근 재생한 순'
-        TextView tv_most = filter_view.findViewById(R.id.tv_most); // 팝업 뷰의 '많이 재생한 순'
-        TextView tv_alphabet = filter_view.findViewById(R.id.tv_alphabet); // 팝업 뷰의 '가나다 순'
-        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
-        bottomSheetDialog.setContentView(filter_view);
-
         // 정렬 필터 버튼 클릭한 경우
         btn_filter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                bottomSheetDialog.show();
-            }
-        });
+                final PopupMenu popupMenu = new PopupMenu(getContext(),view);
+                popupMenu.getMenuInflater().inflate(R.menu.menu_btn_filter, popupMenu.getMenu());
 
-        // 팝업 뷰의 닫기 클릭한 경우
-        iv_close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bottomSheetDialog.dismiss();
-            }
-        });
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        switch (menuItem.getItemId()) {
+                            case R.id.item_recent:
+                                requestMusicRecent();
+                                break;
+                            case R.id.item_most:
+                                requestMusicTimes();
+                                break;
+                            case R.id.item_alphabet:
+                                requestMusicAlphabet();;
+                                break;
+                        }
 
-        // 팝업 뷰의 최신 재생한 순 클릭한 경우
-        tv_recent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requestMusicRecent();
-                select_option = 0;
-                bottomSheetDialog.dismiss();
-            }
-        });
-
-        // 팝업 뷰의 많이 재생한 순 클릭한 경우
-        tv_most.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requestMusicTimes();
-                select_option = 1;
-                bottomSheetDialog.dismiss();
-            }
-        });
-
-        // 팝업 뷰의 가나다 순 클릭한 경우
-        tv_alphabet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requestMusicAlphabet();
-                select_option = 2;
-                bottomSheetDialog.dismiss();
+                        return true;
+                    }
+                });
+                popupMenu.show();
             }
         });
 

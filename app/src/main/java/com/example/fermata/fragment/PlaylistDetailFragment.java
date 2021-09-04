@@ -46,53 +46,15 @@ public class PlaylistDetailFragment extends Fragment {
         rv_like_playlist.setAdapter(adapter); // 리사이클러뷰와 어댑터 연결
 
         ImageButton btn_option = view.findViewById(R.id.btn_option); // 재생 목록 옵션 버튼
-        View option_view = inflater.inflate(R.layout.bottomsheet_option, null, false); // 옵션 버튼의 팝업 뷰
-        ImageView iv_close = option_view.findViewById(R.id.iv_close); // 팝업 뷰의 닫기 버튼
-        TextView tv_delete = option_view.findViewById(R.id.tv_delete); // 팝업 뷰의 재생 목록 삭제
-        TextView tv_share = option_view.findViewById(R.id.tv_share); // 팝업 뷰의 재생 목록 공유
-        TextView tv_update = option_view.findViewById(R.id.tv_update); // 팝업 뷰의 재생 목록 수정
-        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
-        bottomSheetDialog.setContentView(option_view);
+
 
         // 옵션 버튼 클릭한 경우
         btn_option.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                bottomSheetDialog.show();
             }
         });
 
-        // 팝업 뷰의 닫기 클릭한 경우
-        iv_close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bottomSheetDialog.dismiss();
-            }
-        });
-
-        // 팝업 뷰의 재생목록 삭제 클릭한 경우
-        tv_delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bottomSheetDialog.dismiss();
-            }
-        });
-
-        // 팝업 뷰의 재생목록 공유 클릭한 경우
-        tv_share.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bottomSheetDialog.dismiss();
-            }
-        });
-
-        // 팝업 뷰의 재생목록 수정 클릭한 경우
-        tv_update.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bottomSheetDialog.dismiss();
-            }
-        });
 
         return view;
     }
