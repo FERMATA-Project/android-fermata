@@ -9,8 +9,11 @@ import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,7 +42,8 @@ import retrofit2.Response;
 // author: soohyun, last modified: 21.08.27
 
 public class PlayActivity extends AppCompatActivity {
-    Context context;
+    public static Context context; // PlayActivity context
+    ImageButton btn_option; // 재생 목록 옵션 버튼
     BarVisualizer visualizer;
     TextView songName, singerName, songStart, songEnd, nowList, musicInfo; //제목, 가수, 현재 재생 시간, 재생 종료 시간, 현재 재생 목록 (화면 전환), 음악 정보
     Button btnRepeat, btnLike, btnPlay, btnPrev, btnNext, btnVolume, btnSensor; //반복 재생, 좋아요, play(pause), 이전 곡, 다음 곡, 소리 조절, 진동 조절
@@ -52,7 +56,6 @@ public class PlayActivity extends AppCompatActivity {
     SimpleDateFormat dateFormat = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
     Date date = new Date();
     int like = 0;
-    public static Context context; // PlayActivity context
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,7 @@ public class PlayActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
+        btn_option = findViewById(R.id.btn_option);
         visualizer = findViewById(R.id.vi_bar);
         songName = findViewById(R.id.tv_songName);
         singerName = findViewById(R.id.tv_singerName);
@@ -87,21 +91,31 @@ public class PlayActivity extends AppCompatActivity {
         int position = intent.getIntExtra("position", -2); // 음악 재생 위치
 
         // 재생목록 이름 표시
-        nowList.setText(playlist_title);
+        nowList.setText(playlist_title + " 재생 목록");
 
         // 음악 재생 + visualizer
-        if(position == -2 || position == -1) { // 음악 즐기기 클릭한 경우, 음악 목록에서 음악 선택한 경우
-            requestPlaylistNow(position, 0); // 현재 재생 목록 가져오기
-        } else { // 좋아요한 음악 목록, 그 외의 음악 목록에서 음악 선택한 경우
-            playlist = (ArrayList<Music>)intent.getSerializableExtra("playlist"); // LikePlaylistActivity 로부터 받은 재생목록 리스트
-            now_play = position;
+        requestPlaylistNow(position, playlist_title);
 
-            songName.setText(playlist.get(now_play).getMusic_title());
-            singerName.setText(playlist.get(now_play).getSinger());
-            musicInfo.setText("("+ (now_play+1) +"/" + playlist.size() + ")");
+        // 재생 목록 옵션 버튼 클릭한 경우
+        btn_option.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                final PopupMenu popupMenu = new PopupMenu(getApplicationContext(),view);
+                popupMenu.getMenuInflater().inflate(R.menu.menu_btn_play_option, popupMenu.getMenu());
 
-            playAudio(playlist.get(now_play).getMusic_id());
-        }
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        switch (menuItem.getItemId()) {
+                            case R.id.item_add_playlist:
+                                break;
+                        }
+                        return true;
+                    }
+                });
+                popupMenu.show();
+            }
+        });
 
         // play, pause 버튼
         btnPlay.setOnClickListener(new View.OnClickListener() {
@@ -122,15 +136,16 @@ public class PlayActivity extends AppCompatActivity {
         btnPrev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requestPlaylistNow(0, -1);
+                //requestPlaylistNow(0, -1);
+                requestPlaylistNow(now_play-1, playlist_title);
             }
         });
 
-        // 다음곡
+        // 다음곡 버튼
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requestPlaylistNow(0, 1);
+                requestPlaylistNow(now_play+1, playlist_title);
             }
         });
 
@@ -171,7 +186,7 @@ public class PlayActivity extends AppCompatActivity {
             }
         });
 
-        // 현재 재생 목록 (화면 전환)
+        // 재생 목록 음악 리스트 (화면 전환)
         nowList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -319,9 +334,9 @@ public class PlayActivity extends AppCompatActivity {
 
     }
 
-    // 현재 플레이리스트 불러오기 + 음악 재생 메소드
-    public void requestPlaylistNow(int position, int prevNext) { //position : playActivity 가 어디서 실행되었는지 / prevNext : 지금곡(0), 다음곡(1), 이전곡(-1)
-        RetrofitClient.getApiService().requestPlaylistNow().enqueue(new Callback<musicResponse>() {
+    // 선택된 재생목록의 음악 리스트 가져오기 + 음악 재생 메소드
+    public void requestPlaylistNow(int position, String playlist_title) {
+        RetrofitClient.getApiService().requestPlaylistNow(playlist_title).enqueue(new Callback<musicResponse>() {
             @Override
             public void onResponse(Call<musicResponse> call, Response<musicResponse> response) {
                 if(response.isSuccessful()){
@@ -343,14 +358,12 @@ public class PlayActivity extends AppCompatActivity {
                             now_play = 0;
                         }
                         else if(position == -1) { // 음악 목록에서 음악 선택한 경우 (마지막 곡 재생)
-                            now_play = size - 1; // 음악 재생 위치를 마지막 위치로 설정
+                            now_play = size - 1;
                         }
-                        else if(position == 0) { //prev next 버튼 클릭 시
-                            if (now_play + prevNext >= 0)
-                                now_play = (now_play + prevNext) % size;
-                            else
-                                now_play = size - 1;
+                        else {
+                            now_play = position % size; // 전달받은 position값(0~)의 음악 재생
                         }
+
                         // 좋아요
                         like = playlist.get(now_play).getLikes();
                         now_music_id = playlist.get(now_play).getMusic_id();
