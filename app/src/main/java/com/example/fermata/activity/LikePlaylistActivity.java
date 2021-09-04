@@ -108,7 +108,6 @@ public class LikePlaylistActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), PlayActivity.class);
                 intent.putExtra("playlist_title", make_list_name); // 재생목록 이름
                 intent.putExtra("position", position); // 음악 재생 위치
-                intent.putExtra("playlist", likePlaylist); // 재생목록 리스트
                 startActivity(intent);
             }
         });

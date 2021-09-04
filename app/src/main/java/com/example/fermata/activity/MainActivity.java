@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.item_playMusic:
                         Intent intent = new Intent(getApplicationContext(), PlayActivity.class);
-                        intent.putExtra("playlist_title", "현재 재생 목록");
+                        intent.putExtra("playlist_title", "현재");
                         startActivity(intent);
                         break;
                     case R.id.item_playlist:
