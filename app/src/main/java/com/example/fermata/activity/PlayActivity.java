@@ -369,7 +369,6 @@ public class PlayActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) { mediaPlayer.seekTo(sbMusic.getProgress()); }
         });
-
     }
 
     // 선택된 재생목록의 음악 리스트 가져오기 + 음악 재생 메소드
@@ -415,6 +414,10 @@ public class PlayActivity extends AppCompatActivity {
                         songName.setText(playlist.get(now_play).getMusic_title());
                         singerName.setText(playlist.get(now_play).getSinger());
                         musicInfo.setText("("+ (now_play+1) +"/" + size + ")");
+
+                        NowPlaylistActivity.tv_musicName.setText(playlist.get(now_play).getMusic_title());
+                        NowPlaylistActivity.tv_singerName.setText(playlist.get(now_play).getSinger());
+                        NowPlaylistActivity.tv_music_info.setText("("+ (now_play + 1) +"/" + playlist.size() + ")");
                         playAudio(playlist.get(now_play).getMusic_id());
                         requestVibrate(playlist.get(now_play).getMusic_id());
                     }
