@@ -8,6 +8,20 @@
     android:weightSum="10"
     tools:context=".activity.PlayActivity">
 
+    <!-- 재생목록 옵션 버튼
+    <ImageButton
+        android:id="@+id/btn_option"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginRight="20dp"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:background="@drawable/ic_baseline_more_vert_24"
+        app:layout_constraintTop_toBottomOf="@+id/tv_singerName"/>
+ -->
+    <!-- 현재 재생 음악 정보 텍스트 -->
     <!-- visualizer ~ seekbar -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,11 +30,26 @@
         android:gravity="center"
         android:orientation="vertical">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+            <!-- 재생목록 옵션 버튼 -->
+
+            <ImageButton
+                android:id="@+id/btn_option"
+                android:background="@drawable/ic_baseline_more_vert_24"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true" />
+        </RelativeLayout>
+
         <!-- visualizer -->
         <com.gauravk.audiovisualizer.visualizer.BarVisualizer xmlns:custom="http://schemas.android.com/apk/res-auto"
             android:id="@+id/vi_bar"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
+            android:layout_width="match_parent"
+            android:layout_height="420dp"
             custom:avColor="#8C8C8C"
             custom:avDensity="0.5"
             custom:avSpeed="medium"
@@ -52,13 +81,13 @@
                 android:padding="2dp"
                 android:singleLine="true"
                 android:textAlignment="center"
-                android:textSize="22sp"></TextView>
+                android:textSize="20sp"
+                android:textStyle="bold"></TextView>
 
             <!-- 가수명 -->
             <TextView
                 android:id="@+id/tv_singerName"
                 android:text="가수명"
-                android:textColor="@color/black"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
@@ -73,7 +102,8 @@
                 android:padding="2dp"
                 android:singleLine="true"
                 android:textAlignment="center"
-                android:textSize="16sp"></TextView>
+                android:textSize="14sp"
+                android:textColor="#616161"></TextView>
 
             <!-- repeat -->
             <Button
@@ -85,7 +115,8 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_toLeftOf="@id/tv_songName"
-                android:background="@drawable/ic_repeat"></Button>
+                android:background="@drawable/play_btn_repeat"
+                android:backgroundTint="#616161"></Button>
 
             <!-- favorite 토글 -->
             <Button
@@ -98,6 +129,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_toRightOf="@id/tv_songName"
                 android:background="@drawable/ic_favorite_no"></Button>
+
         </RelativeLayout>
 
         <!-- 곡 시작 시간, seekbar, 곡 종료 시간 -->
@@ -116,7 +148,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
                 android:thumbTint="@color/black"
-                android:progressBackgroundTint="@color/black"
+                android:progressBackgroundTint="#E0E0E0"
                 android:layout_marginBottom="20dp"></SeekBar>
 
             <!-- 곡 시작 시간 -->
@@ -129,8 +161,8 @@
                 android:layout_marginLeft="20dp"
                 android:layout_toLeftOf="@id/sb_music"
                 android:text="0:00"
-                android:textColor="@color/black"
-                android:textSize="14sp"></TextView>
+                android:textColor="#9E9E9E"
+                android:textSize="12sp"></TextView>
 
             <!-- 곡 종료 시간 -->
             <TextView
@@ -142,8 +174,8 @@
                 android:layout_marginRight="20dp"
                 android:layout_toRightOf="@id/sb_music"
                 android:text="0:00"
-                android:textColor="@color/black"
-                android:textSize="14sp"></TextView>
+                android:textColor="#9E9E9E"
+                android:textSize="12sp"></TextView>
         </RelativeLayout>
 
     </LinearLayout>
@@ -167,7 +199,7 @@
                 android:layout_centerInParent="true"
                 android:layout_marginRight="20dp"
                 android:layout_toLeftOf="@id/btn_prev"
-                android:background="@drawable/ic_volume"></Button>
+                android:background="@drawable/play_btn_volumn"></Button>
 
             <!-- 이전 곡 -->
             <Button
@@ -178,7 +210,7 @@
                 android:layout_centerInParent="true"
                 android:layout_marginRight="10dp"
                 android:layout_toLeftOf="@id/btn_play"
-                android:background="@drawable/ic_play_prev">
+                android:background="@drawable/play_btn_prev">
             </Button>
 
             <!-- play(pause) 토글 -->
@@ -200,7 +232,7 @@
                 android:layout_centerInParent="true"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@id/btn_play"
-                android:background="@drawable/ic_play_next"></Button>
+                android:background="@drawable/play_btn_next"></Button>
 
             <!-- 진동 조정 -->
             <Button
@@ -211,7 +243,7 @@
                 android:layout_centerInParent="true"
                 android:layout_marginLeft="20dp"
                 android:layout_toRightOf="@id/btn_next"
-                android:background="@drawable/ic_sensor">
+                android:background="@drawable/play_btn_sensor">
             </Button>
 
         </RelativeLayout>
@@ -245,12 +277,12 @@
                 android:id="@+id/tv_music_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="(?/N)"
-                android:textColor="@color/black"
                 android:layout_alignParentRight="true"
                 android:layout_centerInParent="true"
                 android:layout_marginRight="20dp"
-                android:textSize="14sp"/>
+                android:text="(?/N)"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
         </RelativeLayout>
 
     </LinearLayout>

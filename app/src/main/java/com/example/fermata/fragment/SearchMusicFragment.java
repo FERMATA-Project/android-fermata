@@ -1,12 +1,16 @@
 package com.example.fermata.fragment;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,10 +35,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 // 설명: 메인 화면 중 하단바 음악 찾기 클릭 -> 음악 목록 화면
-// author: soohyun, last modified: 21.08.07
+// author: soohyun, last modified: 21.08.29
 public class SearchMusicFragment extends Fragment {
     ArrayList<Music> musicList = new ArrayList<>(); // 음악 목록 리스트
     MusicAdapter adapter; // 음악 목록 어댑터
+    int select_option = 0; // 어떤 옵션을 선택했는지 저장하는 변수, 0 - 최신순 재생한 순 / 1 - 많이 재생한 순 / 2- 가나다
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,55 +63,32 @@ public class SearchMusicFragment extends Fragment {
         });
 
         ImageButton btn_filter = view.findViewById(R.id.btn_filter); // 정렬 필터 버튼
-        //LayoutInflater inflater = (LayoutInflater)view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View filter_view = inflater.inflate(R.layout.bottomsheet_filter, null, false); // 필터 버튼의 팝업 뷰
-        ImageView iv_close = filter_view.findViewById(R.id.iv_close); // 팝업 뷰의 닫기 버튼
-        TextView tv_recent = filter_view.findViewById(R.id.tv_recent); // 팝업 뷰의 '최근 재생한 순'
-        TextView tv_most = filter_view.findViewById(R.id.tv_most); // 팝업 뷰의 '많이 재생한 순'
-        TextView tv_alphabet = filter_view.findViewById(R.id.tv_alphabet); // 팝업 뷰의 '가나다 순'
-        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
-        bottomSheetDialog.setContentView(filter_view);
-
         // 정렬 필터 버튼 클릭한 경우
         btn_filter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                bottomSheetDialog.show();
-            }
-        });
+                final PopupMenu popupMenu = new PopupMenu(getContext(),view);
+                popupMenu.getMenuInflater().inflate(R.menu.menu_btn_filter, popupMenu.getMenu());
 
-        // 팝업 뷰의 닫기 클릭한 경우
-        iv_close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bottomSheetDialog.dismiss();
-            }
-        });
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        switch (menuItem.getItemId()) {
+                            case R.id.item_recent:
+                                requestMusicRecent();
+                                break;
+                            case R.id.item_most:
+                                requestMusicTimes();
+                                break;
+                            case R.id.item_alphabet:
+                                requestMusicAlphabet();;
+                                break;
+                        }
 
-        // 팝업 뷰의 최신 재생한 순 클릭한 경우
-        tv_recent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requestMusicRecent();
-                bottomSheetDialog.dismiss();
-            }
-        });
-
-        // 팝업 뷰의 많이 재생한 순 클릭한 경우
-        tv_most.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requestMusicTimes();
-                bottomSheetDialog.dismiss();
-            }
-        });
-
-        // 팝업 뷰의 가나다 순 클릭한 경우
-        tv_alphabet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requestMusicAlphabet();
-                bottomSheetDialog.dismiss();
+                        return true;
+                    }
+                });
+                popupMenu.show();
             }
         });
 
@@ -220,5 +202,22 @@ public class SearchMusicFragment extends Fragment {
                 Toast.makeText(getContext(), "네트워크 에러", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        switch (select_option) {
+            case 0:
+                requestMusicRecent();
+                break;
+            case 1:
+                requestMusicTimes();
+                break;
+            case 2:
+                requestMusicAlphabet();
+                break;
+        }
     }
 }
