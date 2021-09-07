@@ -140,7 +140,7 @@ public class PlayActivity extends AppCompatActivity {
                 if(mediaPlayer.isPlaying()){
                     btnPlay.setBackgroundResource(R.drawable.ic_play);
                     mediaPlayer.pause();
-                    vibrateThread.interrupt();
+                    //vibrateThread.interrupt();
                 }
                 else{
                     btnPlay.setBackgroundResource(R.drawable.ic_pause);
@@ -415,11 +415,11 @@ public class PlayActivity extends AppCompatActivity {
                         singerName.setText(playlist.get(now_play).getSinger());
                         musicInfo.setText("("+ (now_play+1) +"/" + size + ")");
 
-                        NowPlaylistActivity.tv_musicName.setText(playlist.get(now_play).getMusic_title());
-                        NowPlaylistActivity.tv_singerName.setText(playlist.get(now_play).getSinger());
-                        NowPlaylistActivity.tv_music_info.setText("("+ (now_play + 1) +"/" + playlist.size() + ")");
+                        //NowPlaylistActivity.tv_musicName.setText(playlist.get(now_play).getMusic_title());
+                        //NowPlaylistActivity.tv_singerName.setText(playlist.get(now_play).getSinger());
+                        //NowPlaylistActivity.tv_music_info.setText("("+ (now_play + 1) +"/" + playlist.size() + ")");
                         playAudio(playlist.get(now_play).getMusic_id());
-                        requestVibrate(playlist.get(now_play).getMusic_id());
+                        //requestVibrate(playlist.get(now_play).getMusic_id());
                     }
                 }
             }
