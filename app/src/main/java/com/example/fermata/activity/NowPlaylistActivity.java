@@ -143,13 +143,17 @@ public class NowPlaylistActivity extends AppCompatActivity {
                                                 String list_music_clip = "";
 
                                                 for(Music music: musics){
-                                                    list_music_clip = list_music_clip + "\n" + music.getMusic_title().toString() + " - " + music.getSinger().toString();
+                                                    list_music_clip = list_music_clip + "\n" + music.getMusic_title() + " - " + music.getSinger();
                                                 }
 
                                                 ClipData clip = ClipData.newPlainText(playlist_title, "재생목록 이름: " + playlist_title + "\n" + list_music_clip);
                                                 clipboard.setPrimaryClip(clip);
 
-                                                Toast.makeText(getApplicationContext(), "재생목록이 클립보드에 복사되었습니다.", Toast.LENGTH_SHORT).show();
+                                                // 토스트 메시지 띄우기
+                                                Toast toast = new Toast(getApplicationContext());
+                                                toast.setView(view.inflate(getApplicationContext(), R.layout.clip_copy_toast, null));
+                                                toast.setGravity(Gravity.CENTER, 0, 0);
+                                                toast.show();
                                             }
                                         }
                                     }
@@ -173,7 +177,7 @@ public class NowPlaylistActivity extends AppCompatActivity {
         // 삭제 버튼 클릭한 경우
         btn_delete.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 if(deleteMusicAdapter.deleteList.size() != 0) {
                     int[] deleteList = new int[deleteMusicAdapter.deleteList.size()];
                     for(int i=0; i<deleteList.length; i++) {
@@ -193,10 +197,10 @@ public class NowPlaylistActivity extends AppCompatActivity {
                                     requestPlaylist(); // 재생 목록 갱신
 
                                     // 토스트 메시지 띄우기
-                                    Toast addtoast = new Toast(getApplicationContext());
-                                    addtoast.setView(v.inflate(getApplicationContext(), R.layout.delete_toast, null));
-                                    addtoast.setGravity(Gravity.CENTER, 0, 0);
-                                    addtoast.show();
+                                    Toast toast = new Toast(getApplicationContext());
+                                    toast.setView(view.inflate(getApplicationContext(), R.layout.delete_toast, null));
+                                    toast.setGravity(Gravity.CENTER, 0, 0);
+                                    toast.show();
                                 }
                             }
                         }
