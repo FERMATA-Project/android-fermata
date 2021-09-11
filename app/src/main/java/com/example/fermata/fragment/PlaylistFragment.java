@@ -38,6 +38,7 @@ import retrofit2.Response;
 
 // 설명: 메인 화면 중 하단바 내 재생목록 클릭 -> 재생 목록 화면
 // author: seungyeon, last modified: 21.08.10
+// author: soohyun, last modified: 21.09.10
 public class PlaylistFragment extends Fragment {
     ArrayList<Music> lately_musicList = new ArrayList<>();
     ArrayList<Playlist> playList = new ArrayList<>();
@@ -164,7 +165,8 @@ public class PlaylistFragment extends Fragment {
                         List<Playlist> playlists = result.playlist; // 재생목록 리스트
 
                         for(Playlist playlist: playlists){
-                            playList.add(playlist);
+                            if(!playlist.getListName().equals("현재 재생 목록"))
+                                playList.add(playlist);
                         }
                         adapter_playlist.notifyDataSetChanged();
                     }

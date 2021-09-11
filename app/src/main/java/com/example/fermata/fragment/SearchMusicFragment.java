@@ -181,7 +181,7 @@ public class SearchMusicFragment extends Fragment {
 
     // 현재 재생 목록에 음악 추가
     private void requestAddMusic(int music_id) {
-        RetrofitClient.getApiService().requestAddMusic("현재", music_id).enqueue(new Callback<musicResponse>() {
+        RetrofitClient.getApiService().requestAddMusic("현재 재생 목록", music_id).enqueue(new Callback<musicResponse>() {
             @Override
             public void onResponse(Call<musicResponse> call, Response<musicResponse> response) {
                 if(response.isSuccessful()){
