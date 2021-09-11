@@ -72,19 +72,19 @@ public class DeleteMusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             @Override
             public void onClick(View v) {
                 if(((DeleteMusicAdapter.DeleteMusicViewHolder)viewHolder).btn_add.isChecked()) {
-                    if(make_list_name.equals("좋아요한 음악목록")){
+                    if(playlist_title.equals("좋아요한 음악목록")){
                         requestUpdateLike(likePlaylist.get(position).getMusic_id(), 0);
                     }else{
                         requestDelPlaylist(likePlaylist.get(position).getMusic_id());
                     }
                 }else if(((DeleteMusicAdapter.DeleteMusicViewHolder)viewHolder).btn_add.isChecked() == false) {
-                    if(make_list_name.equals("좋아요한 음악목록")){
+                    if(playlist_title.equals("좋아요한 음악목록")){
                         requestUpdateLike(likePlaylist.get(position).getMusic_id(), 1);
                     }else{
                         requestAddPlaylist(likePlaylist.get(position).getMusic_id());
                     }
                   
-                 if(((AddMusicViewHolder)viewHolder).btn_add.isChecked()) {
+                 if(((AddMusicAdapter.AddMusicViewHolder)viewHolder).btn_add.isChecked()) {
                     deleteList.add(playlist.get(position).getMusic_id());
                 }
                 else {
@@ -102,7 +102,7 @@ public class DeleteMusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     // 뷰 홀더
-    public class DeleteMusicViewHolder extends RecyclerView.ViewHolder{
+    public class DeleteMusicAdapter extends RecyclerView.ViewHolder{
         TextView tv_musicName;
         TextView tv_singerName;
         CheckBox btn_add;
@@ -130,7 +130,7 @@ public class DeleteMusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
               
     // 재생목록에 음악 삭제 메서드
     private void requestDelPlaylist (int music_id) {
-        RetrofitClient.getApiService().requestDelPlaylist(make_list_name, music_id).enqueue(new Callback<com.example.fermata.domain.AddPlaylist>() {
+        RetrofitClient.getApiService().requestDelPlaylist(playlist_title, music_id).enqueue(new Callback<com.example.fermata.domain.AddPlaylist>() {
             @Override
             public void onResponse(Call<com.example.fermata.domain.AddPlaylist> call, Response<com.example.fermata.domain.AddPlaylist> response) {
                 final AddPlaylist delplaylist = response.body();
@@ -147,7 +147,7 @@ public class DeleteMusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     // 재생목록에 음악 추가 메서드
     private void requestAddPlaylist (int music_id) {
-        RetrofitClient.getApiService().requestAddPlaylist(make_list_name, music_id).enqueue(new Callback<com.example.fermata.domain.AddPlaylist>() {
+        RetrofitClient.getApiService().requestAddPlaylist(playlist_title, music_id).enqueue(new Callback<com.example.fermata.domain.AddPlaylist>() {
             @Override
             public void onResponse(Call<com.example.fermata.domain.AddPlaylist> call, Response<com.example.fermata.domain.AddPlaylist> response) {
                 final AddPlaylist addplaylist = response.body();
