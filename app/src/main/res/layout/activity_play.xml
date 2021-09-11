@@ -8,20 +8,6 @@
     android:weightSum="10"
     tools:context=".activity.PlayActivity">
 
-    <!-- 재생목록 옵션 버튼
-    <ImageButton
-        android:id="@+id/btn_option"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginRight="20dp"
-        app:layout_constraintHorizontal_bias="1"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:background="@drawable/ic_baseline_more_vert_24"
-        app:layout_constraintTop_toBottomOf="@+id/tv_singerName"/>
- -->
-    <!-- 현재 재생 음악 정보 텍스트 -->
     <!-- visualizer ~ seekbar -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,8 +19,18 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="60dp">
-            <!-- 재생목록 옵션 버튼 -->
 
+            <!-- 뒤로가기 버튼 -->
+            <ImageButton
+                android:id="@+id/btn_back"
+                android:background="@drawable/ic_back"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="20dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerInParent="true" />
+
+            <!-- 재생목에 추가 버튼 -->
             <ImageButton
                 android:id="@+id/btn_option"
                 android:background="@drawable/ic_baseline_more_vert_24"
@@ -49,7 +45,7 @@
         <com.gauravk.audiovisualizer.visualizer.BarVisualizer xmlns:custom="http://schemas.android.com/apk/res-auto"
             android:id="@+id/vi_bar"
             android:layout_width="match_parent"
-            android:layout_height="420dp"
+            android:layout_height="350dp"
             custom:avColor="#8C8C8C"
             custom:avDensity="0.5"
             custom:avSpeed="medium"
@@ -60,17 +56,13 @@
         <!-- repeat, 곡 제목, 가수명, favorite 토글 -->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp">
+            android:layout_height="70dp">
 
             <!-- 곡 제목 -->
             <TextView
                 android:id="@+id/tv_songName"
-                android:text="곡 제목"
-                android:textColor="@color/black"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:marqueeRepeatLimit="marquee_forever"
                 android:layout_alignParentBottom="true"
                 android:layout_centerInParent="true"
                 android:layout_marginStart="20dp"
@@ -78,9 +70,13 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginRight="60dp"
                 android:layout_marginBottom="30dp"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
                 android:padding="2dp"
                 android:singleLine="true"
+                android:text="곡 제목"
                 android:textAlignment="center"
+                android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"></TextView>
 
@@ -135,7 +131,7 @@
         <!-- 곡 시작 시간, seekbar, 곡 종료 시간 -->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp">
+            android:layout_height="40dp">
 
             <!-- seekbar -->
             <SeekBar
@@ -147,9 +143,10 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
                 android:thumbTint="@color/black"
-                android:progressBackgroundTint="#E0E0E0"
-                android:layout_marginBottom="20dp"></SeekBar>
+                android:backgroundTint="@color/black"
+                android:background="@color/black"></SeekBar>
 
             <!-- 곡 시작 시간 -->
             <TextView
