@@ -43,18 +43,18 @@ import retrofit2.Response;
 
 // 설명: 음악 재생 화면
 // author: dayoung, last modified: 21.08.28
-// author: soohyun, last modified: 21.08.30
+// author: soohyun, last modified: 21.09.10
 public class PlayActivity extends AppCompatActivity {
     public static Context context; // PlayActivity context
-    ImageButton btn_option; // 재생 목록 옵션 버튼
+    ImageButton btn_back, btn_option; // 뒤로가기, 재생 목록 옵션 버튼
     BarVisualizer visualizer;
     TextView songName, singerName, songStart, songEnd, nowList, musicInfo; //제목, 가수, 현재 재생 시간, 재생 종료 시간, 현재 재생 목록 (화면 전환), 음악 정보
-    Button btnRepeat, btnLike, btnPlay, btnPrev, btnNext, btnVolume, btnSensor; //반복 재생, 좋아요, play(pause), 이전 곡, 다음 곡, 소리 조절, 진동 조절
+    Button btnRepeat, btnLike, btnPlay, btnPrev, btnNext, btnVolume, btnSensor; // 반복 재생, 좋아요, play(pause), 이전 곡, 다음 곡, 소리 조절, 진동 조절
     SeekBar sbMusic; //음악 재생바
     Thread updateSB; //현재 재생 시간 확인을 위한
     int now_play = 0; // 현재 음악 재생 위치
     int now_music_id = 0; // 현재 재생 음악 id
-    ArrayList<Music> playlist = new ArrayList<>(); // 재생 목록
+    static ArrayList<Music> playlist = new ArrayList<>(); // 재생 목록
     List<Integer> vibrateList = new ArrayList<>(); // 음악 진동 세기 리스트
     static MediaPlayer mediaPlayer = new MediaPlayer(); // 음악 플레이어
     Thread vibrateThread; // 진동 시간 확인을 위한 스레드
@@ -81,6 +81,7 @@ public class PlayActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("vibrate", Activity.MODE_PRIVATE); // 진동 여부 데이터가 저장되어 있는 곳
         isVibrate = sharedPreferences.getString("vibrate","true"); // 저장된 진동 여부 값
 
+        btn_back = findViewById(R.id.btn_back);
         btn_option = findViewById(R.id.btn_option);
         visualizer = findViewById(R.id.vi_bar);
         songName = findViewById(R.id.tv_songName);
@@ -104,13 +105,11 @@ public class PlayActivity extends AppCompatActivity {
         int position = intent.getIntExtra("position", -2); // 음악 재생 위치
 
         // 재생목록 이름 표시
-        nowList.setText(playlist_title + " 재생 목록");
+        nowList.setText(playlist_title);
 
         // 음악 재생 + visualizer
         requestPlaylistNow(position, playlist_title);
-      
-        //playAudio(playlist.get(now_play).getMusic_id());
-        //requestVibrate(playlist.get(position).getMusic_id());
+        
 
         // 재생 목록 옵션 버튼 클릭한 경우
         btn_option.setOnClickListener(new View.OnClickListener() {
@@ -124,6 +123,10 @@ public class PlayActivity extends AppCompatActivity {
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
                             case R.id.item_add_playlist:
+                                Intent intent = new Intent(getApplicationContext(), SelectPlaylistActivity.class);
+                                intent.putExtra("playlist_title", playlist_title);
+                                intent.putExtra("music_id", playlist.get(now_play).getMusic_id());
+                                startActivity(intent);
                                 break;
                         }
                         return true;
@@ -140,12 +143,12 @@ public class PlayActivity extends AppCompatActivity {
                 if(mediaPlayer.isPlaying()){
                     btnPlay.setBackgroundResource(R.drawable.ic_play);
                     mediaPlayer.pause();
-                    vibrateThread.interrupt();
+                    //vibrateThread.interrupt();
                 }
                 else{
                     btnPlay.setBackgroundResource(R.drawable.ic_pause);
                     mediaPlayer.start();
-                    playVibrate();
+                    //playVibrate();
                 }
             }
         });
@@ -415,11 +418,8 @@ public class PlayActivity extends AppCompatActivity {
                         singerName.setText(playlist.get(now_play).getSinger());
                         musicInfo.setText("("+ (now_play+1) +"/" + size + ")");
 
-                        NowPlaylistActivity.tv_musicName.setText(playlist.get(now_play).getMusic_title());
-                        NowPlaylistActivity.tv_singerName.setText(playlist.get(now_play).getSinger());
-                        NowPlaylistActivity.tv_music_info.setText("("+ (now_play + 1) +"/" + playlist.size() + ")");
                         playAudio(playlist.get(now_play).getMusic_id());
-                        requestVibrate(playlist.get(now_play).getMusic_id());
+                        //requestVibrate(playlist.get(now_play).getMusic_id());
                     }
                 }
             }

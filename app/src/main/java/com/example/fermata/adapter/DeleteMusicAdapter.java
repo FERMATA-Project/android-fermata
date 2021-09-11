@@ -1,6 +1,9 @@
 package com.example.fermata.adapter;
 
 import android.content.Context;
+import android.content.ClipData;
+import android.content.Context;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +21,7 @@ import com.example.fermata.domain.Music;
 import com.example.fermata.response.musicResponse;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,23 +29,24 @@ import retrofit2.Response;
 
 public class DeleteMusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     Context context;
-    private ArrayList<Music> likePlaylist = null;
-    private String make_list_name = "";
-    private AddMusicAdapter.OnItemClickListener listener = null;
-
+    private ArrayList<Music> playlist = null;
+    public ArrayList<Integer> deleteList =  new ArrayList<>();
+    private String playlist_title = ""; // 재생목록 이름
+    private OnItemClickListener listener = null;
+  
     public interface OnItemClickListener {
         void onItemClick(View v, int position) ;
     }
 
     // OnItemClickListener 리스너 객체 참조를 어댑터에 전달하는 메서드
-    public void setOnItemClickListener(AddMusicAdapter.OnItemClickListener listener) {
+    public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
 
-    public DeleteMusicAdapter(Context context, ArrayList<Music> likeplaylist, String make_list_name){
+    public DeleteMusicAdapter(Context context, ArrayList<Music> playlist, String playlist_title){
         this.context = context;
-        this.likePlaylist = likeplaylist;
-        this.make_list_name = make_list_name;
+        this.playlist = playlist;
+        this.playlist_title = playlist_title;
     }
 
     @NonNull
@@ -78,6 +83,13 @@ public class DeleteMusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     }else{
                         requestAddPlaylist(likePlaylist.get(position).getMusic_id());
                     }
+                  
+                 if(((AddMusicViewHolder)viewHolder).btn_add.isChecked()) {
+                    deleteList.add(playlist.get(position).getMusic_id());
+                }
+                else {
+                    int idx = deleteList.indexOf(playlist.get(position).getMusic_id());
+                    deleteList.remove(idx-1);
                 }
             }
         });
@@ -86,7 +98,7 @@ public class DeleteMusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     // 전체 데이터 개수 리턴
     @Override
     public int getItemCount() {
-        return likePlaylist.size();
+        return playlist.size();
     }
 
     // 뷰 홀더
@@ -115,7 +127,7 @@ public class DeleteMusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             });
         }
     }
-
+              
     // 재생목록에 음악 삭제 메서드
     private void requestDelPlaylist (int music_id) {
         RetrofitClient.getApiService().requestDelPlaylist(make_list_name, music_id).enqueue(new Callback<com.example.fermata.domain.AddPlaylist>() {
