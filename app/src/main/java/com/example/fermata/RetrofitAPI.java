@@ -5,6 +5,9 @@ import com.example.fermata.response.musicResponse;
 import com.example.fermata.response.playlistResponse;
 import com.example.fermata.response.vibrateResponse;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -58,7 +61,7 @@ public interface RetrofitAPI {
             @Field("music_id") int music_id
     );
 
-    // 리스트에 음악 저장 취소 API
+    // 리스트에 음악 삭제 API
     @FormUrlEncoded
     @POST("/playlist/playlist_del")
     Call<AddPlaylist> requestDelPlaylist(
@@ -68,10 +71,18 @@ public interface RetrofitAPI {
 
     // 재생목록에 음악 추가 API
     @FormUrlEncoded
-    @POST("/music/add")
+    @POST("/playlist/addMusic")
     Call<musicResponse> requestAddMusic(
             @Field("playlist_title") String playlist_title,
             @Field("music_id") int music_id
+    );
+
+    // 재생목록에 음악 삭제 API
+    @FormUrlEncoded
+    @POST("/playlist/deleteMusic")
+    Call<musicResponse> requestDeleteMusic(
+            @Field("playlist_title") String playlist_title,
+            @Field("music_id") int[] music_id
     );
 
     // 좋아요 상태 변경 API

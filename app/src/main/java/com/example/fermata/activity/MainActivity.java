@@ -1,10 +1,7 @@
 package com.example.fermata.activity;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,7 +15,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.fermata.R;
-import com.example.fermata.fragment.PlaylistDetailFragment;
 import com.example.fermata.fragment.PlaylistFragment;
 import com.example.fermata.fragment.SearchMusicFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -28,8 +24,6 @@ public class MainActivity extends AppCompatActivity {
     FragmentManager fragmentManager; // 프래그먼트 매니저
     SearchMusicFragment searchMusicFragment = new SearchMusicFragment(); // 음악 찾기 프래그먼트
     PlaylistFragment playlistFragment = new PlaylistFragment(); // 내 재생목록 프래그먼트
-    //PlayerFragment playerFragment = new PlayerFragment(); // 음악 재생 프래그먼트
-    PlaylistDetailFragment playlistDetailFragment = new PlaylistDetailFragment();
 
     //(menifest uses-permission) 런타임 퍼미션 목록
     String[] permission_list = {
