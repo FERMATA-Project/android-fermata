@@ -78,8 +78,8 @@ public interface RetrofitAPI {
     @FormUrlEncoded
     @POST("/music/like")
     Call<musicResponse> requestUpdateLike(
-            @Field("like") int like,
-            @Field("music_id") int music_id
+            @Field("music_id") int music_id,
+            @Field("like") int like
     );
 
     // 재생 날짜 변경 API

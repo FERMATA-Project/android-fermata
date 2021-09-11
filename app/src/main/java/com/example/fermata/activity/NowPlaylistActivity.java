@@ -65,12 +65,13 @@ public class NowPlaylistActivity extends AppCompatActivity {
         now_play = intent.getIntExtra("now_play", 0);
 
         // 보여지는 정보 세팅
-        tv_playlistName.setText(playlist_title + " 재생 목록"); // 재생목록 이름
+        tv_playlistName.setText(playlist_title); // 재생목록 이름
         if(PlayActivity.mediaPlayer.isPlaying()) { // 음악 재생 중인 경우
             btn_play.setBackgroundResource(R.drawable.ic_pause);
         } else { // 음악 재생 중이 아닌 경우
             btn_play.setBackgroundResource(R.drawable.now_playlist_btn_play);
         }
+        requestPlaylistInfo(now_play, playlist_title);
 
         RecyclerView rv_now_playlist = findViewById(R.id.rv_now_playlist); // 현재 재생 목록 리사이클러뷰
         LinearLayoutManager manager = new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL,false); // 레이아웃 매니저
@@ -101,6 +102,8 @@ public class NowPlaylistActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // 곡 재생 + 정보 변경
                 ((PlayActivity)PlayActivity.context).requestPlaylistNow(now_play+1, playlist_title);
+                now_play = now_play + 1;
+                requestPlaylistInfo(now_play, playlist_title);
             }
         });
 
@@ -121,7 +124,7 @@ public class NowPlaylistActivity extends AppCompatActivity {
                                 ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 
                                 if(playlist_title.equals("현재 재생 목록")) {
-                                    RetrofitClient.getApiService().requestPlaylistGetmusic("현재").enqueue(new Callback<musicResponse>() {
+                                    RetrofitClient.getApiService().requestPlaylistGetmusic("현재 재생 목록").enqueue(new Callback<musicResponse>() {
                                         @Override
                                         public void onResponse(Call<musicResponse> call, Response<musicResponse> response) {
                                             if(response.isSuccessful()){
@@ -193,6 +196,33 @@ public class NowPlaylistActivity extends AppCompatActivity {
             }
         });
 
+    }
+    // 선택된 재생목록의 음악 리스트 가져오기 + 음악 재생 메소드
+    public void requestPlaylistInfo(int now_play, String playlist_title) {
+        RetrofitClient.getApiService().requestPlaylistNow(playlist_title).enqueue(new Callback<musicResponse>() {
+            @Override
+            public void onResponse(Call<musicResponse> call, Response<musicResponse> response) {
+                if(response.isSuccessful()){
+                    musicResponse result = response.body(); // 응답 결과
+
+                    if(result.code.equals("400")) {
+                        Toast.makeText(getApplicationContext(), "에러가 발생했습니다", Toast.LENGTH_SHORT).show();
+                    } else if (result.code.equals("200")) {
+                        List<Music> musics = result.music; // 음악 리스트
+                        int size = musics.size();
+
+                        // 보여지는 정보 세팅
+                        tv_musicName.setText(musics.get(now_play).getMusic_title());
+                        tv_singerName.setText(musics.get(now_play).getSinger());
+                        tv_music_info.setText("("+ (now_play+1) +"/" + size + ")");
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<musicResponse> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "네트워크 에러", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 }
