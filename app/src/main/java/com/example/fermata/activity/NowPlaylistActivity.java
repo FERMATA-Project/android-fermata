@@ -137,39 +137,39 @@ public class NowPlaylistActivity extends AppCompatActivity {
                                     RetrofitClient.getApiService().requestPlaylistGetmusic("현재 재생 목록").enqueue(new Callback<musicResponse>() {
                                         @Override
                                         public void onResponse(Call<musicResponse> call, Response<musicResponse> response) {
-                                            if(response.isSuccessful()){
+                                            if (response.isSuccessful()) {
                                                 musicResponse result = response.body(); // 응답 결과
-                                            if(result.code.equals("400")) {
-                                                Toast.makeText(getApplicationContext(), "에러가 발생했습니다", Toast.LENGTH_SHORT).show();
-                                            } else if (result.code.equals("200")) {
-                                                List<Music> musics = result.music; // 음악 리스트
-                                                String list_music_clip = "";
+                                                if (result.code.equals("400")) {
+                                                    Toast.makeText(getApplicationContext(), "에러가 발생했습니다", Toast.LENGTH_SHORT).show();
+                                                } else if (result.code.equals("200")) {
+                                                    List<Music> musics = result.music; // 음악 리스트
+                                                    String list_music_clip = "";
 
-                                                for(Music music: musics){
-                                                    list_music_clip = list_music_clip + "\n" + music.getMusic_title() + " - " + music.getSinger();
+                                                    for (Music music : musics) {
+                                                        list_music_clip = list_music_clip + "\n" + music.getMusic_title() + " - " + music.getSinger();
+                                                    }
+
+                                                    ClipData clip = ClipData.newPlainText(playlist_title, "재생목록 이름: " + playlist_title + "\n" + list_music_clip);
+                                                    clipboard.setPrimaryClip(clip);
+
+                                                    // 토스트 메시지 띄우기
+                                                    Toast toast = new Toast(getApplicationContext());
+                                                    toast.setView(view.inflate(getApplicationContext(), R.layout.clip_copy_toast, null));
+                                                    toast.setGravity(Gravity.CENTER, 0, 0);
+                                                    toast.show();
                                                 }
-
-                                                ClipData clip = ClipData.newPlainText(playlist_title, "재생목록 이름: " + playlist_title + "\n" + list_music_clip);
-                                                clipboard.setPrimaryClip(clip);
-
-                                                // 토스트 메시지 띄우기
-                                                Toast toast = new Toast(getApplicationContext());
-                                                toast.setView(view.inflate(getApplicationContext(), R.layout.clip_copy_toast, null));
-                                                toast.setGravity(Gravity.CENTER, 0, 0);
-                                                toast.show();
                                             }
                                         }
-                                    }
 
-                                    @Override
-                                    public void onFailure(Call<musicResponse> call, Throwable t) {
-                                        t.printStackTrace();
-                                        Toast.makeText(getApplicationContext(), "네트워크 에러", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                                break;
+                                        @Override
+                                        public void onFailure(Call<musicResponse> call, Throwable t) {
+                                            t.printStackTrace();
+                                            Toast.makeText(getApplicationContext(), "네트워크 에러", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                    break;
+                                }
                         }
-
                         return true;
                     }
                 });
@@ -223,6 +223,7 @@ public class NowPlaylistActivity extends AppCompatActivity {
         });
 
     }
+
     // 선택된 재생목록의 음악 리스트 가져오기 + 음악 재생 메소드
     public void requestPlaylistInfo(int now_play, String playlist_title) {
         RetrofitClient.getApiService().requestPlaylistNow(playlist_title).enqueue(new Callback<musicResponse>() {
