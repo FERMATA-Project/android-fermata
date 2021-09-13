@@ -126,8 +126,6 @@ public class DeleteMusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             });
         }
     }
-
-
               
     // 재생목록에 음악 삭제 메서드
     private void requestDelPlaylist (int music_id) {
