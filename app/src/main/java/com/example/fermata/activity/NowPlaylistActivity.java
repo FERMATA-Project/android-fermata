@@ -82,7 +82,7 @@ public class NowPlaylistActivity extends AppCompatActivity {
         RecyclerView rv_now_playlist = findViewById(R.id.rv_now_playlist); // 현재 재생 목록 리사이클러뷰
         LinearLayoutManager manager = new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL,false); // 레이아웃 매니저
         nowAdapter = new MusicAdapter(getApplicationContext(), nowPlaylist); // 음악 목록 어댑터
-        DeleteMusicAdapter deleteMusicAdapter = new DeleteMusicAdapter(getApplicationContext(), nowPlaylist, playlist_title); // 음악 삭제 어댑터
+        DeleteMusicAdapter deleteMusicAdapter = new DeleteMusicAdapter(getApplicationContext(), nowPlaylist); // 음악 삭제 어댑터
         rv_now_playlist.setLayoutManager(manager); // 리사이클러뷰와 레이아웃 매니저 연결
         rv_now_playlist.setAdapter(nowAdapter); // 리사이클러뷰와 어댑터 연결
         rv_now_playlist.addItemDecoration(new DividerItemDecoration(getApplicationContext(), 1));
@@ -187,6 +187,7 @@ public class NowPlaylistActivity extends AppCompatActivity {
                         deleteList[i] = deleteMusicAdapter.deleteList.get(i);
                         System.out.println(deleteList[i]);
                     }
+
                     RetrofitClient.getApiService().requestDeleteMusic(playlist_title, deleteList).enqueue(new Callback<musicResponse>() {
                         @Override
                         public void onResponse(Call<musicResponse> call, Response<musicResponse> response) {
@@ -204,6 +205,8 @@ public class NowPlaylistActivity extends AppCompatActivity {
                                     toast.setView(view.inflate(getApplicationContext(), R.layout.delete_toast, null));
                                     toast.setGravity(Gravity.CENTER, 0, 0);
                                     toast.show();
+
+                                    deleteMusicAdapter.deleteList.clear(); // 삭제할 음악 목록 초기화
                                 }
                             }
                         }
