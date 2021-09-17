@@ -35,7 +35,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 // 설명: 음악 재생 화면 재생목록 탭 클릭 -> 재생 목록 화면
-// author: soohyun, last modified: 21.09.07
+// author: soohyun, last modified: 21.09.17
 // author: dayoung, last modified: 21.09.04
 
 public class NowPlaylistActivity extends AppCompatActivity {
@@ -197,7 +197,10 @@ public class NowPlaylistActivity extends AppCompatActivity {
                                 if(result.code.equals("400")) {
                                     Toast.makeText(getApplicationContext(), "에러가 발생했습니다", Toast.LENGTH_SHORT).show();
                                 } else if (result.code.equals("200")) {
-                                    //((PlayActivity)PlayActivity.context).requestPlaylistNow(now_play, playlist_title); // PlayActivity의 재생 목록 갱신
+                                    int now_music_id = nowPlaylist.get(now_play).getMusic_id();
+                                    if(deleteMusicAdapter.deleteList.contains(now_music_id)) {
+                                        ((PlayActivity)PlayActivity.context).requestPlaylistNow(now_play, playlist_title); // PlayActivity의 재생 목록 갱신
+                                    }
                                     requestPlaylist(); // 재생 목록 갱신
 
                                     // 토스트 메시지 띄우기
@@ -267,12 +270,20 @@ public class NowPlaylistActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "에러가 발생했습니다", Toast.LENGTH_SHORT).show();
                     } else if (result.code.equals("200")) {
                         List<Music> musics = result.music; // 음악 리스트
+                        int size = musics.size();
 
                         nowPlaylist.clear(); // 음악 목록 리스트 초기화
                         for(Music music: musics) {
                             nowPlaylist.add(music);
                         }
                         nowAdapter.notifyDataSetChanged();
+
+                        now_play = now_play % size;
+
+                        // 보여지는 정보 세팅
+                        tv_musicName.setText(musics.get(now_play).getMusic_title());
+                        tv_singerName.setText(musics.get(now_play).getSinger());
+                        tv_music_info.setText("("+ (now_play+1) +"/" + size + ")");
                     }
                 }
             }

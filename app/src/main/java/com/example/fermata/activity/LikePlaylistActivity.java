@@ -129,7 +129,7 @@ public class LikePlaylistActivity extends AppCompatActivity {
                                                     list_music_clip = "";
 
                                                     for(Music music: musics){
-                                                        list_music_clip = list_music_clip + "\n" + music.getMusic_title().toString() + " - " + music.getSinger().toString();
+                                                        list_music_clip = list_music_clip + "\n" + music.getMusic_title() + " - " + music.getSinger();
                                                     }
 
                                                     ClipData clip = ClipData.newPlainText(make_list_name, "재생목록 이름: " + make_list_name + "\n" + list_music_clip);
@@ -214,44 +214,6 @@ public class LikePlaylistActivity extends AppCompatActivity {
                 rv_like_playlist.setAdapter(adapter);
                 btn_option.setVisibility(View.VISIBLE); //옵션버튼 화면에 보이게하기
                 btn_delete.setVisibility(View.GONE);    //삭제버튼 화면에 안보이게하기
-
-                /*
-                Toast deletetoast = new Toast(getApplicationContext());
-                deletetoast.setView(View.inflate(getApplicationContext(), R.layout.delete_toast, null));
-                deletetoast.setGravity(Gravity.CENTER, 0, 0);
-                deletetoast.show();
-
-                //좋아요한 음악목록 or 재생목록 음악목록
-                if(make_list_name.equals("좋아요한 음악목록")){
-                    requestPlaylistLikes();
-                }else{
-                    RetrofitClient.getApiService().requestPlaylistGetmusic(make_list_name).enqueue(new Callback<musicResponse>() {
-                        @Override
-                        public void onResponse(Call<musicResponse> call, Response<musicResponse> response) {
-                            if(response.isSuccessful()){
-                                musicResponse result = response.body(); // 응답 결과
-
-                                if(result.code.equals("400")) {
-                                    Toast.makeText(getApplicationContext(), "에러가 발생했습니다", Toast.LENGTH_SHORT).show();
-                                } else if (result.code.equals("200")) {
-                                    List<Music> musics = result.music; // 음악 리스트
-
-                                    likePlaylist.clear(); // 음악 목록 리스트 초기화
-                                    for(Music music: musics){
-                                        likePlaylist.add(music);
-                                    }
-                                    adapter.notifyDataSetChanged();
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<musicResponse> call, Throwable t) {
-                            t.printStackTrace();
-                            Toast.makeText(getApplicationContext(), "네트워크 에러", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }*/
             }
         });
     }

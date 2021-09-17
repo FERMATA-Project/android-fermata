@@ -101,6 +101,7 @@ public interface RetrofitAPI {
     @POST("/music/playdate")
     Call<musicResponse> requestUpdatePlayDate(
             @Field("play_date") String play_date,
+            @Field("count") int count,
             @Field("music_id") int music_id
     );
 
