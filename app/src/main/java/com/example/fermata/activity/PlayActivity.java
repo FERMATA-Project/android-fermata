@@ -208,7 +208,7 @@ public class PlayActivity extends AppCompatActivity {
                     requestUpdateLike(now_music_id, 0);
                     btnLike.setBackgroundResource(R.drawable.ic_play_like_no);
                 }
-                else  // 좋아요 X -> 좋아요 O
+                else // 좋아요 X -> 좋아요 O
                 {
                     requestUpdateLike(now_music_id, 1);
                     btnLike.setBackgroundResource(R.drawable.ic_play_like_yes);
@@ -277,6 +277,7 @@ public class PlayActivity extends AppCompatActivity {
     protected void onDestroy() {
         if (visualizer != null)
             visualizer.release();
+        mediaPlayer.stop();
         super.onDestroy();
     }
 
