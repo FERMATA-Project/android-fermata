@@ -245,9 +245,9 @@ public class NowPlaylistActivity extends AppCompatActivity {
                         int size = musics.size();
 
                         // 보여지는 정보 세팅
-                        tv_musicName.setText(musics.get(now_play).getMusic_title());
-                        tv_singerName.setText(musics.get(now_play).getSinger());
-                        tv_music_info.setText("("+ (now_play+1) +"/" + size + ")");
+                        tv_musicName.setText(musics.get(now_play % size).getMusic_title());
+                        tv_singerName.setText(musics.get(now_play % size).getSinger());
+                        tv_music_info.setText("("+ (now_play % size+1) +"/" + size + ")");
                     }
                 }
             }

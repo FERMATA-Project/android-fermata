@@ -15,6 +15,7 @@ import android.os.Bundle;;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -209,11 +210,13 @@ public class PlayActivity extends AppCompatActivity {
                 {
                     requestUpdateLike(now_music_id, 0);
                     btnLike.setBackgroundResource(R.drawable.ic_play_like_no);
+                    like = 0;
                 }
                 else // 좋아요 X -> 좋아요 O
                 {
                     requestUpdateLike(now_music_id, 1);
                     btnLike.setBackgroundResource(R.drawable.ic_play_like_yes);
+                    like = 1;
                 }
             }
         });
@@ -423,7 +426,10 @@ public class PlayActivity extends AppCompatActivity {
 
                         if (musics.size() == 0) {
                             onBackPressed();
-                            Toast.makeText(context, "현재 재생 목록이 비어있습니다.", Toast.LENGTH_SHORT).show();
+                            Toast nomusictoast = new Toast(getApplicationContext());
+                            nomusictoast.setView(View.inflate(getApplicationContext(), R.layout.no_music_item_toast, null));
+                            nomusictoast.setGravity(Gravity.CENTER, 0, 0);
+                            nomusictoast.show();
                             return;
                         }
 
