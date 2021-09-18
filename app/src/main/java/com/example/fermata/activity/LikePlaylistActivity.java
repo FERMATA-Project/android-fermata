@@ -46,7 +46,6 @@ import retrofit2.Response;
 // 설명: 좋아요한 음악 목록 화면
 // author: soohyun, last modified: 21.08.30
 // author: seungyeon, last modified: 21.09.11
-
 public class LikePlaylistActivity extends AppCompatActivity {
     ArrayList<Music> likePlaylist = new ArrayList<>();
     MusicAdapter adapter;
@@ -70,37 +69,13 @@ public class LikePlaylistActivity extends AppCompatActivity {
         if(make_list_name.equals("좋아요한 음악목록")){
             requestPlaylistLikes();
         }else{
-            RetrofitClient.getApiService().requestPlaylistGetmusic(make_list_name).enqueue(new Callback<musicResponse>() {
-                @Override
-                public void onResponse(Call<musicResponse> call, Response<musicResponse> response) {
-                    if(response.isSuccessful()){
-                        musicResponse result = response.body(); // 응답 결과
-
-                        if(result.code.equals("400")) {
-                            Toast.makeText(getApplicationContext(), "에러가 발생했습니다", Toast.LENGTH_SHORT).show();
-                        } else if (result.code.equals("200")) {
-                            List<Music> musics = result.music; // 음악 리스트
-
-                            likePlaylist.clear(); // 음악 목록 리스트 초기화
-                            for(Music music: musics){
-                                likePlaylist.add(music);
-                            }
-                            adapter.notifyDataSetChanged();
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<musicResponse> call, Throwable t) {
-                    t.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "네트워크 에러", Toast.LENGTH_SHORT).show();
-                }
-            });
+            requestPlaylistMusic();
         }
 
         RecyclerView rv_like_playlist = findViewById(R.id.rv_like_playlist); // 현재 재생 목록 리사이클러뷰
         LinearLayoutManager manager = new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL,false); // 레이아웃 매니저
         adapter = new MusicAdapter(getApplicationContext(), likePlaylist);
+        deleteadapter = new DeleteMusicAdapter(getApplicationContext(), likePlaylist);
         rv_like_playlist.setLayoutManager(manager); // 리사이클러뷰와 레이아웃 매니저 연결
         rv_like_playlist.setAdapter(adapter); // 리사이클러뷰와 어댑터 연결
         rv_like_playlist.addItemDecoration(new DividerItemDecoration(getApplicationContext(), 1));
@@ -118,6 +93,7 @@ public class LikePlaylistActivity extends AppCompatActivity {
 
         ImageButton btn_option = findViewById(R.id.btn_option); // 재생 목록 옵션 버튼
         Button btn_delete = findViewById(R.id.btn_delete);
+
         // 옵션 버튼 클릭한 경우
         btn_option.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,69 +107,10 @@ public class LikePlaylistActivity extends AppCompatActivity {
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
                             case R.id.item_playlist_delete:
+                                rv_like_playlist.setAdapter(deleteadapter);
                                 btn_delete.setVisibility(View.VISIBLE); //삭제버튼 화면에 보이게하기
                                 btn_option.setVisibility(View.GONE);    //옵션버튼 화면에 안보이게하기
-
-                                RecyclerView rv_like_playlist = findViewById(R.id.rv_like_playlist); // 현재 재생 목록 리사이클러뷰
-                                LinearLayoutManager manager = new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL,false); // 레이아웃 매니저
-                                deleteadapter = new DeleteMusicAdapter(getApplicationContext(), likePlaylist, make_list_name);
-                                rv_like_playlist.setLayoutManager(manager); // 리사이클러뷰와 레이아웃 매니저 연결
-                                rv_like_playlist.setAdapter(deleteadapter); // 리사이클러뷰와 어댑터 연결
-                                rv_like_playlist.addItemDecoration(new DividerItemDecoration(getApplicationContext(), 1));
-
-                                btn_delete.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        btn_option.setVisibility(View.VISIBLE); //옵션버튼 화면에 보이게하기
-                                        btn_delete.setVisibility(View.GONE);    //삭제버튼 화면에 안보이게하기
-
-                                        Toast deletetoast = new Toast(getApplicationContext());
-                                        deletetoast.setView(View.inflate(getApplicationContext(), R.layout.delete_toast, null));
-                                        deletetoast.setGravity(Gravity.CENTER, 0, 0);
-                                        deletetoast.show();
-
-                                        //좋아요한 음악목록 or 재생목록 음악목록
-                                        if(make_list_name.equals("좋아요한 음악목록")){
-                                            requestPlaylistLikes();
-                                        }else{
-                                            RetrofitClient.getApiService().requestPlaylistGetmusic(make_list_name).enqueue(new Callback<musicResponse>() {
-                                                @Override
-                                                public void onResponse(Call<musicResponse> call, Response<musicResponse> response) {
-                                                    if(response.isSuccessful()){
-                                                        musicResponse result = response.body(); // 응답 결과
-
-                                                        if(result.code.equals("400")) {
-                                                            Toast.makeText(getApplicationContext(), "에러가 발생했습니다", Toast.LENGTH_SHORT).show();
-                                                        } else if (result.code.equals("200")) {
-                                                            List<Music> musics = result.music; // 음악 리스트
-
-                                                            likePlaylist.clear(); // 음악 목록 리스트 초기화
-                                                            for(Music music: musics){
-                                                                likePlaylist.add(music);
-                                                            }
-                                                            adapter.notifyDataSetChanged();
-                                                        }
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onFailure(Call<musicResponse> call, Throwable t) {
-                                                    t.printStackTrace();
-                                                    Toast.makeText(getApplicationContext(), "네트워크 에러", Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
-                                        }
-
-                                        RecyclerView rv_like_playlist = findViewById(R.id.rv_like_playlist); // 현재 재생 목록 리사이클러뷰
-                                        LinearLayoutManager manager = new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL,false); // 레이아웃 매니저
-                                        adapter = new MusicAdapter(getApplicationContext(), likePlaylist);
-                                        rv_like_playlist.setLayoutManager(manager); // 리사이클러뷰와 레이아웃 매니저 연결
-                                        rv_like_playlist.setAdapter(adapter); // 리사이클러뷰와 어댑터 연결
-                                        rv_like_playlist.addItemDecoration(new DividerItemDecoration(getApplicationContext(), 1));
-                                    }
-                                });
                                 break;
-
                             case R.id.item_playlist_share:
                                 ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 
@@ -212,7 +129,7 @@ public class LikePlaylistActivity extends AppCompatActivity {
                                                     list_music_clip = "";
 
                                                     for(Music music: musics){
-                                                        list_music_clip = list_music_clip + "\n" + music.getMusic_title().toString() + " - " + music.getSinger().toString();
+                                                        list_music_clip = list_music_clip + "\n" + music.getMusic_title() + " - " + music.getSinger();
                                                     }
 
                                                     ClipData clip = ClipData.newPlainText(make_list_name, "재생목록 이름: " + make_list_name + "\n" + list_music_clip);
@@ -275,9 +192,33 @@ public class LikePlaylistActivity extends AppCompatActivity {
                 popupMenu.show();
             }
         });
+
+        // 삭제 버튼 클릭한 경우
+        btn_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(deleteadapter.deleteList.size() != 0) {
+                    int[] deleteList = new int[deleteadapter.deleteList.size()];
+                    for(int i=0; i<deleteList.length; i++) {
+                        deleteList[i] = deleteadapter.deleteList.get(i);
+                        System.out.println(deleteList[i]);
+                    }
+
+                    if(make_list_name.equals("좋아요한 음악목록")) {
+                        requestUpdateLikes(view, deleteList);
+                    } else {
+                        requestDeleteMusic(view, deleteList);
+                    }
+                }
+
+                rv_like_playlist.setAdapter(adapter);
+                btn_option.setVisibility(View.VISIBLE); //옵션버튼 화면에 보이게하기
+                btn_delete.setVisibility(View.GONE);    //삭제버튼 화면에 안보이게하기
+            }
+        });
     }
 
-    // 좋아요한 음악 데이터 요청 메서드
+    // 좋아요한 음악 목록 데이터 요청 메서드
     private void requestPlaylistLikes() {
         RetrofitClient.getApiService().requestPlaylistLikes().enqueue(new Callback<musicResponse>() {
             @Override
@@ -300,6 +241,100 @@ public class LikePlaylistActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<musicResponse> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "네트워크 에러", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // 나머지 재생목록 데이터 요청 메서드
+    private void requestPlaylistMusic() {
+        RetrofitClient.getApiService().requestPlaylistGetmusic(make_list_name).enqueue(new Callback<musicResponse>() {
+            @Override
+            public void onResponse(Call<musicResponse> call, Response<musicResponse> response) {
+                if(response.isSuccessful()){
+                    musicResponse result = response.body(); // 응답 결과
+
+                    if(result.code.equals("400")) {
+                        Toast.makeText(getApplicationContext(), "에러가 발생했습니다", Toast.LENGTH_SHORT).show();
+                    } else if (result.code.equals("200")) {
+                        List<Music> musics = result.music; // 음악 리스트
+
+                        likePlaylist.clear(); // 음악 목록 리스트 초기화
+                        for(Music music: musics){
+                            likePlaylist.add(music);
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<musicResponse> call, Throwable t) {
+                t.printStackTrace();
+                Toast.makeText(getApplicationContext(), "네트워크 에러", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // 좋아요한 음악 목록에서 음악 삭제하는 메서드
+    private void requestUpdateLikes(View view, int[] deleteList) {
+        RetrofitClient.getApiService().requestUpdateLikes(deleteList).enqueue(new Callback<musicResponse>() {
+            @Override
+            public void onResponse(Call<musicResponse> call, Response<musicResponse> response) {
+                if(response.isSuccessful()){
+                    musicResponse result = response.body(); // 응답 결과
+
+                    if(result.code.equals("400")) {
+                        Toast.makeText(getApplicationContext(), "에러가 발생했습니다", Toast.LENGTH_SHORT).show();
+                    } else if (result.code.equals("200")) {
+                        requestPlaylistLikes(); // 재생 목록 갱신
+
+                        // 토스트 메시지 띄우기
+                        Toast toast = new Toast(getApplicationContext());
+                        toast.setView(view.inflate(getApplicationContext(), R.layout.delete_toast, null));
+                        toast.setGravity(Gravity.CENTER, 0, 0);
+                        toast.show();
+
+                        deleteadapter.deleteList.clear(); // 삭제할 음악 목록 초기화
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<musicResponse> call, Throwable t) {
+                t.printStackTrace();
+                Toast.makeText(getApplicationContext(), "네트워크 에러", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // 나머지 재생목록에서 음악 삭제하는 메서드
+    private void requestDeleteMusic(View view, int[] deleteList) {
+        RetrofitClient.getApiService().requestDeleteMusic(make_list_name, deleteList).enqueue(new Callback<musicResponse>() {
+            @Override
+            public void onResponse(Call<musicResponse> call, Response<musicResponse> response) {
+                if(response.isSuccessful()){
+                    musicResponse result = response.body(); // 응답 결과
+
+                    if(result.code.equals("400")) {
+                        Toast.makeText(getApplicationContext(), "에러가 발생했습니다", Toast.LENGTH_SHORT).show();
+                    } else if (result.code.equals("200")) {
+                        requestPlaylistMusic(); // 재생 목록 갱신
+
+                        // 토스트 메시지 띄우기
+                        Toast toast = new Toast(getApplicationContext());
+                        toast.setView(view.inflate(getApplicationContext(), R.layout.delete_toast, null));
+                        toast.setGravity(Gravity.CENTER, 0, 0);
+                        toast.show();
+
+                        deleteadapter.deleteList.clear(); // 삭제할 음악 목록 초기화
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<musicResponse> call, Throwable t) {
+                t.printStackTrace();
                 Toast.makeText(getApplicationContext(), "네트워크 에러", Toast.LENGTH_SHORT).show();
             }
         });
