@@ -1,6 +1,7 @@
 package com.example.fermata.activity;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -21,11 +22,13 @@ import com.example.fermata.R;
 // author: seungyeon, last modified: 21.08.03
 public class MakePlaylistActivity extends AppCompatActivity {
     String make_list_name;
+    public static Activity makePlaylistActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_make_playlist);
+        makePlaylistActivity = MakePlaylistActivity.this;
 
         AppCompatButton btn_list_name = findViewById(R.id.btn_list_name); // 재생목록 추가 버튼
         EditText et_list_name = findViewById(R.id.et_list_name); // 재생목록 이름 입력 창
