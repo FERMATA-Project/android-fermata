@@ -208,11 +208,13 @@ public class PlayActivity extends AppCompatActivity {
                 {
                     requestUpdateLike(now_music_id, 0);
                     btnLike.setBackgroundResource(R.drawable.ic_play_like_no);
+                    like = 0;
                 }
                 else // 좋아요 X -> 좋아요 O
                 {
                     requestUpdateLike(now_music_id, 1);
                     btnLike.setBackgroundResource(R.drawable.ic_play_like_yes);
+                    like = 1;
                 }
             }
         });
