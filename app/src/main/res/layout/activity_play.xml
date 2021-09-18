@@ -83,7 +83,6 @@
             <!-- 가수명 -->
             <TextView
                 android:id="@+id/tv_singerName"
-                android:text="가수명"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
@@ -97,9 +96,10 @@
                 android:marqueeRepeatLimit="marquee_forever"
                 android:padding="2dp"
                 android:singleLine="true"
+                android:text="가수명"
                 android:textAlignment="center"
-                android:textSize="14sp"
-                android:textColor="#616161"></TextView>
+                android:textColor="#616161"
+                android:textSize="14sp"></TextView>
 
             <!-- repeat -->
             <Button
@@ -138,15 +138,11 @@
                 android:id="@+id/sb_music"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_centerInParent="true"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
-                android:layout_marginBottom="20dp"
-                android:thumbTint="@color/black"
-                android:backgroundTint="@color/black"
-                android:background="@color/black"></SeekBar>
+                android:progressDrawable="@drawable/seek_bar"
+                android:thumb="@drawable/seek_thumb"></SeekBar>
 
             <!-- 곡 시작 시간 -->
             <TextView
@@ -196,7 +192,7 @@
                 android:layout_centerInParent="true"
                 android:layout_marginRight="20dp"
                 android:layout_toLeftOf="@id/btn_prev"
-                android:background="@drawable/play_btn_volumn"></Button>
+                android:background="@drawable/btn_volume_on"></Button>
 
             <!-- 이전 곡 -->
             <Button
@@ -207,8 +203,7 @@
                 android:layout_centerInParent="true"
                 android:layout_marginRight="10dp"
                 android:layout_toLeftOf="@id/btn_play"
-                android:background="@drawable/play_btn_prev">
-            </Button>
+                android:background="@drawable/play_btn_prev"></Button>
 
             <!-- play(pause) 토글 -->
             <Button

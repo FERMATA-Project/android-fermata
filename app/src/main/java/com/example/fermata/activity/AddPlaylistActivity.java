@@ -36,7 +36,7 @@ import retrofit2.Response;
 // 설명: 재생목록에 노래 추가하기 화면
 // author: seungyeon, last modified: 21.08.15
 
-public class AddPlaylistActivity extends AppCompatActivity {
+public class  AddPlaylistActivity extends AppCompatActivity {
     ArrayList<Music> AddPlaylist = new ArrayList<>();
     AddMusicAdapter adapter;
     String make_list_title;

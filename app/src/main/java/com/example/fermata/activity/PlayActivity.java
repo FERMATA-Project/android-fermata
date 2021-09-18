@@ -2,12 +2,15 @@ package com.example.fermata.activity;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;;
@@ -27,6 +30,7 @@ import com.example.fermata.FlaskRetrofitClient;
 import com.example.fermata.R;
 import com.example.fermata.RetrofitClient;
 import com.example.fermata.domain.Music;
+import com.example.fermata.fragment.SearchMusicFragment;
 import com.example.fermata.response.musicResponse;
 import com.example.fermata.response.vibrateResponse;
 import com.gauravk.audiovisualizer.visualizer.BarVisualizer;
@@ -64,12 +68,12 @@ public class PlayActivity extends AppCompatActivity {
     SimpleDateFormat dateFormat = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
     Date date = new Date();
     int like = 0;
+    int setVolume = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
-
         context = this;
 
         // 상단바 안보이게 숨기기
@@ -99,6 +103,7 @@ public class PlayActivity extends AppCompatActivity {
         btnSensor = findViewById(R.id.btn_sensor);
         sbMusic = findViewById(R.id.sb_music);
 
+
         // SearchMusicFragment, LikePlaylistActivity, MainAcitivity 로부터 받은 데이터
         Intent intent = getIntent();
         String playlist_title = intent.getStringExtra("playlist_title"); // 재생 목록 이름
@@ -109,7 +114,15 @@ public class PlayActivity extends AppCompatActivity {
 
         // 음악 재생 + visualizer
         requestPlaylistNow(position, playlist_title);
-        
+
+
+        // 뒤로가기 버튼 클릭한 경우
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         // 재생 목록 옵션 버튼 클릭한 경우
         btn_option.setOnClickListener(new View.OnClickListener() {
@@ -203,6 +216,28 @@ public class PlayActivity extends AppCompatActivity {
                 {
                     requestUpdateLike(1, now_music_id);
                     btnLike.setBackgroundResource(R.drawable.ic_favorite_yes);
+                }
+            }
+        });
+
+        // 볼륨 조절
+        btnVolume.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AudioManager am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+
+                if (am.getStreamVolume(AudioManager.STREAM_MUSIC) != 0) // volume on -> off
+                {
+                    setVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC); // 현재 볼륨 저장
+                    am.setStreamVolume(AudioManager.STREAM_MUSIC, 0, AudioManager.FLAG_PLAY_SOUND);
+                    btnVolume.setBackgroundResource(R.drawable.btn_volume_off);
+                    Toast.makeText(context, "소리 끄기", Toast.LENGTH_SHORT).show();
+                }
+                else  // volume off -> on
+                {
+                    am.setStreamVolume(AudioManager.STREAM_MUSIC, setVolume, AudioManager.FLAG_PLAY_SOUND);
+                    btnVolume.setBackgroundResource(R.drawable.btn_volume_on);
+                    Toast.makeText(context, "소리 켜기", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -414,7 +449,8 @@ public class PlayActivity extends AppCompatActivity {
                         requestUpdatePlayDate(dateFormat.format(date), playlist.get(now_play).getMusic_id());
 
                         // 재생
-                        songName.setText(playlist.get(now_play).getMusic_title());
+                        //songName.setText(playlist.get(now_play).getMusic_title());
+                        songName.setText("4:45");
                         singerName.setText(playlist.get(now_play).getSinger());
                         musicInfo.setText("("+ (now_play+1) +"/" + size + ")");
 
