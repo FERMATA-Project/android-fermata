@@ -185,15 +185,15 @@ public class PlayActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (mediaPlayer != null)
                 {
-                    if (mediaPlayer.isLooping()) // 현재 looping으로 설정되어 있으면
+                    if (mediaPlayer.isLooping()) // 반복 재생 설정 -> 해제
                     {
                         mediaPlayer.setLooping(false);
-                        btnRepeat.setBackgroundResource(R.drawable.ic_play_replay);
+                        Toast.makeText(context, "반복 재생 해제", Toast.LENGTH_SHORT).show();
                     }
-                    else
+                    else // 해제 -> 반복 재생 설정
                     {
                         mediaPlayer.setLooping(true);
-                        btnRepeat.setBackgroundResource(R.drawable.ic_play_replay); // 수정 필요
+                        Toast.makeText(context, "반복 재생 설정", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
