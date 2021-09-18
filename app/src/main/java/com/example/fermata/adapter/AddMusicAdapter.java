@@ -26,6 +26,7 @@ import retrofit2.Response;
 public class AddMusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     Context context;
     private ArrayList<Music> AddPlayList = null;
+    public ArrayList<Integer> AddList =  new ArrayList<>();
     private String make_list_title = "";
     private OnItemClickListener listener = null;
 
@@ -67,20 +68,11 @@ public class AddMusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             @Override
             public void onClick(View v) {
                 if(((AddMusicViewHolder)viewHolder).btn_add.isChecked()) {
-                    requestAddPlaylist(AddPlayList.get(position).getMusic_id());
-
-                    Toast addtoast = new Toast(context);
-                    addtoast.setView(v.inflate(context, R.layout.playlist_music_add_toast, null));
-                    addtoast.setGravity(Gravity.CENTER, 0, 0);
-                    addtoast.show();
+                    AddList.add(AddPlayList.get(position).getMusic_id());
                 }
                 else if(((AddMusicViewHolder)viewHolder).btn_add.isChecked() == false) {
-                    requestDelPlaylist(AddPlayList.get(position).getMusic_id());
-
-                    Toast cancletoast = new Toast(context);
-                    cancletoast.setView(v.inflate(context, R.layout.playlist_music_cancle_toast, null));
-                    cancletoast.setGravity(Gravity.CENTER, 0, 0);
-                    cancletoast.show();
+                    int idx = AddList.indexOf(AddPlayList.get(position).getMusic_id());
+                    AddList.remove(idx);
                 }
             }
         });
@@ -117,39 +109,5 @@ public class AddMusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             });
         }
-    }
-
-    // 재생목록에 음악 추가 메서드
-    private void requestAddPlaylist (int music_id) {
-        RetrofitClient.getApiService().requestAddPlaylist(make_list_title, music_id).enqueue(new Callback<com.example.fermata.domain.AddPlaylist>() {
-            @Override
-            public void onResponse(Call<com.example.fermata.domain.AddPlaylist> call, Response<com.example.fermata.domain.AddPlaylist> response) {
-                final AddPlaylist addplaylist = response.body();
-                Toast.makeText(context, "서버에 값을 전달했습니다", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(Call<com.example.fermata.domain.AddPlaylist> call, Throwable t) {
-                t.printStackTrace();
-                Toast.makeText(context, "서버와 통신중 에러가 발생했습니다", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    // 재생목록에 음악 삭제 메서드
-    private void requestDelPlaylist (int music_id) {
-        RetrofitClient.getApiService().requestDelPlaylist(make_list_title, music_id).enqueue(new Callback<com.example.fermata.domain.AddPlaylist>() {
-            @Override
-            public void onResponse(Call<com.example.fermata.domain.AddPlaylist> call, Response<com.example.fermata.domain.AddPlaylist> response) {
-                final AddPlaylist delplaylist = response.body();
-                Toast.makeText(context, "서버에 값을 전달했습니다", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(Call<com.example.fermata.domain.AddPlaylist> call, Throwable t) {
-                t.printStackTrace();
-                Toast.makeText(context, "서버와 통신중 에러가 발생했습니다", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 }
