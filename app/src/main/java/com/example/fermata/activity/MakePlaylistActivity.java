@@ -58,9 +58,9 @@ public class MakePlaylistActivity extends AppCompatActivity {
                 if(make_list_name.equals("")) {
                     Toast.makeText(getApplicationContext(), "재생목록이름을 입력해주세요", Toast.LENGTH_SHORT).show();
                 }else if(make_list_name.equals("현재 재생 목록")) {
-                    Toast.makeText(getApplicationContext(), "현재 재생 목록은 재생목록 이름으로 사용할 수 없습니다", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "현재 재생 목록은 \n재생목록이름으로 사용할 수 없습니다", Toast.LENGTH_SHORT).show();
                 }else if(make_list_name.equals("좋아요한 음악목록")) {
-                    Toast.makeText(getApplicationContext(), "좋아요한 음악목록은 재생목록 이름으로 사용할 수 없습니다", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "좋아요한 음악목록은 \n재생목록이름으로 사용할 수 없습니다", Toast.LENGTH_SHORT).show();
                 } else{
                     Intent MaketoAdd = new Intent(getApplicationContext(), AddPlaylistActivity.class);
                     MaketoAdd.putExtra("재생목록이름", make_list_name);

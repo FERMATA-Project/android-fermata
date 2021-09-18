@@ -108,7 +108,7 @@ public class NowPlaylistActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // 곡 재생 + 정보 변경
-                ((PlayActivity)PlayActivity.context).requestPlaylistNow(now_play+1, playlist_title);
+                ((PlayActivity)PlayActivity.context).requestPlaylist(now_play+1, playlist_title);
                 now_play = now_play + 1;
                 requestPlaylistInfo(now_play, playlist_title);
             }
@@ -199,7 +199,7 @@ public class NowPlaylistActivity extends AppCompatActivity {
                                 } else if (result.code.equals("200")) {
                                     int now_music_id = nowPlaylist.get(now_play).getMusic_id();
                                     if(deleteMusicAdapter.deleteList.contains(now_music_id)) {
-                                        ((PlayActivity)PlayActivity.context).requestPlaylistNow(now_play, playlist_title); // PlayActivity의 재생 목록 갱신
+                                        ((PlayActivity)PlayActivity.context).requestPlaylist(now_play, playlist_title); // PlayActivity의 재생 목록 갱신
                                     }
                                     requestPlaylist(); // 재생 목록 갱신
 
