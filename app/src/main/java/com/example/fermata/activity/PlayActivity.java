@@ -209,12 +209,12 @@ public class PlayActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (like == 1) // 좋아요 O -> 좋아요 X
                 {
-                    requestUpdateLike(0, now_music_id);
+                    requestUpdateLike(now_music_id,0);
                     btnLike.setBackgroundResource(R.drawable.ic_favorite_no);
                 }
-                else  // 좋아요 X -> 좋아요 O
+                else // 좋아요 X -> 좋아요 O
                 {
-                    requestUpdateLike(1, now_music_id);
+                    requestUpdateLike(now_music_id, 1);
                     btnLike.setBackgroundResource(R.drawable.ic_favorite_yes);
                 }
             }
