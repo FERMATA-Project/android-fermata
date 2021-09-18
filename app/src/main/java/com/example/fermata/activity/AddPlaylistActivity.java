@@ -1,13 +1,16 @@
 package com.example.fermata.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SearchView;
@@ -15,6 +18,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,7 +28,9 @@ import com.example.fermata.R;
 import com.example.fermata.RetrofitClient;
 import com.example.fermata.adapter.AddMusicAdapter;
 import com.example.fermata.adapter.MusicAdapter;
+import com.example.fermata.domain.AddPlaylist;
 import com.example.fermata.domain.Music;
+import com.example.fermata.fragment.PlaylistFragment;
 import com.example.fermata.response.musicResponse;
 
 import java.util.ArrayList;
@@ -41,6 +48,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
     AddMusicAdapter adapter;
     String make_list_title;
     ImageView search_close;
+    Button btn_finish;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,30 +72,6 @@ public class AddPlaylistActivity extends AppCompatActivity {
         rv_add_playlist.setLayoutManager(manager); // 리사이클러뷰와 레이아웃 매니저 연결
         rv_add_playlist.setAdapter(adapter); // 리사이클러뷰와 어댑터 연결
         rv_add_playlist.addItemDecoration(new DividerItemDecoration(getApplicationContext(), 1));
-
-        /*
-        adapter.setOnItemClickListener(new AddMusicAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                final Call<com.example.fermata.domain.AddPlaylist> addplaylist = RetrofitClient.getApiService().requestAddPlaylist(make_list_title, AddPlaylist.get(position).getMusic_id());
-
-                addplaylist.enqueue(new Callback<com.example.fermata.domain.AddPlaylist>() {
-                    @Override
-                    public void onResponse(Call<com.example.fermata.domain.AddPlaylist> call, Response<com.example.fermata.domain.AddPlaylist> response) {
-                        final AddPlaylist addplaylist = response.body();
-                        Toast.makeText(getApplicationContext(), "서버에 값을 전달했습니다", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onFailure(Call<com.example.fermata.domain.AddPlaylist> call, Throwable t) {
-                        t.printStackTrace();
-                        Toast.makeText(getApplicationContext(), "서버와 통신중 에러가 발생했습니다", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-                Toast.makeText(getApplicationContext(), "추가가 완료되었습니다.", Toast.LENGTH_SHORT).show();
-            }
-        });*/
 
         EditText et_search = findViewById(R.id.et_search); // 음악 검색창
         // 엔터키 이벤트 처리
@@ -154,6 +138,31 @@ public class AddPlaylistActivity extends AppCompatActivity {
                 et_search.clearFocus();
             }
         });
+
+        // 완료버튼 누를 경우
+        btn_finish = findViewById(R.id.btn_finish);
+        btn_finish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(adapter.AddList.size() != 0) {
+                    int[] AddList = new int[adapter.AddList.size()];
+                    for(int i=0; i<AddList.length; i++) {
+                        AddList[i] = adapter.AddList.get(i);
+                        requestAddPlaylist(AddList[i]);
+                    }
+                }
+
+                Toast finishtoast = new Toast(getApplicationContext());
+                finishtoast.setView(View.inflate(getApplicationContext(), R.layout.playlist_music_add_toast, null));
+                finishtoast.setGravity(Gravity.CENTER, 0, 0);
+                finishtoast.show();
+
+                MakePlaylistActivity makePlaylistActivity = (MakePlaylistActivity)MakePlaylistActivity.makePlaylistActivity;
+                makePlaylistActivity.finish();
+                AddPlaylistActivity.this.finish();
+            }
+        });
     }
 
 
@@ -181,6 +190,23 @@ public class AddPlaylistActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<musicResponse> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "네트워크 에러", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // 재생목록에 음악 추가 메서드
+    private void requestAddPlaylist (int music_id) {
+        RetrofitClient.getApiService().requestAddPlaylist(make_list_title, music_id).enqueue(new Callback<com.example.fermata.domain.AddPlaylist>() {
+            @Override
+            public void onResponse(Call<com.example.fermata.domain.AddPlaylist> call, Response<com.example.fermata.domain.AddPlaylist> response) {
+                final com.example.fermata.domain.AddPlaylist addplaylist = response.body();
+                Toast.makeText(getApplicationContext(), "서버에 값을 전달했습니다", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<com.example.fermata.domain.AddPlaylist> call, Throwable t) {
+                t.printStackTrace();
+                Toast.makeText(getApplicationContext(), "서버와 통신중 에러가 발생했습니다", Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -68,7 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="88dp"
         android:layout_marginLeft="16dp"
-        android:text="노래를 추가해주세요"
+        android:text="노래를 추가하기"
         android:textStyle="bold"
         android:textColor="@color/white"
         android:textSize="34sp"
@@ -76,6 +76,21 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
+
+    <!-- 완료 버튼 -->
+    <Button
+        android:id="@+id/btn_finish"
+        android:layout_width="65dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="110dp"
+        android:layout_marginRight="3dp"
+        android:text="완료"
+        android:textSize="13sp"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_add_playlist"/>
 
     <!-- 전체 곡 리사이클러뷰 -->
     <androidx.recyclerview.widget.RecyclerView

@@ -2,6 +2,7 @@ package com.example.fermata.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.fermata.DividerItemDecorator;
 import com.example.fermata.R;
 import com.example.fermata.RetrofitClient;
+import com.example.fermata.activity.AddPlaylistActivity;
 import com.example.fermata.activity.LikePlaylistActivity;
 import com.example.fermata.WidthItemDecorator;
 import com.example.fermata.activity.MainActivity;
@@ -37,7 +39,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 // 설명: 메인 화면 중 하단바 내 재생목록 클릭 -> 재생 목록 화면
-// author: seungyeon, last modified: 21.08.10
+// author: seungyeon, last modified: 21.09.18
 // author: soohyun, last modified: 21.09.10
 public class PlaylistFragment extends Fragment {
     ArrayList<Music> lately_musicList = new ArrayList<>();
@@ -77,7 +79,6 @@ public class PlaylistFragment extends Fragment {
                 startActivity(PlaylisttoLike);
             }
         });
-
 
         ImageButton btn_add_list = view.findViewById(R.id.btn_add_list); // 재생목록추가 버튼
         btn_add_list.setOnClickListener(new View.OnClickListener() {

@@ -20,7 +20,7 @@ public class DeleteMusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private ArrayList<Music> playlist = null;
     public ArrayList<Integer> deleteList =  new ArrayList<>(); // 삭제할 음악 리스트
     private OnItemClickListener listener = null;
-  
+
     public interface OnItemClickListener {
         void onItemClick(View v, int position) ;
     }
@@ -101,4 +101,3 @@ public class DeleteMusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 }
-
