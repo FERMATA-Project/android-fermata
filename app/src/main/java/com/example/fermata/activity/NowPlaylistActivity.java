@@ -35,7 +35,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 // 설명: 음악 재생 화면 재생목록 탭 클릭 -> 재생 목록 화면
-// author: soohyun, last modified: 21.09.07
+// author: soohyun, last modified: 21.09.17
 // author: dayoung, last modified: 21.09.04
 
 public class NowPlaylistActivity extends AppCompatActivity {
@@ -82,7 +82,7 @@ public class NowPlaylistActivity extends AppCompatActivity {
         RecyclerView rv_now_playlist = findViewById(R.id.rv_now_playlist); // 현재 재생 목록 리사이클러뷰
         LinearLayoutManager manager = new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL,false); // 레이아웃 매니저
         nowAdapter = new MusicAdapter(getApplicationContext(), nowPlaylist); // 음악 목록 어댑터
-        DeleteMusicAdapter deleteMusicAdapter = new DeleteMusicAdapter(getApplicationContext(), nowPlaylist, playlist_title); // 음악 삭제 어댑터
+        DeleteMusicAdapter deleteMusicAdapter = new DeleteMusicAdapter(getApplicationContext(), nowPlaylist); // 음악 삭제 어댑터
         rv_now_playlist.setLayoutManager(manager); // 리사이클러뷰와 레이아웃 매니저 연결
         rv_now_playlist.setAdapter(nowAdapter); // 리사이클러뷰와 어댑터 연결
         rv_now_playlist.addItemDecoration(new DividerItemDecoration(getApplicationContext(), 1));
@@ -187,6 +187,7 @@ public class NowPlaylistActivity extends AppCompatActivity {
                         deleteList[i] = deleteMusicAdapter.deleteList.get(i);
                         System.out.println(deleteList[i]);
                     }
+
                     RetrofitClient.getApiService().requestDeleteMusic(playlist_title, deleteList).enqueue(new Callback<musicResponse>() {
                         @Override
                         public void onResponse(Call<musicResponse> call, Response<musicResponse> response) {
@@ -196,7 +197,10 @@ public class NowPlaylistActivity extends AppCompatActivity {
                                 if(result.code.equals("400")) {
                                     Toast.makeText(getApplicationContext(), "에러가 발생했습니다", Toast.LENGTH_SHORT).show();
                                 } else if (result.code.equals("200")) {
-                                    //((PlayActivity)PlayActivity.context).requestPlaylistNow(now_play, playlist_title); // PlayActivity의 재생 목록 갱신
+                                    int now_music_id = nowPlaylist.get(now_play).getMusic_id();
+                                    if(deleteMusicAdapter.deleteList.contains(now_music_id)) {
+                                        ((PlayActivity)PlayActivity.context).requestPlaylistNow(now_play, playlist_title); // PlayActivity의 재생 목록 갱신
+                                    }
                                     requestPlaylist(); // 재생 목록 갱신
 
                                     // 토스트 메시지 띄우기
@@ -204,6 +208,8 @@ public class NowPlaylistActivity extends AppCompatActivity {
                                     toast.setView(view.inflate(getApplicationContext(), R.layout.delete_toast, null));
                                     toast.setGravity(Gravity.CENTER, 0, 0);
                                     toast.show();
+
+                                    deleteMusicAdapter.deleteList.clear(); // 삭제할 음악 목록 초기화
                                 }
                             }
                         }
@@ -264,12 +270,20 @@ public class NowPlaylistActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "에러가 발생했습니다", Toast.LENGTH_SHORT).show();
                     } else if (result.code.equals("200")) {
                         List<Music> musics = result.music; // 음악 리스트
+                        int size = musics.size();
 
                         nowPlaylist.clear(); // 음악 목록 리스트 초기화
                         for(Music music: musics) {
                             nowPlaylist.add(music);
                         }
                         nowAdapter.notifyDataSetChanged();
+
+                        now_play = now_play % size;
+
+                        // 보여지는 정보 세팅
+                        tv_musicName.setText(musics.get(now_play).getMusic_title());
+                        tv_singerName.setText(musics.get(now_play).getSinger());
+                        tv_music_info.setText("("+ (now_play+1) +"/" + size + ")");
                     }
                 }
             }
