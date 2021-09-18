@@ -14,7 +14,10 @@
         <entry key="app/src/main/res/drawable/ic_play.xml" value="0.272" />
         <entry key="app/src/main/res/drawable/ic_play_menu.xml" value="0.2785" />
         <entry key="app/src/main/res/drawable/ic_play_next.xml" value="0.272" />
+        <entry key="app/src/main/res/drawable/ic_play_play.xml" value="0.3325" />
         <entry key="app/src/main/res/drawable/ic_play_prev.xml" value="0.2785" />
+        <entry key="app/src/main/res/drawable/ic_play_replay.xml" value="0.3325" />
+        <entry key="app/src/main/res/drawable/ic_play_sound.xml" value="0.3325" />
         <entry key="app/src/main/res/drawable/ic_repeat.xml" value="0.239" />
         <entry key="app/src/main/res/drawable/ic_sensor.xml" value="0.2785" />
         <entry key="app/src/main/res/drawable/ic_volume.xml" value="0.2785" />
@@ -31,7 +34,7 @@
         <entry key="app/src/main/res/drawable/selector_btn_like.xml" value="0.272" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.24462890625" />
         <entry key="app/src/main/res/layout/activity_now_playlist.xml" value="0.25625" />
-        <entry key="app/src/main/res/layout/activity_play.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/activity_play.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_search.xml" value="0.378125" />
         <entry key="app/src/main/res/layout/fragment_play.xml" value="0.375" />
         <entry key="app/src/main/res/layout/fragment_playlist.xml" value="0.2144210815429688" />
