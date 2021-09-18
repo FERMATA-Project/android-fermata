@@ -83,6 +83,7 @@ public class LikePlaylistActivity extends AppCompatActivity {
         // 재생목록 리스트 클릭한 경우 -> 음악 즐기기 화면으로 이동
         adapter.setOnItemClickListener(new MusicAdapter.OnItemClickListener() {
             @Override
+
             public void onItemClick(View v, int position) {
                 Intent intent = new Intent(getApplicationContext(), PlayActivity.class);
                 intent.putExtra("playlist_title", make_list_name); // 재생목록 이름
