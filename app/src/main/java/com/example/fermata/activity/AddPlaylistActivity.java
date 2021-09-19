@@ -200,7 +200,6 @@ public class  AddPlaylistActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<com.example.fermata.domain.AddPlaylist> call, Response<com.example.fermata.domain.AddPlaylist> response) {
                 final com.example.fermata.domain.AddPlaylist addplaylist = response.body();
-                Toast.makeText(getApplicationContext(), "서버에 값을 전달했습니다", Toast.LENGTH_SHORT).show();
             }
 
             @Override
