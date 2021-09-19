@@ -282,6 +282,7 @@ public class PlayActivity extends AppCompatActivity {
     protected void onDestroy() {
         if (visualizer != null)
             visualizer.release();
+        mediaPlayer.stop();
         super.onDestroy();
     }
 
