@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -54,6 +55,7 @@ public class PlayActivity extends AppCompatActivity {
     BarVisualizer visualizer;
     TextView songName, singerName, songStart, songEnd, nowList, musicInfo; //제목, 가수, 현재 재생 시간, 재생 종료 시간, 현재 재생 목록 (화면 전환), 음악 정보
     ImageButton btnRepeat, btnLike, btnPlay, btnPrev, btnNext, btnVolume, btnSensor; // 반복 재생, 좋아요, play(pause), 이전 곡, 다음 곡, 소리 조절, 진동 조절
+    ImageView goto_playlist; // 현재 재생 목록 이동
     SeekBar sbMusic; //음악 재생바
     Thread updateSB; //현재 재생 시간 확인을 위한
     int now_play = 0; // 현재 음악 재생 위치
@@ -103,7 +105,7 @@ public class PlayActivity extends AppCompatActivity {
         btnVolume = findViewById(R.id.btn_volume);
         btnSensor = findViewById(R.id.btn_sensor);
         sbMusic = findViewById(R.id.sb_music);
-
+        goto_playlist = findViewById(R.id.goto_playlist);
 
         // SearchMusicFragment, LikePlaylistActivity, MainAcitivity 로부터 받은 데이터
         Intent intent = getIntent();
@@ -114,7 +116,11 @@ public class PlayActivity extends AppCompatActivity {
         nowList.setText(playlist_title);
 
         // 음악 재생 + visualizer
-        requestPlaylist(position, playlist_title);
+        if(playlist_title.equals("좋아요한 음악목록")) {
+            requestLikesPlaylist(position);
+        } else {
+            requestPlaylist(position, playlist_title);
+        }
 
         // 뒤로가기 버튼 클릭한 경우
         btn_back.setOnClickListener(new View.OnClickListener() {
@@ -156,12 +162,12 @@ public class PlayActivity extends AppCompatActivity {
                 if(mediaPlayer.isPlaying()){ // 재생 -> 일시정지
                     btnPlay.setBackgroundResource(R.drawable.ic_play_pause);
                     mediaPlayer.pause();
-                    //vibrateThread.interrupt();
+                    vibrateThread.interrupt();
                 }
                 else{ // 일시정지 -> 재생
                     btnPlay.setBackgroundResource(R.drawable.ic_play_play);
                     mediaPlayer.start();
-                    //playVibrate();
+                    playVibrate();
                 }
             }
         });
@@ -170,7 +176,11 @@ public class PlayActivity extends AppCompatActivity {
         btnPrev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requestPlaylist(now_play-1, playlist_title);
+                if(playlist_title.equals("좋아요한 음악목록")) {
+                    requestLikesPlaylist(now_play-1);
+                } else {
+                    requestPlaylist(now_play-1, playlist_title);
+                }
             }
         });
 
@@ -178,7 +188,11 @@ public class PlayActivity extends AppCompatActivity {
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requestPlaylist(now_play+1, playlist_title);
+                if(playlist_title.equals("좋아요한 음악목록")) {
+                    requestLikesPlaylist(now_play+1);
+                } else {
+                    requestPlaylist(now_play+1, playlist_title);
+                }
             }
         });
 
@@ -264,7 +278,7 @@ public class PlayActivity extends AppCompatActivity {
         });
 
         // 재생 목록 음악 리스트 (화면 전환)
-        nowList.setOnClickListener(new View.OnClickListener() {
+        goto_playlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent_playlist = new Intent(getApplicationContext(), NowPlaylistActivity.class);
@@ -465,7 +479,132 @@ public class PlayActivity extends AppCompatActivity {
                         musicInfo.setText("("+ (now_play+1) +"/" + size + ")");
 
                         playAudio(playlist.get(now_play).getMusic_id());
-                        //requestVibrate(playlist.get(now_play).getMusic_id());
+                        requestVibrate(playlist.get(now_play).getMusic_id());
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<musicResponse> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "네트워크 에러", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // 좋아요한 음악목록의 음악 리스트 가져오기 + 음악 재생 메소드
+    public void requestLikesPlaylist(int position) {
+        RetrofitClient.getApiService().requestPlaylistLikes().enqueue(new Callback<musicResponse>() {
+            @Override
+            public void onResponse(Call<musicResponse> call, Response<musicResponse> response) {
+                if(response.isSuccessful()){
+                    musicResponse result = response.body(); // 응답 결과
+
+                    if(result.code.equals("400")) {
+                        Toast.makeText(getApplicationContext(), "에러가 발생했습니다", Toast.LENGTH_SHORT).show();
+                    } else if (result.code.equals("200")) {
+                        List<Music> musics = result.music; // 음악 리스트
+
+                        playlist.clear(); // 음악 목록 리스트 초기화
+                        for(Music music: musics) {
+                            playlist.add(music);
+                        }
+
+                        // 음악 재생, 정보 표시
+                        int size = playlist.size();
+                        now_play = position % size; // 전달받은 position값(0~)의 음악 재생
+
+                        // 좋아요
+                        like = playlist.get(now_play).getLikes();
+                        now_music_id = playlist.get(now_play).getMusic_id();
+                        if (like == 1) { btnLike.setBackgroundResource(R.drawable.ic_play_like_yes); } // 좋아요 O
+                        else { btnLike.setBackgroundResource(R.drawable.ic_play_like_no); } // 좋아요 X
+
+                        // 재생 날짜 Update
+                        requestUpdatePlayDate(dateFormat.format(date), playlist.get(now_play).getCount() + 1, playlist.get(now_play).getMusic_id());
+
+                        // 재생
+                        songName.setText(playlist.get(now_play).getMusic_title());
+                        singerName.setText(playlist.get(now_play).getSinger());
+                        musicInfo.setText("("+ (now_play+1) +"/" + size + ")");
+
+                        playAudio(playlist.get(now_play).getMusic_id());
+                        requestVibrate(playlist.get(now_play).getMusic_id());
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<musicResponse> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "네트워크 에러", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    // 선택된 재생목록의 음악 리스트 갱신(재생 목록 화면에서 삭제 했을 때 갱신될 때 필요)
+    public void updatePlaylist() {
+        RetrofitClient.getApiService().requestPlaylistNow(playlist_title).enqueue(new Callback<musicResponse>() {
+            @Override
+            public void onResponse(Call<musicResponse> call, Response<musicResponse> response) {
+                if(response.isSuccessful()){
+                    musicResponse result = response.body(); // 응답 결과
+
+                    if(result.code.equals("400")) {
+                        Toast.makeText(getApplicationContext(), "에러가 발생했습니다", Toast.LENGTH_SHORT).show();
+                    } else if (result.code.equals("200")) {
+                        List<Music> musics = result.music; // 음악 리스트
+
+                        playlist.clear(); // 음악 목록 리스트 초기화
+                        for(Music music: musics) {
+                            playlist.add(music);
+                        }
+
+                        // 좋아요
+                        like = playlist.get(now_play).getLikes();
+                        now_music_id = playlist.get(now_play).getMusic_id();
+                        if (like == 1) { btnLike.setBackgroundResource(R.drawable.ic_play_like_yes); } // 좋아요 O
+                        else { btnLike.setBackgroundResource(R.drawable.ic_play_like_no); } // 좋아요 X
+
+                        // 재생
+                        songName.setText(playlist.get(now_play).getMusic_title());
+                        singerName.setText(playlist.get(now_play).getSinger());
+                        musicInfo.setText("("+ (now_play+1) +"/" + playlist.size() + ")");
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<musicResponse> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "네트워크 에러", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // 좋아요한 음악목록의 음악 리스트 갱신(재생 목록 화면에서 삭제 했을 때 갱신될 때 필요)
+    public void updateLikesPlaylist() {
+        RetrofitClient.getApiService().requestPlaylistLikes().enqueue(new Callback<musicResponse>() {
+            @Override
+            public void onResponse(Call<musicResponse> call, Response<musicResponse> response) {
+                if(response.isSuccessful()){
+                    musicResponse result = response.body(); // 응답 결과
+
+                    if(result.code.equals("400")) {
+                        Toast.makeText(getApplicationContext(), "에러가 발생했습니다", Toast.LENGTH_SHORT).show();
+                    } else if (result.code.equals("200")) {
+                        List<Music> musics = result.music; // 음악 리스트
+
+                        playlist.clear(); // 음악 목록 리스트 초기화
+                        for(Music music: musics) {
+                            playlist.add(music);
+                        }
+
+                        // 좋아요
+                        like = playlist.get(now_play).getLikes();
+                        now_music_id = playlist.get(now_play).getMusic_id();
+                        if (like == 1) { btnLike.setBackgroundResource(R.drawable.ic_play_like_yes); } // 좋아요 O
+                        else { btnLike.setBackgroundResource(R.drawable.ic_play_like_no); } // 좋아요 X
+
+                        // 재생
+                        songName.setText(playlist.get(now_play).getMusic_title());
+                        singerName.setText(playlist.get(now_play).getSinger());
+                        musicInfo.setText("("+ (now_play+1) +"/" + playlist.size() + ")");
                     }
                 }
             }
@@ -529,5 +668,10 @@ public class PlayActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if(playlist_title.equals("좋아요한 음악목록")) {
+            updateLikesPlaylist();
+        } else {
+            updatePlaylist();
+        }
     }
 }

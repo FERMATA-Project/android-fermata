@@ -1,280 +1,270 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="10"
     tools:context=".activity.PlayActivity">
 
-    <!-- visualizer ~ seekbar -->
-    <LinearLayout
+
+    <ImageView
+        android:id="@+id/image"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="8"
+        android:layout_height="396dp"
+        android:background="@color/black"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- 뒤로가기 버튼 -->
+    <ImageButton
+        android:id="@+id/btn_back"
+        android:background="@drawable/ic_play_back"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginLeft="16dp"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <!-- 재생목에 추가 버튼 -->
+    <ImageButton
+        android:id="@+id/btn_option"
+        android:background="@drawable/ic_play_option"
+        android:layout_width="23dp"
+        android:layout_height="23dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="16dp"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <!-- visualizer -->
+    <com.gauravk.audiovisualizer.visualizer.BarVisualizer xmlns:custom="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/vi_bar"
+        android:layout_width="match_parent"
+        android:layout_height="348dp"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        custom:layout_constraintBottom_toBottomOf="@id/image"
+        custom:avColor="@color/gray"
+        custom:avDensity="0.5"
+        custom:avSpeed="medium"
+        custom:avType="fill"
+        custom:avWidth="4dp"
+        tools:ignore="MissingConstraints" />
+
+    <!-- 노래 제목 -->
+    <TextView
+        android:id="@+id/tv_songName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginEnd="60dp"
         android:gravity="center"
-        android:orientation="vertical">
+        android:text="노래 제목1"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image"/>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp">
+    <!-- 가수 -->
+    <TextView
+        android:id="@+id/tv_singerName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="가수"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_songName"/>
 
-            <!-- 뒤로가기 버튼 -->
-            <ImageButton
-                android:id="@+id/btn_back"
-                android:background="@drawable/ic_back"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginLeft="20dp"
-                android:layout_alignParentLeft="true"
-                android:layout_centerInParent="true" />
-
-            <!-- 재생목에 추가 버튼 -->
-            <ImageButton
-                android:id="@+id/btn_option"
-                android:background="@drawable/ic_baseline_more_vert_24"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginRight="20dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerInParent="true" />
-        </RelativeLayout>
-
-        <!-- visualizer -->
-        <com.gauravk.audiovisualizer.visualizer.BarVisualizer xmlns:custom="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/vi_bar"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            custom:avColor="#8C8C8C"
-            custom:avDensity="0.5"
-            custom:avSpeed="medium"
-            custom:avType="fill"
-            custom:avWidth="4dp" />
+    <!-- repeat -->
+    <ImageButton
+        android:id="@+id/btn_repeat"
+        android:background="@drawable/ic_play_replay"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="16dp"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image"/>
 
 
-        <!-- repeat, 곡 제목, 가수명, favorite 토글 -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="100dp">
+    <!-- favorite 토글 -->
+    <ImageButton
+        android:id="@+id/btn_like"
+        android:background="@drawable/ic_play_like_no"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="16dp"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image"/>
 
-            <!-- 곡 제목 -->
-            <TextView
-                android:id="@+id/tv_songName"
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerInParent="true"
-                android:layout_marginStart="20dp"
-                android:layout_marginLeft="60dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginRight="60dp"
-                android:layout_marginBottom="30dp"
-                android:ellipsize="marquee"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:padding="2dp"
-                android:singleLine="true"
-                android:text=""
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold"></TextView>
-
-            <!-- 가수명 -->
-            <TextView
-                android:id="@+id/tv_singerName"
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerInParent="true"
-                android:layout_marginStart="20dp"
-                android:layout_marginLeft="60dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginRight="60dp"
-                android:layout_marginBottom="0dp"
-                android:ellipsize="marquee"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:padding="2dp"
-                android:singleLine="true"
-                android:text=""
-                android:textAlignment="center"
-                android:textColor="#616161"
-                android:textSize="14sp"></TextView>
-
-            <!-- repeat -->
-            <ImageButton
-                android:id="@+id/btn_repeat"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentLeft="false"
-                android:layout_centerInParent="true"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_toLeftOf="@id/tv_songName"
-                android:background="@drawable/ic_play_replay"
-                android:backgroundTint="#616161"></ImageButton>
-
-            <!-- favorite 토글 -->
-            <ImageButton
-                android:id="@+id/btn_like"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentRight="false"
-                android:layout_centerInParent="true"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_toRightOf="@id/tv_songName"
-                android:background="@drawable/ic_play_like_no"></ImageButton>
-
-        </RelativeLayout>
-
-        <!-- 곡 시작 시간, seekbar, 곡 종료 시간 -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp">
-
-            <!-- seekbar -->
-            <SeekBar
-                android:id="@+id/sb_music"
-                android:layout_width="400dp"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:progressDrawable="@drawable/seek_bar"
-                android:thumb="@drawable/seek_thumb"></SeekBar>
-
-            <!-- 곡 시작 시간 -->
-            <TextView
-                android:id="@+id/tv_start"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="30dp"
-                android:layout_marginTop="40dp"
-                android:text="0:00"
-                android:textColor="#9E9E9E"
-                android:textSize="12dp"></TextView>
-
-            <!-- 곡 종료 시간 -->
-            <TextView
-                android:id="@+id/tv_end"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="30dp"
-                android:layout_marginTop="40dp"
-                android:text="0:00"
-                android:textColor="#9E9E9E"
-                android:textSize="12dp"></TextView>
-        </RelativeLayout>
-
-    </LinearLayout>
-
-    <!-- 소리, 이전 곡, play(pause), 다음 곡, 진동 -->
-    <LinearLayout
+    <!-- seekbar -->
+    <SeekBar
+        android:id="@+id/sb_music"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1.2">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:progressDrawable="@drawable/seek_bar"
+        android:thumb="@drawable/seek_thumb"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_singerName"></SeekBar>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    <!-- 곡 시작 시간 -->
+    <TextView
+        android:id="@+id/tv_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0:00"
+        android:textColor="@color/gray"
+        android:textSize="14sp"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="20dp"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sb_music"/>
 
-            <!-- 소리 조정 -->
-            <ImageButton
-                android:id="@+id/btn_volume"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentRight="false"
-                android:layout_centerInParent="true"
-                android:layout_marginRight="20dp"
-                android:layout_toLeftOf="@id/btn_prev"
-                android:background="@drawable/ic_play_sound_on"></ImageButton>
+    <!-- 곡 종료 시간 -->
+    <TextView
+        android:id="@+id/tv_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0:00"
+        android:textColor="@color/gray"
+        android:textSize="14sp"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="20dp"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sb_music"/>
 
-            <!-- 이전 곡 -->
-            <ImageButton
-                android:id="@+id/btn_prev"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_alignParentRight="false"
-                android:layout_centerInParent="true"
-                android:layout_marginRight="10dp"
-                android:layout_toLeftOf="@id/btn_play"
-                android:background="@drawable/ic_play_track_prev"></ImageButton>
+    <!-- 소리 조정 -->
+    <ImageButton
+        android:id="@+id/btn_volume"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="70dp"
+        android:background="@drawable/ic_play_sound_on"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sb_music" />
 
-            <!-- play(pause) 토글 -->
-            <ImageButton
-                android:id="@+id/btn_play"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_alignParentRight="false"
-                android:layout_centerInParent="true"
-                android:background="@drawable/ic_play_play"></ImageButton>
+    <!-- 이전 곡 -->
+    <ImageButton
+        android:id="@+id/btn_prev"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="94dp"
+        android:layout_marginTop="69dp"
+        android:background="@drawable/ic_play_track_prev"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sb_music" />
 
-            <!-- 다음 곡 -->
-            <ImageButton
-                android:id="@+id/btn_next"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_alignParentRight="false"
-                android:layout_centerInParent="true"
-                android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@id/btn_play"
-                android:background="@drawable/ic_play_track_next"></ImageButton>
+    <!-- play(pause) 토글 -->
+    <ImageButton
+        android:id="@+id/btn_play"
+        android:background="@drawable/ic_play_play"
+        android:layout_width="57dp"
+        android:layout_height="57dp"
+        android:layout_marginTop="55dp"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sb_music"/>
 
-            <!-- 진동 조정 -->
-            <ImageButton
-                android:id="@+id/btn_sensor"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentRight="false"
-                android:layout_centerInParent="true"
-                android:layout_marginLeft="20dp"
-                android:layout_toRightOf="@id/btn_next"
-                android:background="@drawable/ic_play_vibration"></ImageButton>
+    <!-- 다음 곡 -->
+    <ImageButton
+        android:id="@+id/btn_next"
+        android:background="@drawable/ic_play_track_next"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="69dp"
+        android:layout_marginRight="94dp"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sb_music"/>
 
-        </RelativeLayout>
+    <!-- 진동 조정 -->
+    <ImageButton
+        android:id="@+id/btn_sensor"
+        android:background="@drawable/ic_play_vibration"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginRight="16dp"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sb_music"/>
 
-    </LinearLayout>
-
-    <!-- 현재 재생 목록 (1/N)-->
-    <LinearLayout
+    <ImageView
+        android:id="@+id/goto_playlist"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.8">
+        android:layout_height="49dp"
+        android:background="@color/gray"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#9E9E9E">
+    <!-- 현재 재생 목록으로 -->
+    <TextView
+        android:id="@+id/tv_now"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="현재 재생 목록"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/goto_playlist"/>
 
-            <!-- 현재 재생 목록으로 -->
-            <TextView
-                android:id="@+id/tv_now"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerInParent="true"
-                android:layout_marginLeft="20dp"
-                android:text="현재 재생 목록"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
-
-            <!-- 현재 재생 음악 정보 텍스트 -->
-            <TextView
-                android:id="@+id/tv_music_info"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerInParent="true"
-                android:layout_marginRight="20dp"
-                android:text="(?/N)"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
-        </RelativeLayout>
-
-    </LinearLayout>
+    <!-- 현재 재생 음악 정보 텍스트 -->
+    <TextView
+        android:id="@+id/tv_music_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="(1/N)"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/goto_playlist"/>
 
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
