@@ -340,4 +340,14 @@ public class LikePlaylistActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(make_list_name.equals("좋아요한 음악목록")){
+            requestPlaylistLikes();
+        }else{
+            requestPlaylistMusic();
+        }
+    }
 }
