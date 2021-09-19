@@ -24,7 +24,9 @@ import com.example.fermata.activity.LikePlaylistActivity;
 import com.example.fermata.WidthItemDecorator;
 import com.example.fermata.activity.MainActivity;
 import com.example.fermata.activity.MakePlaylistActivity;
+import com.example.fermata.activity.PlayActivity;
 import com.example.fermata.adapter.LatelyMusicAdapter;
+import com.example.fermata.adapter.MusicAdapter;
 import com.example.fermata.adapter.MyPlayListAdapter;
 import com.example.fermata.domain.Music;
 import com.example.fermata.domain.Playlist;
@@ -59,6 +61,14 @@ public class PlaylistFragment extends Fragment {
         rv_lately_musicList.setLayoutManager(manager_lately); // 리사이클러뷰와 레이아웃 매니저 연결
         rv_lately_musicList.setAdapter(adapter_lately); // 리사이클러뷰와 어댑터 연결
         rv_lately_musicList.addItemDecoration(new WidthItemDecorator(24));
+
+        // 리사이클러뷰의 아이템 클릭 리스너
+        adapter_lately.setOnItemClickListener(new LatelyMusicAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                requestAddMusic(lately_musicList.get(position).getMusic_id()); // 현재 재생 목록에 음악 추가
+            }
+        });
 
         //재생 목록 리스트
         requestPlaylistLikes();
@@ -175,6 +185,31 @@ public class PlaylistFragment extends Fragment {
             }
             @Override
             public void onFailure(Call<playlistResponse> call, Throwable t) {
+                Toast.makeText(getContext(), "네트워크 에러", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // 현재 재생 목록에 음악 추가
+    private void requestAddMusic(int music_id) {
+        RetrofitClient.getApiService().requestAddMusic("현재 재생 목록", music_id).enqueue(new Callback<musicResponse>() {
+            @Override
+            public void onResponse(Call<musicResponse> call, Response<musicResponse> response) {
+                if(response.isSuccessful()){
+                    musicResponse result = response.body(); // 응답 결과
+
+                    if(result.code.equals("400")) {
+                        Toast.makeText(getContext(), "에러가 발생했습니다", Toast.LENGTH_SHORT).show();
+                    } else if (result.code.equals("200")) {
+                        Intent intent = new Intent(getContext(), PlayActivity.class);
+                        intent.putExtra("playlist_title", "현재 재생 목록"); // 재생목록 이름
+                        intent.putExtra("position", -1); // 음악 재생 위치
+                        startActivity(intent);
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<musicResponse> call, Throwable t) {
                 Toast.makeText(getContext(), "네트워크 에러", Toast.LENGTH_SHORT).show();
             }
         });
