@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -52,6 +53,7 @@ public class PlayActivity extends AppCompatActivity {
     BarVisualizer visualizer;
     TextView songName, singerName, songStart, songEnd, nowList, musicInfo; //제목, 가수, 현재 재생 시간, 재생 종료 시간, 현재 재생 목록 (화면 전환), 음악 정보
     ImageButton btnRepeat, btnLike, btnPlay, btnPrev, btnNext, btnVolume, btnSensor; // 반복 재생, 좋아요, play(pause), 이전 곡, 다음 곡, 소리 조절, 진동 조절
+    ImageView goto_playlist; // 현재 재생 목록 이동
     SeekBar sbMusic; //음악 재생바
     Thread updateSB; //현재 재생 시간 확인을 위한
     int now_play = 0; // 현재 음악 재생 위치
@@ -101,7 +103,7 @@ public class PlayActivity extends AppCompatActivity {
         btnVolume = findViewById(R.id.btn_volume);
         btnSensor = findViewById(R.id.btn_sensor);
         sbMusic = findViewById(R.id.sb_music);
-
+        goto_playlist = findViewById(R.id.goto_playlist);
 
         // SearchMusicFragment, LikePlaylistActivity, MainAcitivity 로부터 받은 데이터
         Intent intent = getIntent();
@@ -262,7 +264,7 @@ public class PlayActivity extends AppCompatActivity {
         });
 
         // 재생 목록 음악 리스트 (화면 전환)
-        nowList.setOnClickListener(new View.OnClickListener() {
+        goto_playlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent_playlist = new Intent(getApplicationContext(), NowPlaylistActivity.class);
@@ -280,7 +282,6 @@ public class PlayActivity extends AppCompatActivity {
     protected void onDestroy() {
         if (visualizer != null)
             visualizer.release();
-        mediaPlayer.stop();
         super.onDestroy();
     }
 
