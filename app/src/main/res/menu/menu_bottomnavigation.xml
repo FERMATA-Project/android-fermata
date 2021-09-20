@@ -4,14 +4,14 @@
     <item
         android:id="@+id/item_searchMusic"
         android:title="음악 찾기"
-        android:icon="@drawable/selector_bottomnavigation"/>
+        android:icon="@drawable/bn_searchmusic"/>
     <item
         android:id="@+id/item_playMusic"
         android:title="음악 즐기기"
-        android:icon="@drawable/selector_bottomnavigation"/>
+        android:icon="@drawable/bn_playmusic"/>
     <item
         android:id="@+id/item_playlist"
         android:title="내 재생목록"
-        android:icon="@drawable/selector_bottomnavigation"/>
+        android:icon="@drawable/bn_playlist"/>
 
 </menu>

@@ -1,12 +1,16 @@
 package com.example.fermata;
 
+import com.example.fermata.domain.AddPlaylist;
 import com.example.fermata.response.musicResponse;
 import com.example.fermata.response.playlistResponse;
+import com.example.fermata.response.vibrateResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 public interface RetrofitAPI {
     // 음악 최신 재생한 순 API
@@ -25,10 +29,13 @@ public interface RetrofitAPI {
     @FormUrlEncoded
     @POST("/music/search")
     Call<musicResponse> requestSearch(@Field("search_word") String search_word);
-  
-    // 현재 playList
-    @POST("/playlist/now")
-    Call<musicResponse> requestPlaylistNow();
+
+    // 선택된 재생목록의 음악 리스트 가져오기
+    @FormUrlEncoded
+    @POST("/playlist/get_playlist")
+    Call<musicResponse> requestPlaylistNow(
+            @Field("playlist_title") String playlist_title
+    );
 
     // 최근 재생목록 5개 API
     @POST("/music/playlist_lately")
@@ -38,11 +45,74 @@ public interface RetrofitAPI {
     @POST("/playlist/playlist_list")
     Call<playlistResponse> requestPlaylistList();
 
+    //좋아요 리스트 API
+    @POST("/music/playlist_likes")
+    Call<musicResponse> requestPlaylistLikes();
+
+    //리스트에 음악 저장 API
+    @FormUrlEncoded
+    @POST("/playlist/playlist_add")
+    Call<AddPlaylist> requestAddPlaylist(
+            @Field("playlist_title") String playlist_title,
+            @Field("music_id") int music_id
+    );
+
+    // 리스트에 음악 삭제 API
+    @FormUrlEncoded
+    @POST("/playlist/playlist_del")
+    Call<AddPlaylist> requestDelPlaylist(
+            @Field("playlist_title") String playlist_title,
+            @Field("music_id") int music_id
+    );
+
     // 재생목록에 음악 추가 API
     @FormUrlEncoded
-    @POST("/music/add")
+    @POST("/playlist/addMusic")
     Call<musicResponse> requestAddMusic(
             @Field("playlist_title") String playlist_title,
             @Field("music_id") int music_id
     );
+
+    // 재생목록에 음악 삭제 API
+    @FormUrlEncoded
+    @POST("/playlist/deleteMusic")
+    Call<musicResponse> requestDeleteMusic(
+            @Field("playlist_title") String playlist_title,
+            @Field("music_id") int[] music_id
+    );
+
+    // 좋아요한 음악 목록에 음악 삭제 API
+    @FormUrlEncoded
+    @POST("/playlist/updateLikes")
+    Call<musicResponse> requestUpdateLikes(
+            @Field("music_id") int[] music_id
+    );
+
+    // 좋아요 상태 변경 API
+    @FormUrlEncoded
+    @POST("/music/like")
+    Call<musicResponse> requestUpdateLike(
+            @Field("music_id") int music_id,
+            @Field("like") int like
+    );
+
+    // 재생 날짜 변경 API
+    @FormUrlEncoded
+    @POST("/music/playdate")
+    Call<musicResponse> requestUpdatePlayDate(
+            @Field("play_date") String play_date,
+            @Field("count") int count,
+            @Field("music_id") int music_id
+    );
+
+    //재생목록 음악 가져오기 API
+    @FormUrlEncoded
+    @POST("/music/playlist_getmusic")
+    Call<musicResponse> requestPlaylistGetmusic(
+            @Field("playlist_title") String playlist_title
+    );
+
+    // 음악 진동 세기 가져오기 API
+    @GET("/vibrate")
+    Call<vibrateResponse> requestVibrate(@Query("music_id") int music_id);
 }

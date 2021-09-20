@@ -1,20 +1,23 @@
 package com.example.fermata.fragment;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fermata.R;
 import com.example.fermata.RetrofitClient;
@@ -22,6 +25,7 @@ import com.example.fermata.activity.PlayActivity;
 import com.example.fermata.adapter.MusicAdapter;
 import com.example.fermata.domain.Music;
 import com.example.fermata.response.musicResponse;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,10 +35,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 // 설명: 메인 화면 중 하단바 음악 찾기 클릭 -> 음악 목록 화면
-// author: soohyun, last modified: 21.08.07
+// author: soohyun, last modified: 21.08.29
 public class SearchMusicFragment extends Fragment {
     ArrayList<Music> musicList = new ArrayList<>(); // 음악 목록 리스트
     MusicAdapter adapter; // 음악 목록 어댑터
+    int select_option = 0; // 어떤 옵션을 선택했는지 저장하는 변수, 0 - 최신순 재생한 순 / 1 - 많이 재생한 순 / 2- 가나다
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,6 +50,7 @@ public class SearchMusicFragment extends Fragment {
         adapter = new MusicAdapter(getContext(), musicList);
         rv_musicList.setLayoutManager(manager); // 리사이클러뷰와 레이아웃 매니저 연결
         rv_musicList.setAdapter(adapter); // 리사이클러뷰와 어댑터 연결
+        rv_musicList.addItemDecoration(new DividerItemDecoration(view.getContext(), 1));
 
         requestMusicRecent(); // 처음 화면 데이터 세팅
 
@@ -57,6 +63,7 @@ public class SearchMusicFragment extends Fragment {
         });
 
         ImageButton btn_filter = view.findViewById(R.id.btn_filter); // 정렬 필터 버튼
+        // 정렬 필터 버튼 클릭한 경우
         btn_filter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -67,14 +74,14 @@ public class SearchMusicFragment extends Fragment {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
-                            case R.id.item_recent: // 최신 재생한 순 클릭한 경우
+                            case R.id.item_recent:
                                 requestMusicRecent();
                                 break;
-                            case R.id.item_most: // 많이 재생한 순 클릭한 경우
+                            case R.id.item_most:
                                 requestMusicTimes();
                                 break;
-                            case R.id.item_alphabet: // 가나다 순 클릭한 경우
-                                requestMusicAlphabet();
+                            case R.id.item_alphabet:
+                                requestMusicAlphabet();;
                                 break;
                         }
 
@@ -174,7 +181,7 @@ public class SearchMusicFragment extends Fragment {
 
     // 현재 재생 목록에 음악 추가
     private void requestAddMusic(int music_id) {
-        RetrofitClient.getApiService().requestAddMusic("현재", music_id).enqueue(new Callback<musicResponse>() {
+        RetrofitClient.getApiService().requestAddMusic("현재 재생 목록", music_id).enqueue(new Callback<musicResponse>() {
             @Override
             public void onResponse(Call<musicResponse> call, Response<musicResponse> response) {
                 if(response.isSuccessful()){
@@ -184,8 +191,8 @@ public class SearchMusicFragment extends Fragment {
                         Toast.makeText(getContext(), "에러가 발생했습니다", Toast.LENGTH_SHORT).show();
                     } else if (result.code.equals("200")) {
                         Intent intent = new Intent(getContext(), PlayActivity.class);
-                        intent.putExtra("playlist_title", "현재 재생 목록");
-                        intent.putExtra("position", 0);
+                        intent.putExtra("playlist_title", "현재 재생 목록"); // 재생목록 이름
+                        intent.putExtra("position", -1); // 음악 재생 위치
                         startActivity(intent);
                     }
                 }
@@ -195,5 +202,22 @@ public class SearchMusicFragment extends Fragment {
                 Toast.makeText(getContext(), "네트워크 에러", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        switch (select_option) {
+            case 0:
+                requestMusicRecent();
+                break;
+            case 1:
+                requestMusicTimes();
+                break;
+            case 2:
+                requestMusicAlphabet();
+                break;
+        }
     }
 }

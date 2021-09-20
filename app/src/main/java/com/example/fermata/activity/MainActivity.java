@@ -1,10 +1,5 @@
 package com.example.fermata.activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,9 +9,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.example.fermata.R;
 import com.example.fermata.fragment.PlaylistFragment;
-import com.example.fermata.fragment.SearchFragment;
 import com.example.fermata.fragment.SearchMusicFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -25,8 +24,6 @@ public class MainActivity extends AppCompatActivity {
     FragmentManager fragmentManager; // 프래그먼트 매니저
     SearchMusicFragment searchMusicFragment = new SearchMusicFragment(); // 음악 찾기 프래그먼트
     PlaylistFragment playlistFragment = new PlaylistFragment(); // 내 재생목록 프래그먼트
-    SearchFragment searchFragment = new SearchFragment(); // 검색하기 프래그먼트
-    //PlayerFragment playerFragment = new PlayerFragment(); // 음악 재생 프래그먼트
 
     //(menifest uses-permission) 런타임 퍼미션 목록
     String[] permission_list = {
@@ -74,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_actionbar, menu);
+        getMenuInflater().inflate(R.menu.menu_actionbar_search, menu);
         return true;
     }
 
@@ -83,8 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.item_search:
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.frameLayout, searchFragment).commitAllowingStateLoss(); // 검색하기 프래그먼트로 변환
+                startActivity(new Intent(getApplicationContext(), SearchActivity.class)); // 검색하기 화면으로 이동
                 break;
         }
 
@@ -127,5 +123,4 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
 }

@@ -6,45 +6,82 @@
     android:layout_height="match_parent"
     tools:context=".activity.LikePlaylistActivity">
 
-    <!-- 좋아요한 음악 목록 텍스트 -->
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="match_parent"
+        android:layout_height="124dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/black"/>
+
     <TextView
-        android:id="@+id/tv_like_playlist"
+        android:id="@+id/text1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp"
-        android:text="좋아요한 음악 목록"
-        android:textStyle="bold"
-        android:textColor="@color/black"
-        android:textSize="20sp"
+        android:layout_marginTop="24dp"
+        android:layout_marginLeft="16dp"
+        android:text="나만의 음악 서랍"
+        android:textColor="@color/white"
+        android:textSize="14sp"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- 재생목록 옵션 버튼 -->
+    <!-- 플레이리스트 명 -->
+    <TextView
+        android:id="@+id/tv_playlistName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="16dp"
+        android:text="좋아요한 음악"
+        android:textColor="@color/white"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintTop_toBottomOf="@id/text1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <!-- 옵션 버튼 -->
     <ImageButton
         android:id="@+id/btn_option"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/ic_baseline_more_vert_24"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="58dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/like_playlist_btn_option"
         app:layout_constraintHorizontal_bias="1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- 삭제 버튼 -->
+    <Button
+        android:id="@+id/btn_delete"
+        android:layout_width="65dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="58dp"
+        android:layout_marginRight="3dp"
+        android:text="삭제"
+        android:textSize="13sp"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"/>
 
     <!-- 현재 재생 목록 리사이클러뷰 -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_like_playlist"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:paddingBottom="70dp"
+        android:paddingBottom="130dp"
         android:clipToPadding="false"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_like_playlist"/>
+        app:layout_constraintTop_toBottomOf="@+id/image"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

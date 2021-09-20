@@ -2,6 +2,7 @@ package com.example.fermata.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,13 +10,23 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fermata.DividerItemDecorator;
 import com.example.fermata.R;
 import com.example.fermata.RetrofitClient;
+import com.example.fermata.activity.AddPlaylistActivity;
+import com.example.fermata.activity.LikePlaylistActivity;
+import com.example.fermata.WidthItemDecorator;
+import com.example.fermata.activity.MainActivity;
 import com.example.fermata.activity.MakePlaylistActivity;
+import com.example.fermata.activity.PlayActivity;
 import com.example.fermata.adapter.LatelyMusicAdapter;
+import com.example.fermata.adapter.MusicAdapter;
 import com.example.fermata.adapter.MyPlayListAdapter;
 import com.example.fermata.domain.Music;
 import com.example.fermata.domain.Playlist;
@@ -30,7 +41,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 // 설명: 메인 화면 중 하단바 내 재생목록 클릭 -> 재생 목록 화면
-// author: seungyeon, last modified: 21.08.10
+// author: seungyeon, last modified: 21.09.18
+// author: soohyun, last modified: 21.09.10
 public class PlaylistFragment extends Fragment {
     ArrayList<Music> lately_musicList = new ArrayList<>();
     ArrayList<Playlist> playList = new ArrayList<>();
@@ -41,15 +53,6 @@ public class PlaylistFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_playlist, container, false);
 
-        // 최근 들은 노래 임시 데이터
-        /*
-        lately_musicList.add(new Music("노래 이름1", "가수1"));
-        lately_musicList.add(new Music("노래 이름2", "가수2"));
-        lately_musicList.add(new Music("노래 이름3", "가수3"));
-        lately_musicList.add(new Music("노래 이름4", "가수4"));
-        lately_musicList.add(new Music("노래 이름5", "가수5"));
-         */
-
         requestPlaylistLately();   //최근 들은 노래 리스트
 
         RecyclerView rv_lately_musicList = view.findViewById(R.id.rv_lately_list); // 최근들은노래 리사이클러뷰
@@ -57,26 +60,35 @@ public class PlaylistFragment extends Fragment {
         adapter_lately = new LatelyMusicAdapter(getContext(), lately_musicList);
         rv_lately_musicList.setLayoutManager(manager_lately); // 리사이클러뷰와 레이아웃 매니저 연결
         rv_lately_musicList.setAdapter(adapter_lately); // 리사이클러뷰와 어댑터 연결
+        rv_lately_musicList.addItemDecoration(new WidthItemDecorator(24));
 
+        // 리사이클러뷰의 아이템 클릭 리스너
+        adapter_lately.setOnItemClickListener(new LatelyMusicAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                requestAddMusic(lately_musicList.get(position).getMusic_id()); // 현재 재생 목록에 음악 추가
+            }
+        });
 
-        // 재생 목록 임시 데이터
-        /*
-        playList.add(new Playlist("좋아요한 음악목록", 1));
-        playList.add(new Playlist("재생목록 이름1", 2));
-        playList.add(new Playlist("재생목록 이름2", 3));
-        playList.add(new Playlist("재생목록 이름3", 4));
-        playList.add(new Playlist("재생목록 이름4", 5));
-        playList.add(new Playlist("재생목록 이름5", 6));*/
-
-        requestPlaylistList();  //재생 목록 리스트
+        //재생 목록 리스트
+        requestPlaylistLikes();
+        requestPlaylistList();
 
         RecyclerView rv_my_playlist = view.findViewById(R.id.rv_my_playlist); // 재생목록 리사이클러뷰
         LinearLayoutManager manager_playlist = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL,false); // 레이아웃 매니저
         adapter_playlist = new MyPlayListAdapter(getContext(), playList);
         rv_my_playlist.setLayoutManager(manager_playlist); // 리사이클러뷰와 레이아웃 매니저 연결
         rv_my_playlist.setAdapter(adapter_playlist); // 리사이클러뷰와 어댑터 연결
+        rv_my_playlist.addItemDecoration(new DividerItemDecoration(view.getContext(), 1));
 
-
+        adapter_playlist.setOnItemClickListener(new MyPlayListAdapter.OnItemClickListener(){
+            @Override
+            public void onItemClick(View v, int position) {
+                Intent PlaylisttoLike = new Intent(getContext(), LikePlaylistActivity.class);
+                PlaylisttoLike.putExtra("재생목록이름", playList.get(position).getListName());
+                startActivity(PlaylisttoLike);
+            }
+        });
 
         ImageButton btn_add_list = view.findViewById(R.id.btn_add_list); // 재생목록추가 버튼
         btn_add_list.setOnClickListener(new View.OnClickListener() {
@@ -117,6 +129,39 @@ public class PlaylistFragment extends Fragment {
         });
     }
 
+    //좋아요 개수 데이터 요청 메서드
+    private void requestPlaylistLikes() {
+        RetrofitClient.getApiService().requestPlaylistLikes().enqueue(new Callback<musicResponse>() {
+            @Override
+            public void onResponse(Call<musicResponse> call, Response<musicResponse> response) {
+                if(response.isSuccessful()){
+                    musicResponse result = response.body(); // 응답 결과
+
+                    if(result.code.equals("400")) {
+                        Toast.makeText(getContext(), "에러가 발생했습니다", Toast.LENGTH_SHORT).show();
+                    } else if (result.code.equals("200")) {
+                        List<Music> likescount = result.music; // 좋아요 개수세는 리스트
+                        int count = 0;
+
+                        playList.clear(); // 재생 목록 리스트 초기화
+                        for(Music music: likescount){
+                            count += 1;
+                        }
+                        if(count == 0)
+                            playList.add(new Playlist(0,"좋아요한 음악목록"));
+                        else
+                            playList.add(new Playlist(count,"좋아요한 음악목록"));
+                        adapter_playlist.notifyDataSetChanged();
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<musicResponse> call, Throwable t) {
+                Toast.makeText(getContext(), "네트워크 에러", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     //재생목록 리스트 데이터 요청 메서드
     private void requestPlaylistList() {
         RetrofitClient.getApiService().requestPlaylistList().enqueue(new Callback<playlistResponse>() {
@@ -130,9 +175,9 @@ public class PlaylistFragment extends Fragment {
                     } else if (result.code.equals("200")) {
                         List<Playlist> playlists = result.playlist; // 재생목록 리스트
 
-                        playList.clear(); // 재생 목록 리스트 초기화
                         for(Playlist playlist: playlists){
-                            playList.add(playlist);
+                            if(!playlist.getListName().equals("현재 재생 목록"))
+                                playList.add(playlist);
                         }
                         adapter_playlist.notifyDataSetChanged();
                     }
@@ -143,5 +188,38 @@ public class PlaylistFragment extends Fragment {
                 Toast.makeText(getContext(), "네트워크 에러", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    // 현재 재생 목록에 음악 추가
+    private void requestAddMusic(int music_id) {
+        RetrofitClient.getApiService().requestAddMusic("현재 재생 목록", music_id).enqueue(new Callback<musicResponse>() {
+            @Override
+            public void onResponse(Call<musicResponse> call, Response<musicResponse> response) {
+                if(response.isSuccessful()){
+                    musicResponse result = response.body(); // 응답 결과
+
+                    if(result.code.equals("400")) {
+                        Toast.makeText(getContext(), "에러가 발생했습니다", Toast.LENGTH_SHORT).show();
+                    } else if (result.code.equals("200")) {
+                        Intent intent = new Intent(getContext(), PlayActivity.class);
+                        intent.putExtra("playlist_title", "현재 재생 목록"); // 재생목록 이름
+                        intent.putExtra("position", -1); // 음악 재생 위치
+                        startActivity(intent);
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<musicResponse> call, Throwable t) {
+                Toast.makeText(getContext(), "네트워크 에러", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        requestPlaylistLikes();
+        requestPlaylistList();
     }
 }

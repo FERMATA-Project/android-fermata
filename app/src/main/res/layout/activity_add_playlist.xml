@@ -6,32 +6,101 @@
     android:layout_height="match_parent"
     tools:context=".activity.AddPlaylistActivity">
 
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="match_parent"
+        android:layout_height="165dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/black"/>
+
+    <!-- 음악 검색창 -->
+    <EditText
+        android:id="@+id/et_search"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="2dp"
+        android:hint="Type something"
+        android:background="@null"
+        android:textColorHint="#9E9E9E"
+        android:textColor="@color/white"
+        android:textSize="19sp"
+        android:inputType="text"
+        android:imeOptions="actionSearch"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/iv_search_close"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:paddingLeft="20dp"
+        android:paddingRight="50dp"/>
+
+    <!-- 검색 아이콘 이미지 -->
+    <ImageView
+        android:id="@+id/iv_search_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="18dp"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:background="@drawable/search_actionbar_close"/>
+
+    <!-- 구분선 -->
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:background="#e0e0e0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_search_close"/>
+
     <!-- 재생목록에 노래 추가하기 텍스트 -->
     <TextView
         android:id="@+id/tv_add_playlist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp"
-        android:text="재생목록에 노래 추가하기"
+        android:layout_marginTop="88dp"
+        android:layout_marginLeft="16dp"
+        android:text="노래를 추가하기"
         android:textStyle="bold"
-        android:textColor="@color/black"
-        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:textSize="34sp"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
+
+    <!-- 완료 버튼 -->
+    <Button
+        android:id="@+id/btn_finish"
+        android:layout_width="65dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="110dp"
+        android:layout_marginRight="3dp"
+        android:text="완료"
+        android:textSize="13sp"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_add_playlist"/>
 
     <!-- 전체 곡 리사이클러뷰 -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_add_playlist"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:paddingBottom="70dp"
+        android:paddingBottom="170dp"
         android:clipToPadding="false"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_add_playlist"/>
+        app:layout_constraintTop_toBottomOf="@+id/image"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
